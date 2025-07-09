@@ -3,10 +3,14 @@
 ***************************
 
 // Author: Francesca
-// Last update: November 2024
+// Last update: July 2025
+// Input: excel files from EY_EIG_Guide and Government legislation; eigt_currency.xlsx; supplementary_var_$supvarver 
+// Output: data_longformat for each country; eigt_countries_newdata_transformed 
+
 
 // Change working directory and paths (restored at the end)
-
+	
+	/*
 	// Automatized user paths
 	global username "`c(username)'"
 	
@@ -27,31 +31,29 @@
 	
 
  // Construct the file path
-	cd "$dir2"	
+	cd "$dir2"
+	*/ 
+	
+	
 	foreach source in EY_EIG_Guide Government_legislation {	
-		foreach country in Australia Austria ///
-						   Belgium Brazil Bulgaria ///
-						   Canada Chile China Cyprus Czechia ///
-						   Denmark Finland France Germany Gibraltar Greece ///
-						   India Indonesia Ireland Italy Japan Malta Mexico Monaco ///
-						   Netherlands New_Zealand Norway ///
-						   Peru Philippines Poland Portugal ///
-						   Singapore Slovenia South_Korea Spain Sweden Switzerland ////
-						   Thailand Turkey Ukraine United_Kingdom United_States {
+		foreach country in AU AT BE BR BG CA CL CN CY /// 
+						   CZ DK FI FR DE GI GR IN ID ///
+						   IE IT JP MT MX MC NL NZ NO ///
+						   PE PH PL PT SG SI KR ES SE ///
+						   CH TH TR UA GB US {
    
 		if "`source'" == "EY_EIG_Guide" global name EYb_`country'
-		if "`source'" == "EY_Personal_Tax_Guide" global name EYa_`country'
 		if "`source'" == "Government_legislation" global name Lex_`country'				
 
-		local filepath "`source'/`country'"
+		local filepath "$sources/`source'/`country'"
 		
 		if fileexists("`filepath'/data_longformat.dta") {
 		disp "`country'"
-			if "`country'" != "United_States" qui eigt_verify `source' `country'
+			if "`country'" != "US" qui eigt_verify `source' `country'
 			else qui eigt_verify `source' `country', value(exemption) dummy(taxcredit)
 
 		// Import data 
-			local filepath "`source'/`country'"
+			local filepath "$sources/`source'/`country'"
 			qui use "`filepath'/data_longformat.dta", clear
 			drop subnationallevel 
 			
@@ -96,15 +98,11 @@
 	clear
 	foreach source in EY_EIG_Guide Government_legislation {
 
-		foreach country in Australia Austria ///
-						   Belgium Brazil Bulgaria ///
-						   Canada Chile China Cyprus Czechia ///
-						   Denmark Finland France Germany Gibraltar Greece ///
-						   India Indonesia Ireland Italy Japan Malta Mexico Monaco ///
-						   Netherlands New_Zealand Norway ///
-						   Peru Philippines Poland Portugal ///
-						   Singapore Slovenia South_Korea Spain Sweden Switzerland ////
-						   Thailand Turkey Ukraine United_Kingdom United_States  {
+		foreach country in AU AT BE BR BG CA CL CN CY /// 
+						   CZ DK FI FR DE GI GR IN ID ///
+						   IE IT JP MT MX MC NL NZ NO ///
+						   PE PH PL PT SG SI KR ES SE ///
+						   CH TH TR UA GB US {
 			if fileexists("``source'`country''") qui append using "``source'`country''"
 		}
 	}

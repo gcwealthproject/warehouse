@@ -2,11 +2,11 @@
 *** EIGT translation code
 **************************
 
-// Author: Francesca
-// Last update: October 2024
 
-// Data used: $intfile/eigt_taxsched_data_correct.dta, "$intfile/eigt_taxsched_sources.dta", "$intfile/eigt_oecdrev_data_22mar2024_correct.dta"
-// Output: "$intfile/eigt_countries_v1_transformed.dta"
+// Last update: July 2025
+
+// Data used: $intfile/eigt_taxsched_data_correct.dta, "$intfile/eigt_taxsched_sources.dta", "$intfile/eigt_oecdrev_data_14april25_correct.dta"
+// Output: $intfile/eigt_revenue_all_transformed; $intfile/eigt_taxsched_all_transformed.dta; "$intfile/eigt_countries_v1_transformed.dta"
 
 // Content: move the v1 released eigt data into a long format for the new structure for v2 release
 
@@ -345,8 +345,19 @@ qui {
 	qui append using "`giftax'"
 	qui append using "`esttax'"
 	qui append using "`inhtax'"
-	sort GEO year br 
 
+// Correct cases of status 0 
+	qui replace exempt = -998 if status == 0
+	qui replace toprat = 0 if status == 0
+	qui replace toplb = 0 if status == 0
+	bys GEO year tax applies_to: egen stat = min(status)
+	qui replace adjlbo = 0 if stat == 0 & br == 1
+	qui replace adjubo = -997 if stat == 0 & br == 1
+	qui replace adjmrt = 0 if stat == 0 & br == 1
+	drop stat 
+
+	sort GEO year tax appl br 
+	
 // Attach source 
 	qui merge m:1 GEO year using "$intfile/eigt_taxsched_sources.dta", keep(master matched)  
 
@@ -355,7 +366,6 @@ qui {
 		display in red "`r(N)' Observations without sources, check"
 		tab GEO_long if Source_1 == "" & br == 0
 	}
-// Mexico unmatched, already told Manuel
 	qui gen no_source = (_m == 1)
 	drop _merge 
 	
@@ -408,34 +418,20 @@ qui {
 ********** 1. PREPARE OECD REVENUE *********************************************
 
 // Load data 
-	qui use "$intfile/eigt_oecdrev_data_22mar2024_correct.dta", clear
-	qui drop if tax == "immovable property" | tax == "net wealth" | tax == "property & net wealth"
-
-// Cases with missing total revenues and zero federal, set to missing
+	qui use "$intfile/eigt_oecdrev_data_$oecdver_correct.dta", clear
+	keep if tax == "estate, inheritance & gift" | tax == "estate & inheritance" | tax == "gift"
+	 
+foreach var in revenu revusd prorev revgdp {
+	rename `var'_sta `var'_reg
+	rename `var'_cen `var'_fed
+}
 qui {
-	replace revenu_fed = -999 if revenu_gen == -999 & revenu_fed == 0
-	replace revenu_reg = -999 if revenu_gen == -999 & revenu_reg == 0
-	replace revenu_loc = -999 if revenu_gen == -999 & revenu_loc == 0
-
 	format revenu* %40.0f
-	cap drop sum1	
-	gen double sum1 = revenu_fed + revenu_reg
-	format sum1 %40.0f
-	replace revenu_loc = 0 if revenu_loc == -999 & sum1 == revenu_gen  
-	drop sum1	
-	
-	gen double sum1 = revenu_fed + revenu_loc
-	format sum1 %40.0f
-	replace revenu_reg = 0 if revenu_reg == -999 & sum1 == revenu_gen  
-	drop sum1
 	
 // Show cases in which general level is different from subnational levels
-	drop if revenu_gen == -999 & revenu_fed == -999 & revenu_reg == -999 & revenu_loc == -999 
+	drop if revenu_gen == . & revenu_fed == . & revenu_reg == . & revenu_loc == . 
+	drop revusd*
 	
-// Select only EIG tax (the sum)
-*   keep if tax == "estate, inheritance & gift"
-*   drop tax
-		
 	reshape long revenu prorev revgdp, i(GEO year tax) j(applies_to) string
 	replace applies_to = "tg" if applies_to == "_gen" & tax == "estate, inheritance & gift"
 	replace applies_to = "tf" if applies_to == "_fed" & tax == "estate, inheritance & gift"
@@ -458,7 +454,8 @@ qui {
 // Format variables 
 	format revenu %20.0f
 	format prorev revgdp %5.2f
-		
+	drop if revenu == . & prorev == . & revgdp == .
+	
 // Define labels 
 	label var curren "Currency ISO4217"
 	label var applies_to "Sector"
@@ -468,6 +465,7 @@ qui {
 
 	label define labels -999 "Missing"
 	foreach var in revenu prorev revgdp {
+		replace `var' = -999 if `var' == .
 		label values `var' labels, nofix
 	}	
 	

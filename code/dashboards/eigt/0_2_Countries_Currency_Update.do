@@ -2,15 +2,14 @@
 *** EIGT data: currency update
 ******************************
 
-// Author: Francesca
-// Last update: October 2024
+// Last update: July 2025
 
-// Data used: $intfile/eigt_taxsched_currency.dta, $intfile/eigt_taxsched_data.dta 
+// Data used: $intfile/eigt_taxsched_currency.dta, $intfile/eigt_taxsched_data.dta; $hdmade/eigt_currency.xlsx 
 // $supvars/supplementary_var_16Jul2024
-// $intfile/eigt_oecdrev_currency_22mar2024.dta, $intfile/eigt_oecdrev_data_22mar2024.dta 
+// $intfile/eigt_oecdrev_currency_14april25.dta, $intfile/eigt_oecdrev_data_14april25.dta 
 
-// $hmade/eigt_currency.xlsx
-// Output: $intfile/eigt_taxsched_data_correct.dta, $intfile/eigt_oecdrev_data_22mar2024_correct.dta  
+
+// Output: $intfile/eigt_taxsched_data_correct.dta, $intfile/eigt_oecdrev_data_14april25_correct.dta  
 
 // Content: convert monetary values to the local currency unit used in WID for conversion
 
@@ -197,7 +196,7 @@
 	qui: count if toupdate == 1 & _m == 1 
 	if (`r(N)' != 0) {
 		display in red "`r(N)' cases unmatched for OECD data, check"
-		tab GEO if toupdate == 1 & _m == 1
+		tab GEO if toupdate == 1 & _m == 1 // check HR - decide what to do (replace in supplementary would be the ideal)
 	}	
 	drop _m GEO_long
 
@@ -234,26 +233,26 @@
 	qui: count if _m == 3 & fixed_rate == 0 & oecd_curren != "USD" & wid_currency != "USD"
 	if (`r(N)' != 0) {
 		display in red "`r(N)' cases for which xlcusx cannot be used directly, check"
-		display in red "364 cases checked: Bolivia and Guyana, solved"
+		display in red "452 cases checked: Bolivia, Belize, Barbados, solved"
 		tab GEO if _m == 3 & fixed_rate == 0 & oecd_curren != "USD" & wid_currency != "USD"
 	}	
 	qui replace conv_rate = 1/xlcusx if conv_rate == . & fixed_rate == 0 & oecd_curren == "USD" // from USD to wid
 	qui replace conv_rate = xlcusx if conv_rate == . & fixed_rate == 0 & wid_currency == "USD" // to USD from wid
 	
-// 1) Bolivia: OECD data for Bolivia are in Venezuelan Bolívares (VEB), need to be BOB 
-// 2) Guyana: OECD data for Guyana are in VEF, need to be in GYD
+// 1) Bolivia: OECD data for Bolivia are in Belize Dollar (BZD), need to be BOB 
+// 2) Barbados: OECD data for Barbados are in Bolivian Bolivares (BOB), need to be BBD 
+// 3) Belize: OECD data for Belize are in Barbados Dollar (BBD), need to BZD
 	qui replace xlcusx = . if _m == 3 & fixed_rate == 0 & oecd_curren != "USD" & wid_currency != "USD"
 
 	// BOLIVIA
-	// VEF->USD
+	// BZD->USD
 	preserve
 		qui use "$supvars\supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
-		qui keep if country == "VE" // Venezuela to have the exchange rate VEF -> USD
+		qui keep if country == "BZ" // Belize to have the exchange rate BZD -> USD
 		drop country 
 		qui gen GEO = "BO"
-		qui gen xlcusx2 = xlcusx * 1000 // need also this for VEB -> VEF
-		drop xlcusx
+		rename xlcusx xlcusx2 
 		tempfile bolivia1
 		qui save "`bolivia1'", replace
 	restore
@@ -264,56 +263,91 @@
 		qui keep if country == "BO" // Bolivia to have the exchange rate BOB -> USD
 		rename country GEO
 		qui merge 1:1 GEO year using "`bolivia1'"
-		qui replace xlcusx2 = xlcusx2 / xlcusx // need for VEB -> USD and USD -> BOB
+		qui replace xlcusx2 = xlcusx2 / xlcusx // need for BZD -> USD and USD -> BOB
 		drop xlcusx _m
-		qui gen oecd_curren = "VEB" 
+		qui gen oecd_curren = "BZD" 
 		qui gen wid_currency = "BOB"
 		tempfile bolivia2
 		qui save "`bolivia2'", replace
 	restore	
 	cap drop _m
-	qui merge m:1 GEO year using "`bolivia1'", keep(master matched)
+	qui merge m:1 GEO year using "`bolivia2'", keep(master matched)
 	drop _m 
 	qui replace conv_rate = xlcusx2 if conv_rate == . & fixed_rate == 0 & oecd_curren != "USD" & wid_currency != "USD"
 	drop xlcusx2
 	
-	// GUYANA
-	// VEF->USD	
+	
+	
+	// Barbados
+	// BOB->USD
 	preserve
 		qui use "$supvars\supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
-		qui keep if country == "VE" // Venezuela to have the exchange rate VEF -> USD
+		qui keep if country == "BO" // Bolivia to have the exchange rate BOB -> USD
 		drop country 
-		qui gen GEO = "GY"
-		rename xlcusx xlcusx2
-		tempfile guyana1
-		qui save "`guyana1'", replace
+		qui gen GEO = "BB"
+		rename xlcusx xlcusx2 
+		tempfile barbados1
+		qui save "`barbados1'", replace
 	restore
-	// USD->GYD
+	// USD->BBD
 	preserve
 		qui use "$supvars\supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
-		qui keep if country == "GY" // Guyana to have the exchange rate GYD -> USD
+		qui keep if country == "BB" // Barbados to have the exchange rate BBD -> USD
 		rename country GEO
-		qui merge 1:1 GEO year using "`guyana1'"
-		qui replace xlcusx2 = xlcusx2 / xlcusx // need for VEF -> USD and USD -> GYD
+		qui merge 1:1 GEO year using "`barbados1'"
+		qui replace xlcusx2 = xlcusx2 / xlcusx // need for BOB -> USD and USD -> BBD
 		drop xlcusx _m
-		qui gen oecd_curren = "VEF" 
-		qui gen wid_currency = "GYD"
-		tempfile guyana2
-		qui save "`guyana2'", replace
+		qui gen oecd_curren = "BOB" 
+		qui gen wid_currency = "BBD"
+		tempfile barbados2
+		qui save "`barbados2'", replace
 	restore	
 	cap drop _m
-	qui merge m:1 GEO year using "`guyana2'", keep(master matched)
+	qui merge m:1 GEO year using "`barbados2'", keep(master matched)
 	drop _m 
-
 	qui replace conv_rate = xlcusx2 if conv_rate == . & fixed_rate == 0 & oecd_curren != "USD" & wid_currency != "USD"
 	drop xlcusx2
-
+	
+	
+	// Belize
+	// BBD->USD
+	preserve
+		qui use "$supvars\supplementary_var_$supvarver", clear
+		keep country year xlcusx // WID: Market exchange rate with USD
+		qui keep if country == "BB" // Barbados to have the exchange rate BBD -> USD
+		drop country 
+		qui gen GEO = "BZ"
+		rename xlcusx xlcusx2 
+		tempfile belize1
+		qui save "`belize1'", replace
+	restore
+	// USD->BZD
+	preserve
+		qui use "$supvars\supplementary_var_$supvarver", clear
+		keep country year xlcusx // WID: Market exchange rate with USD
+		qui keep if country == "BZ" // Belize to have the exchange rate BZD -> USD
+		rename country GEO
+		qui merge 1:1 GEO year using "`belize1'"
+		qui replace xlcusx2 = xlcusx2 / xlcusx // need for BBD -> USD and USD -> BZD
+		drop xlcusx _m
+		qui gen oecd_curren = "BBD" 
+		qui gen wid_currency = "BZD"
+		tempfile belize2
+		qui save "`belize2'", replace
+	restore	
+	cap drop _m
+	qui merge m:1 GEO year using "`belize2'", keep(master matched)
+	drop _m 
+	qui replace conv_rate = xlcusx2 if conv_rate == . & fixed_rate == 0 & oecd_curren != "USD" & wid_currency != "USD"
+	drop xlcusx2
+	
+	
 	
 // DIVIDE the monetary variables by conv_rate to convert currency
-	foreach var in revenu_fed revenu_gen revenu_loc revenu_reg  {
-		qui replace `var' = `var' / conv_rate if (`var' != -999 &  `var' != -998 & `var' != -997)
+	foreach var in revenu_gen revenu_loc revenu_sta revusd_cen  {
+		qui replace `var' = `var' / conv_rate 
 	}
 	drop toupdate conv_rate fixed_rate xlcusx oecd_curren
 	rename wid_currency curren 

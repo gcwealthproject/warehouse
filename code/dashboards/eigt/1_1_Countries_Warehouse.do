@@ -3,10 +3,10 @@
 ***********************************
 
 // Author: Francesca
-// Last update: October 2024
+// Last update: July 2025
 
-// Data used: $intfile/eigt_v1_transformed.dta
-// Output: $intfile/eigt_v1_long.dta and $intfile/eigt_v1_ready.dta
+// Data used: $intfile/eigt_v1_transformed.dta; $hdmade/dictionary.xlsx
+// Output:  and $intfile/eigt_countries_v1_ready.dta
 
 	use "$intfile/eigt_countries_v1_transformed.dta", clear
 	
@@ -114,10 +114,10 @@
 	
 	sort GEO year varcode 
 	
-	save "$intfile/eigt_v1_long.dta", replace
+
 	
 // Sources and notes
-	use "$intfile/eigt_v1_long.dta", clear
+
 	replace varcode = substr(varcode, 3, .)
 	
 // Import legend entries from dictionary 

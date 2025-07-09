@@ -1,9 +1,0 @@
-Open the command prompt
-type "pip install pandas aiohttp openpyxl"
-
-Check the working directory and, if needed, change it in the python code
-cd C:\Users\fsubioli\Desktop\scripts
-
-Then type "python scriptname.py"
-
-

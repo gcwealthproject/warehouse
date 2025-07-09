@@ -3,10 +3,11 @@
 ***********************************
 
 // Author: Francesca
-// Last update: July 2024
+// Last update: July 2025
 
-// Data used: $intfile/eigt_USstates_taxsched_data.dta
-// Output: $intfile/eigt_USstates_taxsched_data_transformed.dta
+// Data used: $intfile/eigt_USstates_taxsched_data.dta; $intfile/eigt_USstates_sources; eigt_USstates_revenue_data
+// Output: $intfile/eigt_USstates_taxsched_data_transformed.dta; $intfile/eigt_USstates_revenue_transformed; /// 
+// 		   $intfile/eigt_USstates_v1_transformed 
 
 // Load data 
 	qui use "$intfile/eigt_USstates_taxsched_data.dta", clear

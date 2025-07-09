@@ -2,10 +2,9 @@
 *** EIGT data: automated error finder
 *************************************
 
-// Author: Francesca
-// Last update: October 2024
+// Last update: July 2025
 
-// Data used: $hmade/eigt_transcribed.xlsx, $intfile/country_codes.dta
+// Data used: $sources/eigt_transcribed.xlsx,  $hmade/dictionary.xlsx
 // Output: $intfile/eigt_taxsched_data.dta, $intfile/eigt_taxsched_sources.dta, $intfile/eigt_taxsched_currency.dta
 
 // Content: check validity and consistency of each variable in eigt_transcribed.xlsx.
@@ -14,7 +13,7 @@
 
 	clear all
 	// Import raw data on tax schedules
-	qui import excel "$hmade/eigt_transcribed.xlsx", sheet(Detailed) firstrow clear
+	qui import excel "$sources/eigt_transcribed.xlsx", sheet(Detailed) firstrow clear
 	qui compress 	
 
 ************************* 0. General checks ************************************

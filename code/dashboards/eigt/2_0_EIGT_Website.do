@@ -3,50 +3,7 @@
 /////////////////////////
 
 /// Last update: 5 November 2024
-
-////////////////////////////////////////////////////////////////////////////////
-/// STEP 0: General setting
-
-	clear
-
-// Working directory and paths
-
-	*** automatized user paths
-	global username "`c(username)'"
-	
-	dis "$username" // Displays your user name on your computer
-		
-	* Manuel
-	if "$username" == "manuelstone" { 
-		global dir  "/Users/`c(username)'/Dropbox/gcwealth" 
-	}
-		
-	* Twisha
-	if "$username" == "twishaasher" { 
-		global dir  "/Users/`c(username)'/Dropbox (Hunter College)/gcwealth" 
-	}
-
-	* Francesca
-	if "$username" == "fsubioli" { 
-		global dir  "/Users/`c(username)'/Dropbox/gcwealth" 
-	}	
-	if "$username" == "Francesca Subioli" | "$username" == "Francesca" { 
-		global dir  "C:/Users/`c(username)'/Dropbox/gcwealth" 
-	}	
-	* Luca 
-	if "$username" == "lgiangregorio"  { 
-		global dir  "/Users/`c(username)'/Dropbox/gcwealth" 
-	}
-
-
-// Working directory and paths
-
-	global dofile "$dir/code/dashboards/eigt"
-	global intfile "$dir/raw_data/eigt/intermediary_files"
-	global hmade "$dir/handmade_tables"
-	global supvars "$dir/output/databases/supplementary_variables"
-	global output "$dir/raw_data/eigt"	
-	global website "$dir/output/databases/website"
+	clear 
 	
 ////////////////////////////////////////////////////////////////////////////////
 /// STEP 1: Building country-level wide viz
@@ -70,7 +27,7 @@
 	sort GEO year tax br
 
 	preserve
-		use "$supvars/supplementary_var_16Jul2024.dta", clear
+		use "$supvars/supplementary_var_$supvarver.dta", clear
 		keep country LCU_wid
 		duplicates drop
 		egen pippo = group(country)

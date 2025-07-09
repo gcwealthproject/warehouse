@@ -3,9 +3,13 @@
 ***********************************
 
 // Author: Francesca
-// Last update: July 2024
+// Last update: July 2025
+// Data used: $intfile/eigt_USstates_v1_transformed.dta ; $hmade/dictionary.xlsx 
+// Data output: $intfile/eigt_USstates_v1_ready
 
-// Data used: $intfile/eigt_USstates_v1_transformed.dta
+
+
+
 
 	use "$intfile/eigt_USstates_v1_transformed.dta", clear
 

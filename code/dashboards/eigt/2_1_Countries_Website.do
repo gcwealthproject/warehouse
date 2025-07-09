@@ -3,7 +3,7 @@
 *********************************
 
 // Author: Francesca
-// Last update: August 2024
+// Last update: July 2025
 
 // Data used: output/eigt_ready.dta
 // Output: output/databases/dashboards/eigt_countries_wide_viz.dta for the website

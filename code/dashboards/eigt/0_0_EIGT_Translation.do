@@ -2,42 +2,18 @@
 /// Main do file for EIGT translation from old to new structure
 /////////////////////////
 
-/// Last update: 4 November 2024
+/// Last update: July 2025
 /// Author: Francesca
 
+
+	
 ////////////////////////////////////////////////////////////////////////////////
-/// STEP 0: General setting
-
-	clear
-
-// Working directory and paths
-
-	*** automatized user paths
-	global username "`c(username)'"
-	
-	dis "$username" // Displays your user name on your computer
-		
-	* Francesca
-	if "$username" == "fsubioli" { 
-		global dir  "/Users/`c(username)'/Dropbox/gcwealth" 
-	}	
-	if "$username" == "Francesca Subioli" | "$username" == "Francesca" | "$username" == "franc" { 
-		global dir  "C:/Users/`c(username)'/Dropbox/gcwealth" 
-	}	
-	* Luca 
-	if "$username" == "lgiangregorio" | "$username" == "lucagiangregorio" { 
-		global dir  "/Users/`c(username)'/Dropbox/gcwealth" 
-	}
-	
-	global dofile "$dir/code/dashboards/eigt"
-	global intfile "$dir/raw_data/eigt/intermediary_files"
-	global hmade "$dir/handmade_tables"
-	global supvars "$dir/output/databases/supplementary_variables"
-	                   
-	cd "$dir"
-	
-	global supvarver 16Jul2024
-	global oecdver 22mar2024
+/// STEP 0: a. OECD revenue download and harmonization; b .ado for new data reading/import /// 
+/// 		c. US States data preparation
+			
+	run "$dofile/Auxiliary_Countries_OECD_Rev.do"
+	run "$dofile/eigt_verify.ado"
+	run "$dofile/Auxiliary_US_States.do"
 	
 ////////////////////////////////////////////////////////////////////////////////
 /// STEP 1: Country-level data

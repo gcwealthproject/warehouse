@@ -3,10 +3,10 @@
 ******************************************************
 
 // Author: Francesca
-// Last update: May 2024
+// Last update: July 2025
 
-// Data used: $intfile/USstates_final_oldstructure.dta
-// Output: $intfile/eigt_USstates_taxsched_data.dta
+// Data used: $intfile/USstates_final_oldstructure.dta; $hdmade/dictionary.xlsx
+// Output: $intfile/eigt_USstates_taxsched_data.dta; eigt_USstates_sources.dta 
 
 // Content: check validity and consistency of each variable in USstates_final_oldstructure.dta
 // After the check, transform the variables in their final (and numeric) format

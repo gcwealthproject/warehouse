@@ -2,8 +2,11 @@
 /// Main do file for EIGT warehouse building
 /////////////////////////
 
-/// Last update: 4 November 2024
+/// Last update: July 2025
 /// Author: Francesca
+/// Data input: $intfile/eigt_countries_v1_ready; $intfile/eigt_countries_new_ready; $intfile/eigt_USstates_v1_ready 
+/// Data output: $output/eigt_ready; $intfile/eigt_data_coverage; $dir/output/metadata/metadata_eigt
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// STEP 0: General setting
@@ -11,12 +14,14 @@
 	clear
 
 // Working directory and paths
-
+/*
 	global dofile "code/dashboards/eigt"
 	global intfile "raw_data/eigt/intermediary_files"
 	global hmade "handmade_tables"
 	global supvars "output/databases/supplementary_variables"
 	global output "raw_data/eigt"	
+*/ 
+
 	
 ////////////////////////////////////////////////////////////////////////////////
 /// STEP 1.1: Building country-level warehouse
@@ -219,5 +224,5 @@ qui {
 	
 	order varcode percentile metadata 
 
-	qui export delimited using "output/metadata/metadata_eigt.csv", nolabel replace  
+	qui export delimited using "$dir/output/metadata/metadata_eigt.csv", nolabel replace  
 }

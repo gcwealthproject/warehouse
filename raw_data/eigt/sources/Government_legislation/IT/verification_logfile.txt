@@ -1,0 +1,17 @@
+WARNING: 131 unmatched currency codes. Historical currency?
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: schedule lower bounds <= of the preceding one
+WARNING: marginal rate = to the preceding one, the brackets will be unified
+WARNING: marginal rate = to the preceding one, the brackets will be unified
+WARNING: marginal rate = to the preceding one, the brackets will be unified

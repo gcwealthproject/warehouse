@@ -2,7 +2,10 @@
 *** EIGT data: adjust for website
 *********************************
 
-// Last update: August 2024
+// Last update: July 2025
+
+// Data input: $output/eigt_ready
+// Data output: $intfile/eigt_USstates_wide_viz
 
 // Prepare data in partially wide form 
 	use "$output/eigt_ready.dta", clear

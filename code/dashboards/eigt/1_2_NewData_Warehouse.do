@@ -3,7 +3,9 @@
 ************************************************
 
 // Author: Francesca
-// Last update: November 2024
+// Last update: July 2025
+// Input data: $intfile/eigt_countries_newdata_transformed; $hmade/dictionary.xlsx 
+// Output data: $intfile/eigt_countries_new_ready
 
 // Upload data
 	use "$intfile/eigt_countries_newdata_transformed.dta", clear

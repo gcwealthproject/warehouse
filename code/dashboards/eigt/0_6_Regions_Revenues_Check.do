@@ -3,9 +3,9 @@
 **********************************
 
 // Author: Francesca
-// Last update: March 2024
+// Last update: July 2025
 
-// Data used: $intfile/USstates_final_oldstructure.dta
+// Data used: $intfile/USstates_final_oldstructure.dta; $hdmade/dictionary.xlsx
 // Output: $intfile/eigt_USstates_revenue_data.dta
  
  	clear all
