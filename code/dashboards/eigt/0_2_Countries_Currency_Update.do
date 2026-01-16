@@ -218,7 +218,7 @@
 
 // Apply conversion rate and prepare for matching
 	preserve
-		qui use "$supvars\supplementary_var_$supvarver", clear
+		qui use "$supvars/supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
 		rename country GEO
 		tempfile convert
@@ -247,7 +247,7 @@
 	// BOLIVIA
 	// BZD->USD
 	preserve
-		qui use "$supvars\supplementary_var_$supvarver", clear
+		qui use "$supvars/supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
 		qui keep if country == "BZ" // Belize to have the exchange rate BZD -> USD
 		drop country 
@@ -258,7 +258,7 @@
 	restore
 	// USD->BOB
 	preserve
-		qui use "$supvars\supplementary_var_$supvarver", clear
+		qui use "$supvars/supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
 		qui keep if country == "BO" // Bolivia to have the exchange rate BOB -> USD
 		rename country GEO
@@ -281,7 +281,7 @@
 	// Barbados
 	// BOB->USD
 	preserve
-		qui use "$supvars\supplementary_var_$supvarver", clear
+		qui use "$supvars/supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
 		qui keep if country == "BO" // Bolivia to have the exchange rate BOB -> USD
 		drop country 
@@ -292,7 +292,7 @@
 	restore
 	// USD->BBD
 	preserve
-		qui use "$supvars\supplementary_var_$supvarver", clear
+		qui use "$supvars/supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
 		qui keep if country == "BB" // Barbados to have the exchange rate BBD -> USD
 		rename country GEO
@@ -314,7 +314,7 @@
 	// Belize
 	// BBD->USD
 	preserve
-		qui use "$supvars\supplementary_var_$supvarver", clear
+		qui use "$supvars/supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
 		qui keep if country == "BB" // Barbados to have the exchange rate BBD -> USD
 		drop country 
@@ -325,7 +325,7 @@
 	restore
 	// USD->BZD
 	preserve
-		qui use "$supvars\supplementary_var_$supvarver", clear
+		qui use "$supvars/supplementary_var_$supvarver", clear
 		keep country year xlcusx // WID: Market exchange rate with USD
 		qui keep if country == "BZ" // Belize to have the exchange rate BZD -> USD
 		rename country GEO

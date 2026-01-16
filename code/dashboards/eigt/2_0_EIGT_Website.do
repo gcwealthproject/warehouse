@@ -52,6 +52,7 @@
 	// Drop all gift tax information 
 	drop if tax == "Gift Tax"
 	
+	cap mkdir "output/databases/website"
 	qui export delimited using "$website/eigt_wide_viz.csv", replace nolabel
 
 	compress

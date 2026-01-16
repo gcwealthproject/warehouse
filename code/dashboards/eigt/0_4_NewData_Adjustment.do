@@ -228,9 +228,6 @@ sysdir set PERSONAL "code/dashboards/eigt/ado"
 
 // Drop variable not included in v1_2
 	drop homexe bssexe taxabl different_tax
-
-// Restore the main working directory
-	cd "$dir"
 		
 // Save
 	sort GEO year tax appl br

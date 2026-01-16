@@ -10,7 +10,17 @@ if ("${vctr}" == "" | "${old_vctr}" == "") {
 	di as error "You need to specify a current and old version " ///
 		"to run this do-file. either in a global or in " ///
 		"auxiliar/version_control.do"
-} 				
+} 	
+
+*store links in memory (for metadata)
+qui import excel "handmade_tables/dictionary", sheet("Sources") clear firstrow
+qui keep Source Link Ref_link
+gen strL Source_nospace = subinstr(Source, " ", "", .)
+qui levelsof Source_nospace, local(sources_nospace)
+foreach s of local sources_nospace {
+    qui levelsof Link if Source_nospace == `"`s'"', local(link_`s') clean 
+	qui levelsof Ref_link if Source_nospace == `"`s'"', local(rl_`s') clean
+}			
 
 *store variable format in memory (eig_wide, _viz, _meta)
 foreach w in viz meta eigt  {
@@ -18,14 +28,8 @@ foreach w in viz meta eigt  {
 	if "`w'" == "eigt" local fnam EIGtax_wide_visualization
 	di _newline 
 	di as result "storing formats from warehouse_`w'" 
-	if "`w'" == "meta" {
-		qui import delimited ///
-			"output/databases/full_warehouse/`fnam'${old_vctr}.csv", clear 
-	} 
-	else {
-		qui import delimited ///
-			"output/databases/previous_versions/`fnam'${old_vctr}.csv", clear 
-	}
+	qui import delimited ///
+		"raw_data/previous_versions/`fnam'${old_vctr}.csv", clear 
 	cap drop 
 	global wht `w'
 	run "code/mainstream/auxiliar/describe_warehouse.do"
@@ -224,6 +228,28 @@ foreach il in `all_il' {
 *merge with source-metadata 
 merge m:1 source _1_dashboard using `tfmeta', nogen keep(3 1)
 
+qui replace source = subinstr(source, "/", " | ", .)
+cap drop link2  
+qui gen link2 = source 
+qui gen reflink2 = source
+foreach s in `sources_nospace' {
+	if ("`link_`s''" != "") {
+		qui replace link2 = subinstr(link2, "`s'", "`link_`s''", .)
+	} 
+	else {
+		qui replace link2 = "" if link2 == "`s'"
+	}
+	if ("`rl_`s''" != "") {
+		qui replace reflink2 = subinstr(reflink2, "`s'", "`rl_`s''", .)
+	} 
+	else {
+		qui replace reflink2 = "" if reflink2 == "`s'"
+	}
+ }
+qui replace link = link2 if missing(link) & !missing(link2)
+qui replace ref_link = reflink2 if missing(ref_link) & !missing(reflink2)
+qui drop link2 reflink2 
+
 *fill source type variable whenever missing due to multiple sources (EIG)
 replace aggsource = "Multiple source types" ///
 	if strpos(source, "/") > 0 & aggsource == ""	
@@ -340,7 +366,7 @@ qui duplicates drop
 
 qui rename (d1_des d2_des d3_des d4_des d5_des aggsource) ///
 	(d1_dashboard_des d2_sector_des d3_vartype_des d4_concept_des ///
-	d5_dboard_specific_des source_type)
+	d5_dboard_specific_des source_type)	
 
 foreach z in "_meta" "_norm" {
 	local ext `z'
@@ -391,19 +417,21 @@ foreach z in "_meta" "_norm" {
 	qui gen last_update = "$S_TIME - $S_DATE" in 1
 	
 	//save 
+	cap mkdir "output/databases/full_warehouse"
 	di as result "saving warehouse`ext'..." _continue 
 	qui export delimited ///
 		"output/databases/full_warehouse/warehouse`ext'${vctr}.csv", replace 
 	qui export excel ///
-		"output/databases//full_warehouse/warehouse`ext'${vctr}.xlsx", ///
+		"output/databases/full_warehouse/warehouse`ext'${vctr}.xlsx", ///
 		replace firstrow(variables)
 	qui save ///
-		"output/databases//full_warehouse/warehouse`ext'${vctr}.dta", replace
+		"output/databases/full_warehouse/warehouse`ext'${vctr}.dta", replace
 	di as result " (done)"
 	tempfile tff
 	qui save `tff', replace 
 
 	//export individual dashboards too 
+	cap mkdir "output/databases/dashboards"
 	foreach d in ineq topo eigt {
 		preserve 
 			di as result "saving `d'_warehouse`ext' ..." _continue 
