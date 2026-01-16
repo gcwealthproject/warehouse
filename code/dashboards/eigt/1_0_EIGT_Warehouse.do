@@ -221,5 +221,6 @@ qui {
 	
 	order varcode percentile metadata 
 
+	cap mkdir "output/metadata"
 	qui export delimited using "output/metadata/metadata_eigt.csv", nolabel replace  
 }

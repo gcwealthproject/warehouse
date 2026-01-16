@@ -58,7 +58,8 @@ tempfile grid_c
 save `grid_c' 
 
 foreach c of local ctr {
-use `grid_c', clear
-qui keep if area == "`c'"
-qui export excel "${intermediate}/grid", sheet("`c'_hs", replace) firstrow(variables) 	
+	use `grid_c', clear
+	qui keep if area == "`c'"
+	qui export excel "${intermediate}/grid", ///
+		sheet("`c'_hs", replace) firstrow(variables) 	
 }
