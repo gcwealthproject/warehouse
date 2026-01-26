@@ -40,7 +40,7 @@ forvalues n = 1/4 {
 }
 
 //loop over all files  
-forvalues n = 1/4 {
+forvalues n = 1/3 {
 	foreach docode in ${do_codes`n'} {
 		
 		*********************
@@ -60,7 +60,7 @@ forvalues n = 1/4 {
 				di as text "  * " "${doname_`docode2'}" _continue
 				di as text " ${do_endtime_`docode2'}"
 			}
-			if `x' == 4 di as result "{hline 70}"	
+			if `x' == 3 di as result "{hline 70}"	
 		}
 	}
 }
