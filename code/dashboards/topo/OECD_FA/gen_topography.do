@@ -76,7 +76,6 @@ foreach cod in `codes' {
 	}	
 }	 
 
-
 ** Crate topography by country-sector-concept triple
 
 foreach s in `sector_list'{
@@ -162,7 +161,6 @@ foreach s in `sector_list'{
 						* area | year | source | percentile | varcode | value | longname (empty)
 						qui keep area year source percentile varcode sector value longname
 						qui drop if value == . // clean
-						
 						save "${intermediate}/topo/topo_`ctry'_`s'_`cod'", replace
 						drop area year source percentile varcode sector value
 					restore	 

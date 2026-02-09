@@ -28,13 +28,12 @@ The [GC Wealth Project website](https://wealthproject.gc.cuny.edu/index.html) �
 
 Below, we provide details on required packages and on how to execute the pipeline and the structure of the codebase.
 
-### Data Folders
+### Data Folder
 
 - `raw_data/`: This folder contains the large input datasets used by the code.  
-- `output/`: This folder stores the generated output files, including processed data and results.
 
-⚠️ **IMPORTANT:** These folders are **not included** in the repository due to GitHub's file size limitations.  
-📁 **They are available via Dropbox [here](https://www.dropbox.com/scl/fo/ahwvnausm6yoxu17b145w/AMxF8KlzX2yF5TijX-LlJd8?rlkey=edq66i0ffs3bv09opd92xsjtq&st=f7qqkl5f&dl=0)**
+⚠️ **IMPORTANT:** These folder is **not included** in the repository due to GitHub's file size limitations.  
+📁 **It is available via Dropbox [here](https://www.dropbox.com/scl/fo/ahwvnausm6yoxu17b145w/AMxF8KlzX2yF5TijX-LlJd8?rlkey=edq66i0ffs3bv09opd92xsjtq&st=f7qqkl5f&dl=0)**
 
 ➡️ To run the code, **download the contents** from the Dropbox link and place the `raw_data/` and `output/` folders in the root directory of the project.
 
