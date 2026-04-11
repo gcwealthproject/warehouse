@@ -50,6 +50,7 @@ ssc install labmask
 ssc install renvarlab
 ssc install ereplace
 ssc install xfill
+ssc install wid
 ```
 
 * From Sealed Envelope:
