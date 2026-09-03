@@ -1,0 +1,165 @@
+{
+  "aliases": [
+    {
+      "type": "source",
+      "old": "alvaredo2017share",
+      "new": "alvaredo2017",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-03-25T14:47:16Z"
+    },
+    {
+      "type": "citekey",
+      "old": "alvaredo2017share",
+      "new": "alvaredo2017",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-03-25T14:47:16Z"
+    },
+    {
+      "type": "source",
+      "old": "Acciari_Morelli_2020",
+      "new": "Acciari2021",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T13:32:53Z"
+    },
+    {
+      "type": "citekey",
+      "old": "Acciari_Morelli_2020",
+      "new": "Acciari2021",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T13:32:53Z"
+    },
+    {
+      "type": "source",
+      "old": "apostel2025belgian",
+      "new": "Apostel2025",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T13:34:21Z"
+    },
+    {
+      "type": "citekey",
+      "old": "apostel2025belgian",
+      "new": "Apostel2025",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T13:34:21Z"
+    },
+    {
+      "type": "source",
+      "old": "Atkinson_2018",
+      "new": "Atkinson2012",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T13:58:35Z"
+    },
+    {
+      "type": "citekey",
+      "old": "Atkinson_2018",
+      "new": "Atkinson2012",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T13:58:35Z"
+    },
+    {
+      "type": "source",
+      "old": "Brülhart_Fuster_Martínez_Moseka_2026",
+      "new": "Brulhart2026",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T16:58:20Z"
+    },
+    {
+      "type": "citekey",
+      "old": "Brülhart_Fuster_Martínez_Moseka_2026",
+      "new": "Brulhart2026",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T16:58:20Z"
+    },
+    {
+      "type": "source",
+      "old": "Brülhart_Dupertuis_Moreau_2018",
+      "new": "Brulhart2018",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T16:59:15Z"
+    },
+    {
+      "type": "citekey",
+      "old": "Brülhart_Dupertuis_Moreau_2018",
+      "new": "Brulhart2018",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T16:59:15Z"
+    },
+    {
+      "type": "source",
+      "old": "piketty2011long",
+      "new": "Piketty2011",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T17:00:00Z"
+    },
+    {
+      "type": "citekey",
+      "old": "piketty2011long",
+      "new": "Piketty2011",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-22T17:00:00Z"
+    },
+    {
+      "type": "source",
+      "old": "alvaredo2017",
+      "new": "Alvaredo2017",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-23T16:17:27Z"
+    },
+    {
+      "type": "citekey",
+      "old": "alvaredo2017",
+      "new": "Alvaredo2017",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-23T16:17:27Z"
+    },
+    {
+      "type": "source",
+      "old": "Shultz 1926",
+      "new": "Shultz1926",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-04-28T08:15:30Z"
+    },
+    {
+      "type": "source",
+      "old": "EY2025b",
+      "new": "EY2026b",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-05-25T13:59:09Z"
+    },
+    {
+      "type": "citekey",
+      "old": "EY2025b",
+      "new": "EY2026b",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-05-25T13:59:09Z"
+    },
+    {
+      "type": "source",
+      "old": "drg2025",
+      "new": "Findex_ineq",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-05-26T13:11:50Z"
+    },
+    {
+      "type": "citekey",
+      "old": "drg2025",
+      "new": "Findex_ineq",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-05-26T13:11:50Z"
+    },
+    {
+      "type": "source",
+      "old": "EY2026b",
+      "new": "EY2025b",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-05-28T15:31:42Z"
+    },
+    {
+      "type": "citekey",
+      "old": "EY2026b",
+      "new": "EY2025b",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-05-28T15:31:42Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "version",
+    "config",
+    "records"
+  ],
+  "definitions": {
+    "record": {
+      "type": "object",
+      "properties": {
+        "shared_citekey_group": {
+          "type": "string"
+        },
+        "shared_citekey_note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "section",
+        "legend",
+        "source",
+        "link",
+        "citekey",
+        "bib"
+      ]
+    }
+  }
+}

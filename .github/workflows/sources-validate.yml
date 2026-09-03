@@ -1,0 +1,31 @@
+name: Validate Sources Registry
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Excel validation dependency
+        run: python3 -m pip install openpyxl
+
+      - name: Validate canonical registry and generated outputs
+        run: |
+          python3 code/tools/sources/validate_sources.py \
+            --registry code/tools/metadata/sources/sources.yaml \
+            --schema code/tools/metadata/sources/schema.json \
+            --aliases code/tools/metadata/sources/aliases.yaml \
+            --change-log code/tools/metadata/sources/change_log.yaml \
+            --check-generated \
+            --dictionary handmade_tables/dictionary.xlsx \
+            --bib "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib" \
+            --wealth-bib-input "documentation/BibTeX files/GCWealthProject_WealthResearchLibrary.bib" \
+            --both-bib "documentation/BibTeX files/BothLibraries.bib"

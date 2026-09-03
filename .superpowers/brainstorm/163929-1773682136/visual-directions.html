@@ -1,0 +1,331 @@
+<style>
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .direction-card {
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(33, 41, 52, 0.12);
+    background: #fff;
+    box-shadow: 0 20px 50px rgba(25, 35, 48, 0.08);
+  }
+  .direction-top {
+    padding: 18px 18px 10px;
+    border-bottom: 1px solid rgba(33, 41, 52, 0.08);
+  }
+  .direction-top h3 {
+    margin: 0 0 6px;
+    font-size: 1.15rem;
+  }
+  .direction-top p {
+    margin: 0;
+    color: #536173;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+  .tag {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(21, 65, 116, 0.08);
+    color: #154174;
+  }
+  .card-image {
+    padding: 18px;
+    background: #f6f1e8;
+  }
+  .card-body {
+    padding: 18px;
+  }
+  .mock-shell {
+    border-radius: 20px;
+    overflow: hidden;
+    min-height: 380px;
+    border: 1px solid rgba(29, 36, 47, 0.12);
+  }
+  .shell-a {
+    background: linear-gradient(180deg, #f5efe4 0%, #fcfaf5 100%);
+  }
+  .shell-b {
+    background: linear-gradient(180deg, #f7f7f4 0%, #ffffff 100%);
+  }
+  .shell-c {
+    background: linear-gradient(180deg, #eef2f4 0%, #fbfcfd 100%);
+  }
+  .mock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(29, 36, 47, 0.08);
+  }
+  .mock-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mock-title strong {
+    font-size: 1rem;
+  }
+  .mock-title span {
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6d7784;
+  }
+  .pills {
+    display: flex;
+    gap: 8px;
+  }
+  .pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    border: 1px solid rgba(29, 36, 47, 0.12);
+  }
+  .mock-body {
+    padding: 18px;
+  }
+  .panel {
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(29, 36, 47, 0.09);
+    background: rgba(255, 255, 255, 0.76);
+  }
+  .panel h4 {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5f6772;
+  }
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field span {
+    font-size: 0.72rem;
+    color: #667180;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .field div {
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(250, 250, 249, 0.9);
+    border: 1px solid rgba(44, 52, 61, 0.1);
+  }
+  .status-box {
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .status-good {
+    background: #f0f7f0;
+    border: 1px solid #bfd7c0;
+    color: #234b2a;
+  }
+  .status-rich {
+    background: #f7f3ea;
+    border: 1px solid #dccdb0;
+    color: #564329;
+  }
+  .status-cool {
+    background: #eef4f9;
+    border: 1px solid #c5d6e4;
+    color: #24455f;
+  }
+  .pros-cons {
+    margin-top: 14px;
+  }
+</style>
+
+<h2>Polish-Only Visual Directions</h2>
+<p class="subtitle">All three keep the current single-page structure and actions. The change is presentation: typography, spacing, color, and feedback clarity.</p>
+
+<div class="cards">
+  <div class="direction-card card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="direction-top">
+      <div class="tag">Recommended</div>
+      <h3>A. Ledger Editorial</h3>
+      <p>Warm paper tones, stronger hierarchy, and quieter blue accents. Feels finished without becoming decorative.</p>
+    </div>
+    <div class="card-image">
+      <div class="mock-shell shell-a">
+        <div class="mock-header">
+          <div class="mock-title">
+            <span>Source Registry</span>
+            <strong>Reference Manager</strong>
+          </div>
+          <div class="pills">
+            <div class="pill">Data Sources</div>
+            <div class="pill">Wealth Research</div>
+          </div>
+        </div>
+        <div class="mock-body">
+          <div class="panel">
+            <h4>Intake</h4>
+            <div class="field-grid">
+              <div class="field"><span>Section</span><div></div></div>
+              <div class="field"><span>Aggsource</span><div></div></div>
+              <div class="field"><span>Legend</span><div></div></div>
+              <div class="field"><span>Source / Citekey</span><div></div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h4>Bib Fields</h4>
+            <div class="field-grid">
+              <div class="field"><span>Entry type</span><div></div></div>
+              <div class="field"><span>Author</span><div></div></div>
+              <div class="field"><span>Year</span><div></div></div>
+              <div class="field"><span>Title</span><div></div></div>
+            </div>
+          </div>
+          <div class="status-box status-rich">Validation summary is framed as a readable review block instead of raw terminal output.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Most aligned with “editorial and polished.”</li>
+            <li>Makes the app feel intentional without changing behavior.</li>
+            <li>Improves perceived quality of dense forms.</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Tradeoff</h4>
+          <ul>
+            <li>Relies on subtle typographic work, so it needs disciplined spacing.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="direction-card card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="direction-top">
+      <div class="tag">Option</div>
+      <h3>B. Studio Minimal</h3>
+      <p>Cleaner white surfaces, lighter borders, and a more restrained interface with minimal color.</p>
+    </div>
+    <div class="card-image" style="background:#f5f5f2;">
+      <div class="mock-shell shell-b">
+        <div class="mock-header">
+          <div class="mock-title">
+            <span>Local UI</span>
+            <strong>Source Registry Manager</strong>
+          </div>
+          <div class="pills">
+            <div class="pill">Data</div>
+            <div class="pill">Wealth</div>
+          </div>
+        </div>
+        <div class="mock-body">
+          <div class="panel" style="background:#ffffff;">
+            <h4>Core Fields</h4>
+            <div class="field-grid">
+              <div class="field"><span>Section</span><div style="background:#fff;"></div></div>
+              <div class="field"><span>Aggsource</span><div style="background:#fff;"></div></div>
+              <div class="field"><span>Legend</span><div style="background:#fff;"></div></div>
+              <div class="field"><span>URL / Link</span><div style="background:#fff;"></div></div>
+            </div>
+          </div>
+          <div class="panel" style="background:#ffffff;">
+            <h4>Actions</h4>
+            <div class="field-grid">
+              <div class="field"><span>Check Entry</span><div></div></div>
+              <div class="field"><span>Save and Build</span><div></div></div>
+            </div>
+          </div>
+          <div class="status-box status-good">Status area becomes cleaner, but still quiet.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Safest visual update.</li>
+            <li>Easy to implement without much CSS risk.</li>
+            <li>Keeps the app tool-like.</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Tradeoff</h4>
+          <ul>
+            <li>May still read as generic after the redesign.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="direction-card card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="direction-top">
+      <div class="tag">Option</div>
+      <h3>C. Research Desk</h3>
+      <p>Cooler tones, stronger panels, and more prominent status treatment. More “application” than “document.”</p>
+    </div>
+    <div class="card-image" style="background:#edf2f5;">
+      <div class="mock-shell shell-c">
+        <div class="mock-header">
+          <div class="mock-title">
+            <span>Registry Workspace</span>
+            <strong>Reference Intake</strong>
+          </div>
+          <div class="pills">
+            <div class="pill" style="background:#18354b; color:#fff;">Data Sources</div>
+            <div class="pill">Wealth Research</div>
+          </div>
+        </div>
+        <div class="mock-body">
+          <div class="panel" style="background:#ffffff;">
+            <h4>Metadata</h4>
+            <div class="field-grid">
+              <div class="field"><span>Section</span><div></div></div>
+              <div class="field"><span>Legend</span><div></div></div>
+              <div class="field"><span>Title</span><div></div></div>
+              <div class="field"><span>Author</span><div></div></div>
+            </div>
+          </div>
+          <div class="status-box status-cool">
+            Status becomes a high-contrast audit panel with clearer pass, warning, and failure blocks.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Best if clarity in the output panel becomes a bigger priority.</li>
+            <li>Feels robust and purpose-built.</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Tradeoff</h4>
+          <ul>
+            <li>Less editorial and a bit more software-like than your stated preference.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

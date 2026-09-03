@@ -1,0 +1,34 @@
+name: Publish Bib To BibBase
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - 'documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish to BibBase endpoint (optional)
+        env:
+          BIBBASE_UPLOAD_URL: ${{ secrets.BIBBASE_UPLOAD_URL }}
+          BIBBASE_API_TOKEN: ${{ secrets.BIBBASE_API_TOKEN }}
+        run: |
+          if [ -z "$BIBBASE_UPLOAD_URL" ] || [ -z "$BIBBASE_API_TOKEN" ]; then
+            echo "BibBase secrets not configured. Skipping publish step."
+            exit 0
+          fi
+
+          curl --fail --show-error --silent \
+            -X POST "$BIBBASE_UPLOAD_URL" \
+            -H "Authorization: Bearer $BIBBASE_API_TOKEN" \
+            -F "file=@documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"
+
+          echo "Published .bib to BibBase endpoint"

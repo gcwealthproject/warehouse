@@ -7,3 +7,4 @@ raw_data/
 .RData
 output/
 raw_data/eigt/
+.worktrees/

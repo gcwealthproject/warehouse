@@ -1,0 +1,208 @@
+<h2>Minimalist Examples: Table-First Layout</h2>
+<p class="subtitle">These are three stripped-down versions of the table-first approach. All keep the tray pinned open on wide screens and show a draggable divider. Focus on density, clarity, and whether the top bar feels appropriately lean.</p>
+
+<div class="options">
+  <div class="option" data-choice="option-1" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>Balanced top bar</h3>
+      <p>Counts and scan state stay visible. Tray holds filters, benchmark, actions, and help.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="option-2" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>Very lean top bar</h3>
+      <p>Top bar shows only title, counts, and apply. Scan and tools move fully into the tray.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="option-3" onclick="toggleSelect(this)">
+    <div class="letter">3</div>
+    <div class="content">
+      <h3>Sectioned tray</h3>
+      <p>Same as option 1, but the tray is broken into compact collapsible blocks for more order.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="display:grid;gap:18px;margin-top:22px;">
+  <div class="mockup">
+    <div class="mockup-header">Option 1: Balanced top bar</div>
+    <div class="mockup-body" style="padding:14px;background:#f6f2ea;">
+      <div style="border:1px solid #d8ccb9;border-radius:12px;background:#fffdf8;overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #e7ddcf;">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;">
+            <strong>Ref_link review</strong>
+            <span style="font-size:12px;color:#6a645d;">Ready 24</span>
+            <span style="font-size:12px;color:#6a645d;">Review 9</span>
+            <span style="font-size:12px;color:#6a645d;">Dismissed 3</span>
+            <span style="font-size:12px;color:#6a645d;">Scan complete</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="mock-button">Refresh</button>
+            <button class="mock-button">Apply 12</button>
+            <div title="Help" style="width:22px;height:22px;border:1px solid #c8b69c;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:12px;">i</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 10px 290px;min-height:250px;">
+          <div style="padding:12px;background:#fffdf8;">
+            <div style="display:grid;gap:8px;">
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+            </div>
+          </div>
+          <div style="background:#e6dbcd;position:relative;">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:46px;background:#b9a68d;border-radius:999px;"></div>
+          </div>
+          <div style="padding:12px;background:#fbf7f0;border-left:1px solid #e7ddcf;display:grid;gap:10px;">
+            <div style="padding:10px;border:1px solid #ddd1c0;border-radius:10px;background:white;">
+              <div class="label">Filters</div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px;">
+                <div style="height:62px;border:1px solid #e5dccf;border-radius:8px;background:#fcfaf6;"></div>
+                <div style="height:62px;border:1px solid #e5dccf;border-radius:8px;background:#fcfaf6;"></div>
+                <div style="height:62px;border:1px solid #e5dccf;border-radius:8px;background:#fcfaf6;"></div>
+              </div>
+            </div>
+            <div style="padding:10px;border:1px solid #ddd1c0;border-radius:10px;background:white;">
+              <div class="label">Benchmark</div>
+              <div style="height:26px;margin-top:8px;background:#fcfaf6;border:1px solid #e5dccf;border-radius:8px;"></div>
+            </div>
+            <div style="padding:10px;border:1px solid #ddd1c0;border-radius:10px;background:white;">
+              <div class="label">Actions</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                <button class="mock-button">Select visible</button>
+                <button class="mock-button">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Option 2: Very lean top bar</div>
+    <div class="mockup-body" style="padding:14px;background:#f6f2ea;">
+      <div style="border:1px solid #d8ccb9;border-radius:12px;background:#fffdf8;overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #e7ddcf;">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;">
+            <strong>Ref_link review</strong>
+            <span style="font-size:12px;color:#6a645d;">24 ready</span>
+            <span style="font-size:12px;color:#6a645d;">9 review</span>
+            <span style="font-size:12px;color:#6a645d;">3 dismissed</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="mock-button">Apply 12</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 10px 320px;min-height:250px;">
+          <div style="padding:12px;background:#fffdf8;">
+            <div style="display:grid;gap:8px;">
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+            </div>
+          </div>
+          <div style="background:#e6dbcd;position:relative;">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:46px;background:#b9a68d;border-radius:999px;"></div>
+          </div>
+          <div style="padding:12px;background:#fbf7f0;border-left:1px solid #e7ddcf;display:grid;gap:10px;">
+            <div style="padding:10px;border:1px solid #ddd1c0;border-radius:10px;background:white;">
+              <div class="label">Scan</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+                <span style="font-size:12px;color:#6a645d;">187 / 187</span>
+                <div style="flex:1;height:7px;background:#e7ddcf;border-radius:999px;overflow:hidden;">
+                  <div style="width:100%;height:100%;background:#7a98b8;"></div>
+                </div>
+              </div>
+            </div>
+            <div style="padding:10px;border:1px solid #ddd1c0;border-radius:10px;background:white;">
+              <div class="label">Filters</div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px;">
+                <div style="height:74px;border:1px solid #e5dccf;border-radius:8px;background:#fcfaf6;"></div>
+                <div style="height:74px;border:1px solid #e5dccf;border-radius:8px;background:#fcfaf6;"></div>
+                <div style="height:74px;border:1px solid #e5dccf;border-radius:8px;background:#fcfaf6;"></div>
+              </div>
+            </div>
+            <div style="padding:10px;border:1px solid #ddd1c0;border-radius:10px;background:white;">
+              <div class="label">Benchmark and actions</div>
+              <div style="height:26px;margin-top:8px;background:#fcfaf6;border:1px solid #e5dccf;border-radius:8px;"></div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                <button class="mock-button">Refresh</button>
+                <button class="mock-button">Select visible</button>
+                <button class="mock-button">Dismiss</button>
+                <div title="Help" style="width:22px;height:22px;border:1px solid #c8b69c;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:12px;">i</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Option 3: Sectioned tray</div>
+    <div class="mockup-body" style="padding:14px;background:#f6f2ea;">
+      <div style="border:1px solid #d8ccb9;border-radius:12px;background:#fffdf8;overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #e7ddcf;">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;">
+            <strong>Ref_link review</strong>
+            <span style="font-size:12px;color:#6a645d;">Ready 24</span>
+            <span style="font-size:12px;color:#6a645d;">Review 9</span>
+            <span style="font-size:12px;color:#6a645d;">Dismissed 3</span>
+            <span style="font-size:12px;color:#6a645d;">Scan complete</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="mock-button">Refresh</button>
+            <button class="mock-button">Apply 12</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 10px 280px;min-height:250px;">
+          <div style="padding:12px;background:#fffdf8;">
+            <div style="display:grid;gap:8px;">
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+              <div style="height:30px;background:#efe6d7;border-radius:8px;"></div>
+            </div>
+          </div>
+          <div style="background:#e6dbcd;position:relative;">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:46px;background:#b9a68d;border-radius:999px;"></div>
+          </div>
+          <div style="padding:12px;background:#fbf7f0;border-left:1px solid #e7ddcf;display:grid;gap:8px;">
+            <div style="padding:9px 10px;border:1px solid #ddd1c0;border-radius:10px;background:white;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;font-weight:600;">Filters</span>
+              <span style="font-size:12px;color:#6a645d;">3 active</span>
+            </div>
+            <div style="padding:9px 10px;border:1px solid #ddd1c0;border-radius:10px;background:white;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;font-weight:600;">Benchmark</span>
+              <span style="font-size:12px;color:#6a645d;">custom</span>
+            </div>
+            <div style="padding:9px 10px;border:1px solid #ddd1c0;border-radius:10px;background:white;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;font-weight:600;">Bulk actions</span>
+              <span style="font-size:12px;color:#6a645d;">4 tools</span>
+            </div>
+            <div style="padding:9px 10px;border:1px solid #ddd1c0;border-radius:10px;background:white;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;font-weight:600;">Help</span>
+              <span style="font-size:12px;color:#6a645d;">i</span>
+            </div>
+            <div style="padding:10px;border:1px dashed #d3c5b0;border-radius:10px;background:#fcfaf6;">
+              <div class="label">Only one section expanded at a time</div>
+              <div style="height:64px;margin-top:8px;border:1px solid #e5dccf;border-radius:8px;background:white;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p><strong>What to judge:</strong> whether the top bar feels too busy, whether the tray feels orderly enough, and whether the balance between “always visible” and “available on demand” matches your workflow.</p>
+</div>

@@ -1,0 +1,1724 @@
+{
+  "changes": [
+    {
+      "operation": "add",
+      "record_id": "src-alvaredo2017share",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-03-25T14:41:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2017share",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-03-25T14:47:16Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-crous2017fungal",
+      "reason": "Deleted via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T09:10:17Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-blanchet2022weight",
+      "reason": "Deleted via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T09:10:32Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-acciari-morelli-2020",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T10:09:07Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-alvaredo-garbinti-piketty-2017",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T12:51:50Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-atkinson-2018",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T12:54:55Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-br-lhart-fuster-mart-nez-moseka-2026",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T12:56:27Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-br-lhart-dupertuis-moreau-2018",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T12:57:21Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-piketty2011long",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T13:12:00Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-schinke2012inheritance",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T13:29:09Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-apostel2025belgian",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T13:30:27Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-acciari-morelli-2020",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T13:32:53Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-alvaredo-garbinti-piketty-2017",
+      "reason": "Deleted via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T13:33:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-apostel2025belgian",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T13:34:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-atkinson-2018",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T13:58:35Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-br-lhart-fuster-mart-nez-moseka-2026",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T16:58:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-br-lhart-dupertuis-moreau-2018",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T16:59:15Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-piketty2011long",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T17:00:00Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-schinke2012inheritance",
+      "reason": "Deleted via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-22T17:00:24Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-guzzardi2026",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-23T14:05:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-guzzardi2026",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-23T14:06:18Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2017share",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-23T16:17:27Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-blanchet2022weight",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-27T12:02:40Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-blanchet2022weight",
+      "reason": "Deleted via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-27T12:14:08Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-bruneitaxlaw-1984",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:16:59Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlawestate-1929",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:03Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1878",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:08Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1915",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:11Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1923",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:15Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1925",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:19Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1929",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:23Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1932",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:27Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1934",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:31Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1965",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:35Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-chiletaxlaw-1981",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:39Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2008bj",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:43Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2009me",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:47Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2010fr",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:51Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2010gw",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:55Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2011bj",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:17:59Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2020bj",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:03Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2023me",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:07Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2024gw",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:11Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2024sl",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:16Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025bi",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:20Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025cf",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:24Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025dj",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:28Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025dm",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:32Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025er",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:36Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025fm",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:41Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025gm",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:45Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025km",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:49Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025kn",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:53Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025me",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:18:57Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025mm",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:01Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025np",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:06Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025pw",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:10Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025sd",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:14Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025tj",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:18Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025tm",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:22Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025to",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:26Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025vc",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:30Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025vu",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:34Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd2025ye",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:38Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1985",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:42Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-legifrance1979",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:46Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-pakistan-tax-law1950",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:50Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-perutaxlaw-1979",
+      "reason": "Added via local UI",
+      "actor": "Ignacio Flores",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-28T10:19:55Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-drg2025",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-29T21:24:32Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-cyprustaxlaw-1942",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T08:46:26Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-cyprustaxlaw-1962",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T08:48:17Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-cyprustaxlaw-2000",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T08:52:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2008bj",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T08:58:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2009de",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T08:59:09Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2009fr",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T08:59:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2008bj",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:00:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2009de",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2009fr",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:09Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2009hn",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:15Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2009me",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:24Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2010de",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2010fr",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2010gw",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:48Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2011bj",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:01:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2011de",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:02:11Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2011fr",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:02:23Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2013us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:02:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2014us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:02:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2015us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:04:26Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2016us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:04:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2017us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:04:43Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2018us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:05:06Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2019us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:06:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2020bj",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:06:11Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2020us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:06:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2021us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:06:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2022us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:06:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2023me",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:07:04Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2023us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:07:24Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2024gw",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:07:43Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2024sl",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:07:52Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2024us",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:08:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025bi",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:08:22Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025cf",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:08:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025dj",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:08:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025dm",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:08:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025er",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:08:59Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025fm",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:08Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025gm",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:19Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025km",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:26Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025kn",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025me",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025mm",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:46Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025np",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025pw",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:09:59Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025sd",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:10:11Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025tj",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:10:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025tm",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:10:27Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025to",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:10:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025vc",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:10:43Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025vu",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:10:48Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2025ye",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:10:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1923",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-04-30T09:33:36Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-alvaredo2024",
+      "reason": "Added via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T08:27:22Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2024",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T08:36:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2024",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T08:36:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2024",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T08:37:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2024",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T08:37:52Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2024",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T08:49:14Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-alvaredo2024",
+      "reason": "Deleted via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T09:06:50Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-alvaredo2024",
+      "reason": "Added via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T09:07:37Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-fed-dwa-ineq",
+      "reason": "Added via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T14:34:59Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-fed-dwa-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T14:37:49Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-fed-dwa-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-06T14:38:04Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-me-csfi1982",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-07T08:53:03Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ey2025b",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-11T13:19:01Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ey2026a",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-11T13:55:58Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lithuania-taxlaw1995",
+      "reason": "Added via local UI",
+      "actor": "Luca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-12T08:57:37Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lithuania-taxlaw1997",
+      "reason": "Added via local UI",
+      "actor": "Luca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-12T08:58:53Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lithuania-taxlaw2002",
+      "reason": "Added via local UI",
+      "actor": "Luca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-12T08:59:44Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-tidv2",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-12T10:35:40Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-tiddata",
+      "reason": "Deleted via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-12T10:52:52Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-tidseelkopf2021",
+      "reason": "Deleted via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-12T10:53:27Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-tidv2",
+      "reason": "Deleted via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-12T10:56:31Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ibfd",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-14T09:04:58Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-do1950",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-22T09:35:36Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-do2004",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-22T09:36:44Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-ve1999",
+      "reason": "Added via local UI",
+      "actor": "Luca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-22T12:39:40Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-bo1995",
+      "reason": "Added via local UI",
+      "actor": "Luca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-22T12:40:47Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ey2025b",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-25T13:59:09Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-gabbuti2025",
+      "reason": "Added via local UI",
+      "actor": "Demetrio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-25T17:30:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-drg2025",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-26T13:11:50Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-drg2025",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-26T13:27:53Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-dhs-topo",
+      "reason": "Deleted via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-26T13:31:23Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-waemu-topo",
+      "reason": "Deleted via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-26T13:32:39Z"
+    },
+    {
+      "operation": "delete",
+      "record_id": "src-lsms-topo",
+      "reason": "Deleted via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-26T13:33:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dhs-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-26T15:54:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-lsms-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-28T13:31:06Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-waemu-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-28T13:32:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-waemu-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Matteo",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-28T13:34:11Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-tiddata",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-28T15:24:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ey2025b",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-05-28T15:31:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2024",
+      "reason": "Edited via local UI",
+      "actor": "MT",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-24T12:47:07Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-alvaredo2024",
+      "reason": "Edited via local UI",
+      "actor": "MT",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-24T12:47:11Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-fed-dwa-ineq",
+      "reason": "Edited via local UI",
+      "actor": "MT",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-24T12:48:08Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-drg2025",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:35:56Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-drg2025",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:35:57Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-drg2025",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:36:01Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-waemu-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:36:40Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-waemu-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:36:48Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-waemu-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:36:50Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-drg2025",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:37:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-drg2025",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:37:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dhs-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:38:18Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dhs-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T12:38:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-lsms-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T15:00:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-lsms-ineq",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-25T15:00:54Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Added via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-26T13:27:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-26T13:28:48Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-06-26T13:28:51Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-austriataxlaw-2008",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:03:42Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-germantaxlaw-1951",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:06:37Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-perutaxlaw-1923",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:08:26Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-bo1996",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:12:36Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-bo1997",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:13:15Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-bo1998",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:13:46Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-bo1999",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:14:20Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-bo2000",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:14:57Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-lex-bo2001",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:15:24Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1919",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:18:22Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1924",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:19:20Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1926",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:19:47Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1931",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:20:08Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1939",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:21:23Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1941",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:21:53Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1951",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:22:24Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1960",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:22:50Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1961",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:23:17Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie1976",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:23:45Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie2003",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:24:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:24:59Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:25:10Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:25:27Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:25:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:25:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:26:02Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:26:16Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie2003",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:26:28Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie2009",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:26:51Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie2012",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:27:17Z"
+    },
+    {
+      "operation": "add",
+      "record_id": "src-ie2013",
+      "reason": "Added via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T10:27:43Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2010de",
+      "reason": "Edited via local UI",
+      "actor": "Luca Giangregorio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T14:07:39Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2010de",
+      "reason": "Edited via local UI",
+      "actor": "Luca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T14:08:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2010de",
+      "reason": "Edited via local UI",
+      "actor": "Luca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T14:08:10Z"
+    }
+  ]
+}

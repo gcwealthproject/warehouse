@@ -1,0 +1,5 @@
+# Source registry canonical data and automation
+/code/tools/metadata/sources/ @gcwealth-maintainers
+/code/tools/sources/ @gcwealth-maintainers
+/.github/workflows/sources-validate.yml @gcwealth-maintainers
+/.github/workflows/sources-publish-bibbase.yml @gcwealth-maintainers

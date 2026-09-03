@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Architect"
+  short_description: "Plan minimal agent workflows for code tasks"
+  default_prompt: "Use $team-architect to decide whether this coding task should stay single-agent or use a minimal multi-agent workflow."

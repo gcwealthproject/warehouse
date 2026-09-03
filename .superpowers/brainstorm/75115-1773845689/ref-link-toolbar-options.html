@@ -1,0 +1,131 @@
+<h2>Ref_link Review: Compact Toolbar Directions</h2>
+<p class="subtitle">Pick the direction that feels closest to what you want. All three remove most explanatory text from the main view and replace it with an info icon or terse status text.</p>
+
+<div class="cards" style="grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">A. Single compact top bar</div>
+        <div class="mockup-body" style="display:grid;gap:10px;">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;">
+            <div>
+              <div class="label">Ref_link review</div>
+              <div style="font-weight:600;">Ready 24 | Review 9 | Dismissed 3</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+              <button class="mock-button">Refresh</button>
+              <button class="mock-button">Apply 12</button>
+              <button class="mock-button">Close</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;">
+            <div style="font-size:12px;font-weight:600;">Scan 187 / 187</div>
+            <div style="flex:1;min-width:120px;height:7px;border-radius:999px;background:#e4dbcf;overflow:hidden;">
+              <div style="width:100%;height:100%;background:#6c8fb1;"></div>
+            </div>
+            <div style="font-size:12px;color:#6b6b6b;">Benchmark set</div>
+            <div style="width:20px;height:20px;border:1px solid #bba98e;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:12px;">i</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;padding:10px 12px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;">
+            <button class="mock-button">Filters</button>
+            <div style="padding:6px 10px;border:1px solid #d6c8b6;border-radius:999px;font-size:12px;">Status: 2</div>
+            <div style="padding:6px 10px;border:1px solid #d6c8b6;border-radius:999px;font-size:12px;">Confidence: all</div>
+            <div style="padding:6px 10px;border:1px solid #d6c8b6;border-radius:999px;font-size:12px;">Reason: 1</div>
+            <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="mock-button">Select visible</button>
+              <button class="mock-button">Dismiss</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Always compact</h3>
+      <p>Everything stays in one shallow header stack. Filters open in a popover or small tray only when needed.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">B. Collapsed filters drawer</div>
+        <div class="mockup-body" style="display:grid;gap:10px;">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;">
+            <div style="display:grid;gap:3px;">
+              <div style="font-weight:600;">Ref_link review</div>
+              <div style="font-size:12px;color:#6b6b6b;">24 ready, 9 review, 3 dismissed</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="mock-button">Refresh</button>
+              <button class="mock-button">Apply 12</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;">
+            <button class="mock-button">Filters 3 active</button>
+            <button class="mock-button">Benchmark</button>
+            <button class="mock-button">Bulk actions</button>
+            <div style="margin-left:auto;font-size:12px;color:#6b6b6b;">Scan complete</div>
+            <div style="width:20px;height:20px;border:1px solid #bba98e;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:12px;">i</div>
+          </div>
+          <div style="padding:10px 12px;border:1px dashed #c8b8a0;border-radius:10px;background:#fcf8f1;">
+            <div class="label">Drawer opens only on demand</div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px;">
+              <div style="padding:8px;border:1px solid #d6c8b6;border-radius:8px;background:white;font-size:12px;">Status</div>
+              <div style="padding:8px;border:1px solid #d6c8b6;border-radius:8px;background:white;font-size:12px;">Confidence</div>
+              <div style="padding:8px;border:1px solid #d6c8b6;border-radius:8px;background:white;font-size:12px;">Reason</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Progressive disclosure</h3>
+      <p>The default view is very short. Secondary controls live behind three plain buttons and open only when requested.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">C. Table-first with side tray</div>
+        <div class="mockup-body" style="display:grid;gap:10px;">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;">
+            <div style="font-weight:600;">Ref_link review</div>
+            <div style="display:flex;gap:8px;">
+              <button class="mock-button">Open tools</button>
+              <button class="mock-button">Apply 12</button>
+            </div>
+          </div>
+          <div class="split" style="grid-template-columns:1.8fr 0.9fr;gap:10px;">
+            <div style="padding:10px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;min-height:170px;">
+              <div class="label">Rows immediately visible</div>
+              <div style="margin-top:8px;display:grid;gap:8px;">
+                <div style="height:24px;background:#f0e8db;border-radius:6px;"></div>
+                <div style="height:24px;background:#f0e8db;border-radius:6px;"></div>
+                <div style="height:24px;background:#f0e8db;border-radius:6px;"></div>
+                <div style="height:24px;background:#f0e8db;border-radius:6px;"></div>
+              </div>
+            </div>
+            <div style="padding:10px;border:1px solid #d6c8b6;border-radius:10px;background:#fffdf8;min-height:170px;">
+              <div class="label">Collapsible side tray</div>
+              <div style="display:grid;gap:8px;margin-top:8px;">
+                <div style="padding:8px;border:1px solid #d6c8b6;border-radius:8px;font-size:12px;">Status</div>
+                <div style="padding:8px;border:1px solid #d6c8b6;border-radius:8px;font-size:12px;">Confidence</div>
+                <div style="padding:8px;border:1px solid #d6c8b6;border-radius:8px;font-size:12px;">Reason</div>
+                <div style="padding:8px;border:1px solid #d6c8b6;border-radius:8px;font-size:12px;">Benchmark</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Maximum table space</h3>
+      <p>Best if the review table is the real product and controls are clearly secondary. The top area becomes very small.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p><strong>What changes across all options:</strong> remove long helper copy from the sticky area, move explanations to one info icon or tooltips, compress counts into one summary line, and stop showing 3 tall multi-select boxes by default.</p>
+</div>
