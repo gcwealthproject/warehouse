@@ -8,7 +8,12 @@ library(openxlsx)
 ################################################################################
 
 # ── 1. Load data ──────────────────────────────────────────────────────────────
-df <- read_csv("../../output/databases/dashboards/topo_warehouse_meta_v2.csv")
+if (!exists("warehouse_version")) {
+  warehouse_version <- "2"
+}
+warehouse_meta_path <- paste0("../../output/databases/warehouse/warehouse_meta_v", warehouse_version, ".csv")
+df <- read_csv(warehouse_meta_path, show_col_types = FALSE) |>
+  filter(substr(varcode, 1, 1) == "p")
 
 # ── 2. Extract composition rule from metadata ─────────────────────────────────
 extract_formula <- function(meta) {

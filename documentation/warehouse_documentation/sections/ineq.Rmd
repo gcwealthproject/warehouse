@@ -34,7 +34,7 @@ Table \ref{tab:show_wh_ineq} provides a small extract from the Wealth Inequality
 
 ```{r show_wh_ineq, echo=FALSE, show_col_types = FALSE, warning=FALSE, message=FALSE}
 source(file.path("render_support", "render_config.R"))
-whouse <- read_delim(paste0("../../output/databases/full_warehouse/warehouse_v", warehouse_version, ".csv")) 
+whouse <- read_delim(paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")) 
 sketch_AT <- whouse %>% select(source, GEO, GEO_long, year, varcode, percentile, value) %>% filter(source=="HFCS_ineq") %>% filter(GEO=="AT") %>% filter(year==2010) %>% filter(varcode=="t-hs-dsh-netwea-ho")
 kbl(sketch_AT, 
     format="latex", booktabs = T, 

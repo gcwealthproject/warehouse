@@ -23,11 +23,12 @@ library(readxl)
 library(flextable)
 library(haven)
 
-taxw_warehouse_path <- "../../output/databases/dashboards/taxw_warehouse_v2.csv"
-if (!file.exists(taxw_warehouse_path)) {
-  # The dashboard build still writes the legacy filename in this workspace.
-  taxw_warehouse_path <- "../../output/databases/dashboards/eigt_warehouse_v2.csv"
+if (!exists("warehouse_version")) {
+  warehouse_version <- "2"
 }
+warehouse_path <- paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")
+taxw_warehouse <- read_csv(warehouse_path, show_col_types = FALSE) %>%
+  filter(substr(varcode, 1, 1) == "x")
 ```
 
 # Taxes on Wealth {#sec:taxw}
@@ -158,13 +159,11 @@ Table \ref{tab:EIG_sector} summarizes the sector combinations.
 
 ```{r EIG_sector, echo=FALSE, message=FALSE, warning=FALSE}
 
-vcdlist <- read_delim(
-  taxw_warehouse_path,
-  col_select = c("varcode")
-) %>% 
-  distinct() %>% 
+vcdlist <- taxw_warehouse %>%
+  select(varcode) %>%
+  distinct() %>%
   separate(varcode, into = c("part1","part2","part3","Code","part5"), sep = "-") %>%
-  select(part2) %>% 
+  select(part2) %>%
   distinct() %>% 
   rename(Code = part2)
 
@@ -200,13 +199,11 @@ Six types of variables are used within the Taxes on Wealth section. These are de
 ```{r taxw_vt, echo=FALSE, message=FALSE, warning=FALSE}
 
 # Take the EIG vartype
-vcdlist <- read_delim(
-  taxw_warehouse_path,
-  col_select = c("varcode")
-) %>% 
-  distinct() %>% 
+vcdlist <- taxw_warehouse %>%
+  select(varcode) %>%
+  distinct() %>%
   separate(varcode, into = c("part1","part2","part3","Code","part5"), sep = "-") %>%
-  select(part3) %>% 
+  select(part3) %>%
   distinct() %>% 
   rename(Code = part3)
 
@@ -334,12 +331,10 @@ All the concepts described above are summarized in the Table \ref{tab:EIG_defs} 
 ```{r EIG_defs, echo=FALSE, message=FALSE, warning=FALSE}
 
 # Filter Taxes on Wealth concepts.
-vcdlist <- read_delim(
-  taxw_warehouse_path
-) %>% 
-  distinct() %>% 
+vcdlist <- taxw_warehouse %>%
+  distinct() %>%
   separate(varcode, into = c("part1","part2","part3","Code","part5"), sep = "-") %>%
-  select(Code) %>% 
+  select(Code) %>%
   distinct()
 
 # Merge with Dictionary varcode labels
@@ -377,9 +372,9 @@ An example is illustrated in Table \ref{tab:eig_ex1l}, reporting the main tax sc
 
 ```{r eig_ex1l, echo=FALSE, message=FALSE, warning=FALSE}
 
-example <- read_delim(taxw_warehouse_path) %>% 
-  distinct() %>% 
-  filter(GEO == "US" & year == 2023) %>% 
+example <- taxw_warehouse %>%
+  distinct() %>%
+  filter(GEO == "US" & year == 2023) %>%
   filter(substr(varcode,10,15) != "homexe" & substr(varcode,10,15) != "bssexe" & substr(varcode,10,15) != "diftax" & substr(varcode,10,15) != "typtax" & substr(varcode,10,15) != "toplbo") %>%
   filter(substr(varcode,3,4) == "ec" | substr(varcode,3,4) == "tg") %>% 
   mutate(

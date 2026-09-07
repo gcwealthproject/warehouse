@@ -16,12 +16,14 @@ library(tidyr)
 source(file.path("render_support", "render_config.R"))
 options(knitr.kable.NA = "-")
 
-inhe_data_path <- "../../output/databases/dashboards/inhe_warehouse_v2.csv"
-inhe_meta_path <- "../../output/databases/dashboards/inhe_warehouse_meta_v2.csv"
+warehouse_data_path <- paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")
+warehouse_meta_path <- paste0("../../output/databases/warehouse/warehouse_meta_v", warehouse_version, ".csv")
 dictionary_path <- "../../handmade_tables/dictionary.xlsx"
 
-inhe_data <- read_csv(inhe_data_path, show_col_types = FALSE)
-inhe_meta <- read_csv(inhe_meta_path, show_col_types = FALSE)
+inhe_data <- read_csv(warehouse_data_path, show_col_types = FALSE) %>%
+  filter(substr(varcode, 1, 1) == "i")
+inhe_meta <- read_csv(warehouse_meta_path, show_col_types = FALSE) %>%
+  filter(substr(varcode, 1, 1) == "i")
 
 escape_latex <- function(x) {
   # kable escape=FALSE is needed for \cite{}, so text columns are escaped here.

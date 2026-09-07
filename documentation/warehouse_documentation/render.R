@@ -1,4 +1,4 @@
-662622# Open this file in RStudio and click Source to render documentation.
+# Open this file in RStudio and click Source to render documentation.
 # The script prints a console menu for your choice
 
 truthy <- function(x) {
@@ -28,7 +28,7 @@ source(file.path(support_dir, "render_config.R"))
 setwd(doc_root)
 
 bibliography_file <- file.path(doc_root, "..", "BibTeX files", "digital_library.bib")
-bibliography_yaml <- "../BibTeX files/digital_library.bib"
+bibliography_resource <- "../BibTeX files/digital_library.bib"
 
 dir.create(outputs_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(section_outputs_dir, recursive = TRUE, showWarnings = FALSE)
@@ -184,6 +184,9 @@ section_output_format <- function() {
     mustWork = FALSE
   )
 
+  bibliography_header <- tempfile("warehouse-bibliography-", fileext = ".tex")
+  writeLines(paste0("\\addbibresource{", bibliography, "}"), bibliography_header, useBytes = TRUE)
+
   rmarkdown::pdf_document(
     citation_package = "biblatex",
     toc = FALSE,
@@ -197,7 +200,7 @@ section_output_format <- function() {
       "graphicx", "xcolor", "colortbl", "amsmath", "makecell",
       "booktabs", "longtable"
     ),
-    pandoc_args = c(paste0("--bibliography=", bibliography))
+    includes = rmarkdown::includes(in_header = bibliography_header)
   )
 }
 
@@ -253,9 +256,9 @@ wrapper_lines <- function(target) {
     "- \\usepackage{booktabs}",
     "- \\usepackage{longtable}",
     "- \\renewcommand{\\chaptername}{Section}",
+    paste0("- \\addbibresource{", bibliography, "}"),
     "urlcolor: blue",
     "documentclass: report",
-    paste0("bibliography: ", yaml_string(bibliography)),
     "link-citations: yes",
     "suppress-bibliography: no",
     "---",
@@ -398,10 +401,16 @@ render_full_document <- function() {
   unlink(wrapper_file)
 
   wrapper_lines <- readLines(master_rmd_path, warn = FALSE)
-  wrapper_lines <- sub(
-    '^bibliography: ".*(BothLibraries|digital_library)\\.bib"$',
-    paste0('bibliography: "', bibliography_yaml, '"'),
+  wrapper_lines <- ifelse(
+    grepl('^- \\\\addbibresource\\{.*(BothLibraries|digital_library)\\.bib\\}$', wrapper_lines),
+    paste0("- \\addbibresource{", bibliography_resource, "}"),
     wrapper_lines
+  )
+  wrapper_lines <- grep(
+    '^bibliography: ".*(BothLibraries|digital_library)\\.bib"$',
+    wrapper_lines,
+    value = TRUE,
+    invert = TRUE
   )
   writeLines(wrapper_lines, wrapper_file, useBytes = TRUE)
   on.exit(if (success) unlink(wrapper_file), add = TRUE)

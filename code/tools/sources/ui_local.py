@@ -1502,8 +1502,6 @@ def _history_action_label(operation: str, reason: str) -> str:
 def _history_entry_summary(library: str, operation: str, record_id: str, reason: str) -> str:
     action = _history_action_label(operation, reason)
     record = normalize_whitespace(record_id) or "(no record id)"
-    if library == "wealth_research":
-        return f"{action} in legacy Wealth Research for {record}."
     return f"{action} in Library for {record}."
 
 
@@ -1547,15 +1545,8 @@ def _history_file_descriptors(
     op = normalize_whitespace(operation).lower()
     reason_text = normalize_whitespace(reason).lower()
 
-    if library == "wealth_research":
-        add_descriptor(_wealth_bib_path(cfg), "legacy", "Archived Wealth Research bibliography store.")
-        add_descriptor(changelog_path, "legacy history", "Legacy Wealth Research history log.")
-        if op in {"add", "edit", "delete", "build_only"}:
-            add_descriptor(_digital_bib_path(cfg), "generated", "Digital library regenerated from unified registry.")
-        return sorted(descriptors, key=lambda item: _history_file_sort_key(item.get("path", "")))
-
-    add_descriptor(registry_path, "canonical", "Primary Library registry.")
-    add_descriptor(changelog_path, "history", "Library history log.")
+    add_descriptor(registry_path, "canonical", "Primary unified Library registry.")
+    add_descriptor(changelog_path, "history", "Unified Library history log.")
     if op in {"add", "edit", "delete", "build_only", "bulk_label_update"}:
         add_descriptor(_dictionary_output_path(cfg), "generated", "Sources sheet rebuilt from canonical registry.")
         add_descriptor(_digital_bib_path(cfg), "generated", "Digital library regenerated from unified registry.")
@@ -1647,7 +1638,7 @@ def _build_history_entry(
         "history_id": f"{library}:{storage_index}",
         "storage_index": storage_index,
         "library": library,
-        "branch_label": "Legacy Wealth Research" if library == "wealth_research" else "Library",
+        "branch_label": "Unified Library",
         "operation": operation,
         "action_label": _history_action_label(operation, reason),
         "record_id": record_id,
@@ -1671,14 +1662,12 @@ def _build_history_entry(
 def build_history_feed(app, registry: dict) -> dict:
     cfg = registry.get("config", {}) or {}
     data_log = load_json_yaml(app.changelog_path) or {"changes": []}
-    wealth_log_path = _wealth_change_log_path(cfg)
-    wealth_log = load_json_yaml(wealth_log_path) or {"changes": []}
     entries: List[dict] = []
 
     for idx, entry in enumerate(data_log.get("changes", []) or []):
         entries.append(
             _build_history_entry(
-                "data_sources",
+                "library",
                 entry or {},
                 idx,
                 app.registry_path,
@@ -1688,27 +1677,13 @@ def build_history_feed(app, registry: dict) -> dict:
             )
         )
 
-    for idx, entry in enumerate(wealth_log.get("changes", []) or []):
-        entries.append(
-            _build_history_entry(
-                "wealth_research",
-                entry or {},
-                idx,
-                app.registry_path,
-                wealth_log_path,
-                app.aliases_path,
-                cfg,
-            )
-        )
-
     entries.sort(key=lambda item: (item.get("updated_at", ""), item.get("history_id", "")), reverse=True)
     latest = entries[0] if entries else {}
     summary = {
         "total": len(entries),
-        "data_sources": sum(1 for item in entries if item.get("library") == "data_sources"),
-        "wealth_research": sum(1 for item in entries if item.get("library") == "wealth_research"),
         "latest_updated_at": latest.get("updated_at", ""),
         "latest_summary": latest.get("summary", ""),
+        "latest_actor": latest.get("actor", ""),
     }
     return {"entries": entries, "summary": summary}
 
@@ -1987,6 +1962,7 @@ small { color: var(--text-muted); }
 .app-subtitle { margin: 0 0 20px; font-size: 0.95rem; color: var(--text-muted); }
 .panel { margin-bottom: 18px; padding: 18px; border: 1px solid rgba(109, 95, 74, 0.18); border-radius: 20px; background: linear-gradient(180deg, rgba(255, 253, 248, 0.96) 0%, rgba(250, 245, 236, 0.92) 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7); }
 .section-heading { margin: 0 0 14px; font-size: 1.15rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.section-help { margin: -6px 0 14px; color: var(--text-muted); font-size: 13px; line-height: 1.45; }
 pre { background: linear-gradient(180deg, #1d242d 0%, #131920 100%); color: #e8efe8; padding: 16px; border-radius: 16px; overflow: auto; border: 1px solid rgba(132, 145, 160, 0.2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
 #status { white-space: pre-wrap; line-height: 1.5; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 12px; }
 #status .status-ok { color: #8fd28f; font-weight: 600; }
@@ -2115,7 +2091,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
 .history-kpi { padding: 14px 16px; border: 1px solid rgba(109, 95, 74, 0.18); border-radius: 16px; background: rgba(255, 251, 244, 0.88); }
 .history-kpi-label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
 .history-kpi-value { font-family: "Avenir Next Condensed", "Gill Sans", "Trebuchet MS", sans-serif; color: var(--accent-ink); font-size: 1.1rem; line-height: 1.2; }
-.history-toolbar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.history-toolbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: end; }
 .history-filter-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .history-layout { display: grid; grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr); gap: 18px; align-items: start; }
 .history-list { max-height: 640px; overflow: auto; display: grid; gap: 10px; padding-right: 2px; }
@@ -2190,7 +2166,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
   <div class='app-header'>
     <div class='app-header-main'>
       <h1>ADAM SSM - Sleepless Source Manager</h1>
-      <p class='app-subtitle'><small>This UI validates and writes locally.</small></p>
+      <p class='app-subtitle'><small>This app writes locally. Recompile the warehouse and documentation to see changes. Update the website's copy of digital_library.bib to publish d</small></p>
     </div>
     <div class='app-header-actions'>
       <button id='relaunch_app_button' class='secondary' onclick='relaunchApp()'>Relaunch App</button>
@@ -2237,27 +2213,24 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
 
   <div id='dataBibPasteWrap' class='panel'>
   <details open>
-    <summary><b>BibTeX Paste</b></summary>
+    <summary><b>Quick import</b></summary>
     <div class='help' style='margin-top:8px;'>
-      Paste a full BibTeX entry here (for example, from Google Scholar), then click <b>Parse BibTeX and fill fields</b>.
-      Parsing copies data into the fields below and <b>overwrites those target fields</b>.
-      Editing the paste box alone does nothing until Parse is clicked again.
-      After parsing, any manual edits in the fields below are what will be saved.
+      Fill most fields automatically by pasting a BibTeX entry below and clicking <b>Parse</b>. Validate/edit fields before saving.
     </div>
     <div class='row' style='margin-top:8px;'>
       <textarea id='bib_paste' placeholder='@article{Key, ...}'></textarea>
-      <button class='secondary' onclick='parseBib()'>Parse BibTeX and fill fields</button>
+      <button class='secondary' onclick='parseBib()'>Parse BibTex</button>
     </div>
   </details>
   </div>
 
   <div class='panel'>
-  <h3 class='section-heading'>Core Source Fields</h3>
+  <h3 class='section-heading'>Source ID</h3>
   <div class='row checkbox-row'>
-    <label><input id='is_data_source' type='checkbox' onchange='onDataSourceCheckboxChange()'> This record is a data source</label>
+    <label><input id='is_data_source' type='checkbox' onchange='onDataSourceCheckboxChange()'> The source is recorded in the data warehouse</label>
   </div>
   <div class='grid3'>
-    <div class='row data-source-field'><label>Data source categories <span class='req'>*</span></label><div id='data_source_categories' class='checkbox-group' role='group' aria-label='Data source categories'>
+    <div class='row data-source-field'><label>Classification in warehouse<span class='req'>*</span></label><div id='data_source_categories' class='checkbox-group' role='group' aria-label='Data source categories'>
       <label><input type='checkbox' value='Wealth Topography' onchange='onDataSourceCategoriesChange()'> Wealth Topography</label>
       <label><input type='checkbox' value='Wealth Inequality' onchange='onDataSourceCategoriesChange()'> Wealth Inequality</label>
       <label><input type='checkbox' value='Taxes on Wealth' onchange='onDataSourceCategoriesChange()'> Taxes on Wealth</label>
@@ -2266,17 +2239,17 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
       <label><input type='checkbox' value='Unclassified' onchange='onDataSourceCategoriesChange()'> Unclassified</label>
     </div></div>
     <input id='section' type='hidden'>
-    <div class='row data-source-field'><label>Aggsource <span class='req'>*</span></label><input id='aggsource' list='aggsource_opts'></div>
-    <div class='row'><label>Legend <span class='req'>*</span></label><input id='legend'></div>
+    <div class='row data-source-field'><label>Source type (Aggsource) <span class='req'>*</span></label><input id='aggsource' list='aggsource_opts' placeholder='Click for dropdown options'></div>
+    <div class='row'><label>Legend <span class='req'>*</span></label><input id='legend' placeholder='Name (year)'></div>
     <input id='source_key' type='hidden'>
-    <div class='row data-source-field' id='row_source_value'><label>Source code <span class='req'>*</span></label><input id='source_value' placeholder='Warehouse/dictionary source code'></div>
-    <div class='row' id='row_citekey_value'><label>BibTeX citekey <span class='req'>*</span></label><input id='citekey_value' placeholder='Canonical BibTeX key'></div>
+    <div class='row data-source-field' id='row_source_value'><label>Source code <span class='req'>*</span></label><input id='source_value' placeholder='Ideally the same than citekey'></div>
+    <div class='row' id='row_citekey_value'><label>Citekey <span class='req'>*</span></label><input id='citekey_value' placeholder='ShortnameYear'></div>
     <div class='row'><label>URL / Link</label><input id='link'></div>
   </div>
   </div>
 
   <div class='panel'>
-  <h3 class='section-heading'>Bib Fields</h3>
+  <h3 class='section-heading'>Bibliographic Fields</h3>
   <div class='grid3'>
     <div class='row'>
       <label>entry_type <span class='req'>*</span></label>
@@ -2295,22 +2268,9 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
     <div class='row'><label>year <span class='req'>*</span></label><input id='bib_year' oninput='trySuggestLegend()'></div>
   </div>
   <div class='row'><label>title <span class='req'>*</span></label><input id='bib_title'></div>
-  <div class='grid3'>
-    <div class='row'><label>Research categories</label><div id='research_categories' class='checkbox-group' role='group' aria-label='Research categories'>
-      <label><input type='checkbox' value='Cross-National Comparisons' onchange='onResearchCategoriesChange()'> Cross-National Comparisons</label>
-      <label><input type='checkbox' value='Determinants of Wealth and Wealth Inequality' onchange='onResearchCategoriesChange()'> Determinants of Wealth and Wealth Inequality</label>
-      <label><input type='checkbox' value='Estate Inheritance and Gift Taxes' onchange='onResearchCategoriesChange()'> Estate Inheritance and Gift Taxes</label>
-      <label><input type='checkbox' value='Impacts of Wealth Inequality' onchange='onResearchCategoriesChange()'> Impacts of Wealth Inequality</label>
-      <label><input type='checkbox' value='Intergenerational Wealth' onchange='onResearchCategoriesChange()'> Intergenerational Wealth</label>
-      <label><input type='checkbox' value='Methods of Estimation of Wealth Inequality' onchange='onResearchCategoriesChange()'> Methods of Estimation of Wealth Inequality</label>
-      <label><input type='checkbox' value='Trends in Aggregate Wealth and Wealth Inequality' onchange='onResearchCategoriesChange()'> Trends in Aggregate Wealth and Wealth Inequality</label>
-      <label><input type='checkbox' value='Wealth Taxation' onchange='onResearchCategoriesChange()'> Wealth Taxation</label>
-    </div></div>
-  </div>
-  <input id='bib_keywords' type='hidden'>
 
   <details>
-    <summary><b>More fields</b> (optional)</summary>
+    <summary><b>Optional fields</b></summary>
     <div class='grid3' style='margin-top:10px;'>
       <div class='row data-source-field'><label>Data_type</label><input id='data_type' list='data_type_opts'></div>
       <div class='row data-source-field'><label>Ref_link</label><input id='ref_link'></div>
@@ -2335,6 +2295,24 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
     <div class='row data-source-field'><label>Metadata</label><textarea id='metadata'></textarea></div>
     <div class='row'><label>abstract</label><textarea id='bib_abstract'></textarea></div>
   </details>
+  </div>
+
+  <div class='panel'>
+  <h3 class='section-heading'>Research Library Classification</h3>
+  <p class='section-help'>Choose one or many research themes to include this source in the research library. </p>
+  <div class='grid3'>
+    <div class='row'><label>Categories</label><div id='research_categories' class='checkbox-group' role='group' aria-label='Research categories'>
+      <label><input type='checkbox' value='Cross-National Comparisons' onchange='onResearchCategoriesChange()'> Cross-National Comparisons</label>
+      <label><input type='checkbox' value='Determinants of Wealth and Wealth Inequality' onchange='onResearchCategoriesChange()'> Determinants of Wealth and Wealth Inequality</label>
+      <label><input type='checkbox' value='Estate Inheritance and Gift Taxes' onchange='onResearchCategoriesChange()'> Estate Inheritance and Gift Taxes</label>
+      <label><input type='checkbox' value='Impacts of Wealth Inequality' onchange='onResearchCategoriesChange()'> Impacts of Wealth Inequality</label>
+      <label><input type='checkbox' value='Intergenerational Wealth' onchange='onResearchCategoriesChange()'> Intergenerational Wealth</label>
+      <label><input type='checkbox' value='Methods of Estimation of Wealth Inequality' onchange='onResearchCategoriesChange()'> Methods of Estimation of Wealth Inequality</label>
+      <label><input type='checkbox' value='Trends in Aggregate Wealth and Wealth Inequality' onchange='onResearchCategoriesChange()'> Trends in Aggregate Wealth and Wealth Inequality</label>
+      <label><input type='checkbox' value='Wealth Taxation' onchange='onResearchCategoriesChange()'> Wealth Taxation</label>
+    </div></div>
+  </div>
+  <input id='bib_keywords' type='hidden'>
   </div>
 
   <div class='panel'>
@@ -2427,7 +2405,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
   <div id='branch_history' class='hidden'>
     <div class='panel'>
       <h3 class='section-heading'>History</h3>
-      <div class='help'>Browse history, identify the point before a change, and use external file history in GitHub or Dropbox to restore earlier versions. Recommended: keep history intact. Remove history records only for testing or development cleanup.</div>
+      <div class='help'>History shows changes recorded through the unified Library editor. Old Wealth Research history is archived in code/tools/metadata/sources/wealth_research_change_log.yaml and is not shown here. Browse affected files and restore guidance to audit or roll back a change.</div>
     </div>
 
     <div id='history_summary_strip' class='history-summary-strip'></div>
@@ -2437,14 +2415,6 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
         <div>
           <label>Show Changes Up To</label>
           <input id='history_show_before' type='datetime-local' onchange='renderHistoryView()'>
-        </div>
-        <div>
-          <label>Branch</label>
-          <select id='history_branch_filter' onchange='renderHistoryView()'>
-            <option value=''>All branches</option>
-            <option value='data_sources'>Data Sources</option>
-            <option value='wealth_research'>Legacy Wealth Research</option>
-          </select>
         </div>
         <div>
           <label>Action</label>
@@ -3697,7 +3667,6 @@ function historyApplyCleanupReason(reason){
 
 function historyClearFilters(){
   document.getElementById('history_show_before').value = '';
-  document.getElementById('history_branch_filter').value = '';
   document.getElementById('history_action_filter').value = '';
   document.getElementById('history_search').value = '';
   renderHistoryView();
@@ -3720,8 +3689,6 @@ function historyMatches(entry){
       return false;
     }
   }
-  const branchFilter = v('history_branch_filter').trim();
-  if (branchFilter && String(entry.library || '') !== branchFilter) return false;
   const actionFilter = v('history_action_filter').trim();
   if (actionFilter && String(entry.action_label || '') !== actionFilter) return false;
   const query = v('history_search').trim().toLowerCase();
@@ -3732,7 +3699,6 @@ function historyMatches(entry){
     entry.actor,
     entry.reason,
     entry.summary,
-    entry.branch_label,
     entry.action_label,
     ...files.map((item) => item.path),
   ].join(' ').toLowerCase();
@@ -3747,10 +3713,10 @@ function renderHistorySummaryStrip(entries){
   const strip = document.getElementById('history_summary_strip');
   if (!strip) return;
   const cards = [
+    {label: 'Total changes', value: String(historySummary.total || 0)},
+    {label: 'Visible changes', value: String((entries || []).length)},
     {label: 'Latest change', value: historySummary.latest_updated_at ? historyFormatDate(historySummary.latest_updated_at) : 'No history yet'},
-    {label: 'Visible rows', value: String((entries || []).length)},
-    {label: 'Data Sources rows', value: String(historySummary.data_sources || 0)},
-    {label: 'Legacy Wealth Research rows', value: String(historySummary.wealth_research || 0)},
+    {label: 'Latest actor', value: historySummary.latest_actor || 'Unknown actor'},
   ];
   strip.innerHTML = cards.map((card) => `
     <div class="history-kpi">
@@ -3787,7 +3753,6 @@ function renderHistoryList(entries){
           <button class="history-item${active}" onclick='historySelect(${JSON.stringify(entry.history_id)})'>
             <div class="history-item-top">
               <div class="history-badges">
-                <span class="history-badge library">${escapeHtml(entry.branch_label || '')}</span>
                 <span class="history-badge action">${escapeHtml(entry.action_label || '')}</span>
               </div>
               <div class="history-item-time">${escapeHtml(historyFormatDate(entry.updated_at))}</div>
@@ -3877,9 +3842,9 @@ function renderHistoryDetail(entry){
         </div>
       </details>
       <details>
-        <summary><b>History cleanup</b></summary>
+        <summary><b>Advanced history cleanup</b></summary>
         <div style="margin-top:12px;">
-          <div class="history-cleanup-note">Recommended: keep history intact. Removes history records only. Source records and generated files are not changed.</div>
+          <div class="history-cleanup-note">Development-only cleanup removes entries from the unified Library history log only. Source records and generated files are not changed.</div>
           <div class="row" style="margin-top:12px;">
             <label>Cleanup reason</label>
             <input id="history_cleanup_reason" list="history_cleanup_reason_suggestions" placeholder="test entry, development trial, duplicate noise" value="${escapeHtml(historyCleanupReason)}" oninput="historyCleanupReason = this.value">
@@ -3898,8 +3863,8 @@ function renderHistoryDetail(entry){
           </div>
           <div class="history-filter-actions">
             <button class="secondary" onclick="historyUseSelectedTime()">Filter to this time</button>
-            <button class="warn" onclick="historyDeleteSelected()">Remove History Record</button>
-            <button class="warn" onclick="historyDeleteForRecord()">Remove History Records For This Source</button>
+            <button class="warn" onclick="historyDeleteSelected()">Remove Selected Log Entry</button>
+            <button class="warn" onclick="historyDeleteForRecord()">Remove Log Entries For This Record</button>
           </div>
         </div>
       </details>
@@ -4018,7 +3983,7 @@ Generated files are not changed.
       `Use only for testing or development cleanup.`;
     if (!confirm(msg)) return;
     const out = await req('/api/history/delete_entry', {
-      library: entry.library,
+      library: 'library',
       cleanup_scope: 'entry',
       storage_index: entry.storage_index,
       cleanup_reason: cleanupReason,
@@ -4038,7 +4003,7 @@ async function historyDeleteForRecord(){
   try {
     const entry = historyGetEntryById(historySelectedId);
     if (!entry) throw new Error('Select a history record first.');
-    if (!entry.record_id) throw new Error('This history record has no source or key identifier to clean up.');
+    if (!entry.record_id) throw new Error('This history record has no record identifier to clean up.');
     const cleanupReason = (v('history_cleanup_reason') || '').trim();
     historyCleanupReason = cleanupReason;
     if (!cleanupReason) throw new Error('Cleanup reason is required to remove history records for a source.');
@@ -4047,12 +4012,12 @@ async function historyDeleteForRecord(){
       `Remove all ${matchingRows.length} history record(s) for ${entry.record_id}?
 
 ` +
-      `Removes history records only for this source or key in ${entry.branch_label}.
+      `Removes entries from the unified Library history log only.
 Source records are not changed.
 Generated files are not changed.`;
     if (!confirm(msg)) return;
     const out = await req('/api/history/delete_entry', {
-      library: entry.library,
+      library: 'library',
       cleanup_scope: 'record',
       record_id: entry.record_id,
       cleanup_reason: cleanupReason,
@@ -6560,19 +6525,17 @@ class Handler(BaseHTTPRequestHandler):
 
             if self.path == "/api/history/delete_entry":
                 data = self._read_json()
-                library = normalize_whitespace(data.get("library", ""))
+                library = normalize_whitespace(data.get("library", "library")) or "library"
                 cleanup_reason = normalize_whitespace(data.get("cleanup_reason", ""))
                 cleanup_scope = normalize_whitespace(data.get("cleanup_scope", "entry")) or "entry"
-                if library not in {"data_sources", "wealth_research"}:
-                    raise ValueError("library must be data_sources or wealth_research")
+                if library != "library":
+                    raise ValueError("history cleanup is available only for the unified Library history log")
                 if cleanup_scope not in {"entry", "record"}:
                     raise ValueError("cleanup_scope must be entry or record")
                 if not cleanup_reason:
                     raise ValueError("cleanup_reason is required")
 
-                reg = self.app.registry
-                cfg = reg.get("config", {}) or {}
-                changelog_path = self.app.changelog_path if library == "data_sources" else _wealth_change_log_path(cfg)
+                changelog_path = self.app.changelog_path
                 if cleanup_scope == "record":
                     record_id = normalize_whitespace(data.get("record_id", ""))
                     removed_rows = delete_history_entries_for_record(changelog_path, record_id)

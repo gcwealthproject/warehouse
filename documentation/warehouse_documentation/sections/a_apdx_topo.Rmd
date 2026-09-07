@@ -52,7 +52,7 @@ sources_tab <- read_excel("docs/bible_wt_sources.xlsx", sheet = "sources", col_n
 sources_tab <- sources_tab %>% select(Source, `Download date`)
 
 source(file.path("render_support", "render_config.R"))
-whouse <- paste0("../../output/databases/full_warehouse/warehouse_meta_v", warehouse_version, ".csv")
+whouse <- paste0("../../output/databases/warehouse/warehouse_meta_v", warehouse_version, ".csv")
 whouse <- read_csv(whouse, na = c("", "NA"), quoted_na = FALSE)
 topo <- whouse  %>% 
   filter(substr(varcode,1,1)=="p")

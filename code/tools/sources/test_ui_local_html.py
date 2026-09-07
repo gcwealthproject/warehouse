@@ -234,7 +234,7 @@ class UiLocalHtmlTests(unittest.TestCase):
     def test_data_source_checkbox_and_category_hooks_exist(self):
         for marker in [
             "id='is_data_source'",
-            "This record is a data source",
+            "The source is recorded in the data warehouse",
             "id='data_source_categories' class='checkbox-group'",
             "type='checkbox' value='Taxes on Wealth'",
             "id='research_categories' class='checkbox-group'",
@@ -450,24 +450,37 @@ class UiLocalHtmlTests(unittest.TestCase):
     def test_history_tab_restore_guidance_and_cleanup_hooks_exist(self):
         for marker in [
             "branch_history_tab",
+            "History shows changes recorded through the unified Library editor.",
+            "wealth_research_change_log.yaml",
             "Show Changes Up To",
             "Restore Guidance",
-            "Remove History Record",
+            "Advanced history cleanup",
+            "Remove Selected Log Entry",
             "Filter to this time",
-            "Removes history records only. Source records and generated files are not changed.",
+            "Development-only cleanup removes entries from the unified Library history log only.",
             "/api/history",
             "/api/history/delete_entry",
             "history_summary_strip",
+            "Total changes",
+            "Visible changes",
+            "Latest actor",
             "history_cleanup_reason",
             "history_cleanup_reason_suggestions",
             "historyApplyCleanupReason('testing noise')",
-            "Remove History Records For This Source",
+            "Remove Log Entries For This Record",
             "cleanup_scope",
             "Relaunch App",
             "/api/relaunch",
             "relaunchApp()",
         ]:
             self.assertIn(marker, self.html)
+        for marker in [
+            "history_branch_filter",
+            "All branches",
+            "Data Sources rows",
+            "Legacy Wealth Research",
+        ]:
+            self.assertNotIn(marker, self.html)
 
     def test_maintenance_tab_and_hybrid_key_hooks_exist(self):
         for marker in [
@@ -571,7 +584,7 @@ class UiLocalHtmlTests(unittest.TestCase):
 
     def test_history_file_descriptors_cover_data_registry_and_cleanup_paths(self):
         files = self.mod._history_file_descriptors(
-            "data_sources",
+            "library",
             "edit",
             "Edited via local UI",
             pathlib.Path(DEFAULT_REGISTRY_PATH),
@@ -589,6 +602,67 @@ class UiLocalHtmlTests(unittest.TestCase):
         self.assertEqual(indexed[DEFAULT_DIGITAL_BIB_PATH]["category"], "generated")
         self.assertEqual(ordered_paths[0], self.mod.DEFAULT_DICTIONARY_PATH)
         self.assertEqual(ordered_paths[1], DEFAULT_DIGITAL_BIB_PATH)
+
+    def test_history_feed_uses_current_library_log_only(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = pathlib.Path(tmpdir)
+            current_log = tmp / "change_log.yaml"
+            legacy_log = tmp / "wealth_research_change_log.yaml"
+            current_log.write_text(
+                json.dumps(
+                    {
+                        "changes": [
+                            {
+                                "operation": "edit",
+                                "record_id": "current-source",
+                                "reason": "current test",
+                                "actor": "current actor",
+                                "updated_at": "2026-03-24T10:00:00Z",
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            legacy_log.write_text(
+                json.dumps(
+                    {
+                        "changes": [
+                            {
+                                "operation": "add",
+                                "record_id": "legacy-source",
+                                "reason": "legacy test",
+                                "actor": "legacy actor",
+                                "updated_at": "2026-03-25T10:00:00Z",
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            class App:
+                registry_path = tmp / "sources.yaml"
+                changelog_path = current_log
+                aliases_path = tmp / "aliases.yaml"
+
+            feed = self.mod.build_history_feed(
+                App(),
+                {"config": {"wealth_change_log": str(legacy_log)}},
+            )
+            self.assertEqual(feed["summary"]["total"], 1)
+            self.assertEqual(feed["summary"]["latest_actor"], "current actor")
+            self.assertNotIn("data_sources", feed["summary"])
+            self.assertNotIn("wealth_research", feed["summary"])
+            self.assertEqual(feed["entries"][0]["history_id"], "library:0")
+            self.assertEqual(feed["entries"][0]["library"], "library")
+            self.assertEqual(feed["entries"][0]["record_id"], "current-source")
+            self.assertNotIn("legacy-source", json.dumps(feed))
+            affected = {entry["path"] for entry in feed["entries"][0]["affected_files"]}
+            self.assertIn(str(App.registry_path), affected)
+            self.assertIn(str(current_log), affected)
+            self.assertIn(DEFAULT_DICTIONARY_PATH, affected)
+            self.assertIn(DEFAULT_DIGITAL_BIB_PATH, affected)
 
     def test_delete_history_entry_removes_selected_row(self):
         with tempfile.TemporaryDirectory() as tmpdir:

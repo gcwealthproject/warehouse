@@ -57,7 +57,7 @@ In the Inheritance Trends database, each estimate (`value`) is uniquely identifi
 Table \ref{tab:intro_inhe} provides a small extract from the Inheritance Trends database. This table displays data for Italy in 1995 and 1996. The series reported in the `value` column correspond to an inheritance indicator (`varcode`), with the `percentile` column always set to *p0p100* because all estimates in this section refer to the reference population as a whole. The `varcode` column carries the substantive information: the type of measure (an aggregate in national currency, or a ratio to national income), the concept it refers to (bequests only, or bequests and gifts together), and the type of flow estimate (fiscal or economic). The subsequent sections elaborate on the `varcode` and on the `percentile` variable.
 
 ```{r show_inhe, echo=FALSE, show_col_types = FALSE, warning=FALSE, message=FALSE}
-whouse <- read_delim(paste0("../../output/databases/full_warehouse/warehouse_v", warehouse_version, ".csv"))
+whouse <- read_delim(paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv"))
 
 # Aggregates are rescaled to billions and ratios/rates to percentages so that
 # the extract is readable; formatC() keeps the values out of scientific notation.

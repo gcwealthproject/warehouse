@@ -21,7 +21,7 @@ library(expss)
 
 # Load warehouse
 source(file.path("render_support", "render_config.R"))
-whouse <- paste0("../../output/databases/full_warehouse/warehouse_v", warehouse_version, ".csv")
+whouse <- paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")
 whouse %<>% read_delim() 
 head(whouse)
 

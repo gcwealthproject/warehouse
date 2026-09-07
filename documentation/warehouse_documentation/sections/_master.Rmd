@@ -34,10 +34,10 @@ header-includes:
 - \usepackage{makecell}
 - \usepackage[normalem]{ulem}
 - \renewcommand{\chaptername}{Section}
+- \addbibresource{../../BibTeX files/digital_library.bib}
 subtitle: null
 urlcolor: blue
 documentclass: report
-bibliography: "../../BibTeX files/digital_library.bib"
 link-citations: yes
 suppress-bibliography: no
 ---

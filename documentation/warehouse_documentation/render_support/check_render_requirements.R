@@ -500,28 +500,21 @@ check_render_requirements <- function(install = FALSE,
     "../../handmade_tables/taxw_currency.xlsx",
     "../../handmade_tables/taxw_input_format.xlsx",
     "../../handmade_tables/exclude_sources_ineq.xlsx",
-    "../../output/databases/dashboards/inhe_warehouse_v2.csv",
-    "../../output/databases/dashboards/inhe_warehouse_meta_v2.csv",
     "../../raw_data/taxw/taxw_ready.csv",
     "../../raw_data/ineq/CS_ineq/raw data/data_quality_table.xlsx",
     "../../raw_data/ineq/WID_ineq/raw data/data_quality_table.xlsx",
     "../../raw_data/ineq/ineq_ready.csv"
   )
 
-  alternative_required_files <- list(
-    "Taxes on Wealth dashboard CSV" = c(
-      "../../output/databases/dashboards/taxw_warehouse_v2.csv",
-      "../../output/databases/dashboards/eigt_warehouse_v2.csv"
-    )
-  )
+  alternative_required_files <- list()
 
   if (exists("warehouse_version", envir = config_env, inherits = FALSE)) {
     warehouse_version <- get("warehouse_version", envir = config_env, inherits = FALSE)
     required_files <- c(required_files, paste0(
-      "../../output/databases/full_warehouse/warehouse_v", warehouse_version, ".csv"
+      "../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv"
     ))
     required_files <- c(required_files, paste0(
-      "../../output/databases/full_warehouse/warehouse_meta_v", warehouse_version, ".csv"
+      "../../output/databases/warehouse/warehouse_meta_v", warehouse_version, ".csv"
     ))
   }
 

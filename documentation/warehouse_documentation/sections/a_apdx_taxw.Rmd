@@ -26,11 +26,12 @@ library(expss)
 library(data.table)
 library(dplyr)
 
-taxw_warehouse_path <- "../../output/databases/dashboards/taxw_warehouse_v2.csv"
-if (!file.exists(taxw_warehouse_path)) {
-  # The dashboard build still writes the legacy filename in this workspace.
-  taxw_warehouse_path <- "../../output/databases/dashboards/eigt_warehouse_v2.csv"
+if (!exists("warehouse_version")) {
+  warehouse_version <- "2"
 }
+warehouse_path <- paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")
+taxw_warehouse <- read_csv(warehouse_path, show_col_types = FALSE) %>%
+  filter(substr(varcode, 1, 1) == "x")
 ```
 
 # Appendix to the Taxes on Wealth Section
@@ -334,11 +335,7 @@ library(data.table)
 # ------------------------------------------------------------
 # 1. Read final dataset and extract unique sources
 # ------------------------------------------------------------
-eig_viz <- read_csv(
-  taxw_warehouse_path,
-  col_names = TRUE,
-  na = " "
-)
+eig_viz <- taxw_warehouse
 
 eig_src <- eig_viz %>%
   select(source) %>%
