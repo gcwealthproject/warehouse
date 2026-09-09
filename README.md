@@ -46,10 +46,8 @@ Below, we provide details on required packages and on how to execute the pipelin
 ssc install egenmore
 ssc install sxpose
 ssc install findname
-ssc install labmask
 ssc install renvarlab
 ssc install ereplace
-ssc install xfill
 ```
 
 * From Sealed Envelope:
@@ -82,7 +80,7 @@ This will process the raw data, generate structured outputs, and store them in t
 
 ### Code Structure
 
-- **`mainstream`**: The core processing stream. Running `run_everything.do` from this folder will execute all scripts required to clean and transform the data.
+- **`mainstream`**: The core processing stream. Running `00_run_everything.do` from this folder will execute all scripts required to clean and transform the data.
 - **`dashboards`**: Scripts dedicated to cleaning, estimating, and arranging data from specific sources.
 - **`raw_data`**: Contains unprocessed data used as input. This folder is currently available on demand, since it is approximately 70 Gb.
 
