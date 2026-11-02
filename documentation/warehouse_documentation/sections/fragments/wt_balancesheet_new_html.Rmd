@@ -1,0 +1,29 @@
+```{r balancesheet-html, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+tibble(
+  Asset = c(
+    "Housing & Land", "Housing", "Land",
+    "Financial Assets & Fixed Capital of Personal Business",
+    "Fixed Capital of Personal Businesses",
+    "Cash, Deposits, Bonds & Loans", "Deposits",
+    "Stocks, Business Equities & Fund Shares",
+    "Pensions & Life Insurance",
+    "Offshore Financial Wealth", "Consumer Durables"
+  ),
+  Value = c(1510, 800, 710, 3518, 26, 684, 350, 1550, 1258, 241, 278),
+  Liability = c(
+    "Debt", "Debt Secured by a Mortgage", "", "", "", "", "",
+    "Net Wealth",
+    "Net Wealth incl. Offshore Wealth and Consumer Durable Goods",
+    "", ""
+  ),
+  `Net Worth` = c(695, 400, NA, NA, NA, NA, NA, 4333, 4852, NA, NA)
+) %>%
+  mutate(`Net Worth` = if_else(is.na(`Net Worth`), "", as.character(`Net Worth`))) %>%
+  kbl(caption = "Wealth Topography: Balance Sheet Example") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("condensed")) %>%
+  add_indent(c(2, 3, 5, 6, 7, 8, 9))
+```

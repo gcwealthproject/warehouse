@@ -11,23 +11,21 @@ from collections import OrderedDict
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, Iterable, List, Tuple
 from urllib.parse import urlparse
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
 
 from source_paths import (
-    DEFAULT_BOTH_BIB_PATH,
-    DEFAULT_DATA_BIB_PATH,
+    DEFAULT_DIGITAL_BIB_PATH,
     DEFAULT_DICTIONARY_PATH,
-    DEFAULT_WEALTH_BIB_PATH,
-    DEFAULT_WEALTH_CHANGE_LOG_PATH,
 )
 
 NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 NS_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 NS_PKG_REL = "http://schemas.openxmlformats.org/package/2006/relationships"
 EXPECTED_SOURCES_SHEET_NAME = "Sources"
+SOURCE_ALIASES_SHEET_NAME = "SourceAliases"
 REQUIRED_XLSX_MEMBERS = ("xl/workbook.xml", "xl/_rels/workbook.xml.rels")
 INVALID_SHEET_CHARS_RE = re.compile(r"[\[\]:*?/\\]")
 
@@ -52,8 +50,17 @@ SOURCES_HEADERS = [
     "SeeAggSourcelisthere",
 ]
 
+SOURCE_ALIAS_HEADERS = [
+    "Alias",
+    "Source",
+    "Citekey",
+    "Record_ID",
+    "Note",
+]
+
 CANONICAL_KEYS = [
     "id",
+    "is_data_source",
     "section",
     "aggsource",
     "legend",
@@ -72,6 +79,7 @@ CANONICAL_KEYS = [
     "arjcomments",
     "arjreplies",
     "seeaggsourcelisthere",
+    "source_aliases",
     "bib",
     "created_at",
     "updated_at",
@@ -97,6 +105,54 @@ BIB_FIELD_ORDER = [
     "note",
 ]
 
+DATA_SOURCE_KEYWORD_PREFIX = "Data Sources: "
+CANONICAL_DATA_SOURCE_KEYWORDS = [
+    "Data Sources: Wealth Topography",
+    "Data Sources: Wealth Inequality",
+    "Data Sources: Taxes on Wealth",
+    "Data Sources: Inheritance Trends",
+    "Data Sources: Supplementary Variables",
+    "Data Sources: Unclassified",
+]
+CANONICAL_DATA_SOURCE_KEYWORD_SET = set(CANONICAL_DATA_SOURCE_KEYWORDS)
+RESEARCH_CATEGORY_KEYWORDS = [
+    "Cross-National Comparisons",
+    "Determinants of Wealth and Wealth Inequality",
+    "Estate Inheritance and Gift Taxes",
+    "Impacts of Wealth Inequality",
+    "Intergenerational Wealth",
+    "Methods of Estimation of Wealth Inequality",
+    "Trends in Aggregate Wealth and Wealth Inequality",
+    "Wealth Taxation",
+]
+RESEARCH_CATEGORY_KEYWORD_SET = set(RESEARCH_CATEGORY_KEYWORDS)
+DATA_SOURCE_SECTION_TO_KEYWORD = {
+    "wealth topography": "Data Sources: Wealth Topography",
+    "wealth inequality": "Data Sources: Wealth Inequality",
+    "wealth inequality trends": "Data Sources: Wealth Inequality",
+    "taxes on wealth": "Data Sources: Taxes on Wealth",
+    "estate inheritance and gift taxes": "Data Sources: Taxes on Wealth",
+    "inheritance trends": "Data Sources: Inheritance Trends",
+    "supplementary variables": "Data Sources: Supplementary Variables",
+    "unclassified": "Data Sources: Unclassified",
+}
+DATA_SOURCE_KEYWORD_TO_SECTION = {
+    keyword: keyword.replace(DATA_SOURCE_KEYWORD_PREFIX, "", 1)
+    for keyword in CANONICAL_DATA_SOURCE_KEYWORDS
+}
+LEGACY_DATA_SOURCE_KEYWORD_MAP = {
+    "data sources: wealth inequality trends": "Data Sources: Wealth Inequality",
+    "data sources: estate inheritance and gift taxes": "Data Sources: Taxes on Wealth",
+    "data sources: taxes on wealth": "Data Sources: Taxes on Wealth",
+    "data sources: wealth topography": "Data Sources: Wealth Topography",
+    "data sources: wealth inequality": "Data Sources: Wealth Inequality",
+    "data sources: inheritance trends": "Data Sources: Inheritance Trends",
+    "data sources: supplementary variables": "Data Sources: Supplementary Variables",
+    "data sources: unclassified": "Data Sources: Unclassified",
+}
+BIB_EXPORT_BLOCKED_FIELDS = {"section"}
+DIGITAL_LIBRARY_CONFLICT_FIELDS = ["title", "author", "year", "journal", "doi", "publisher", "abstract"]
+
 DEFAULT_REGISTRY = OrderedDict(
     [
         ("version", 1),
@@ -104,16 +160,11 @@ DEFAULT_REGISTRY = OrderedDict(
             "config",
             OrderedDict(
                 [
-                    ("bib_output", DEFAULT_DATA_BIB_PATH),
-                    ("wealth_bib_input", DEFAULT_WEALTH_BIB_PATH),
-                    ("both_bib_output", DEFAULT_BOTH_BIB_PATH),
-                    ("wealth_change_log", DEFAULT_WEALTH_CHANGE_LOG_PATH),
+                    ("digital_bib_output", DEFAULT_DIGITAL_BIB_PATH),
                     ("bibbase_profile_source_url", ""),
                     ("bibbase_timeout_seconds", 20),
                     ("online_bib_reference_url", ""),
                     ("online_bib_timeout_seconds", 20),
-                    ("wealth_online_bib_reference_url", ""),
-                    ("wealth_online_bib_timeout_seconds", 20),
                     ("dictionary_template", DEFAULT_DICTIONARY_PATH),
                     ("dictionary_output", DEFAULT_DICTIONARY_PATH),
                 ]
@@ -363,6 +414,393 @@ def format_bib_value(value: str) -> str:
     return "{" + value.replace("\n", " ").strip() + "}"
 
 
+def split_keywords(value: str) -> List[str]:
+    tokens: List[str] = []
+    seen = set()
+    for raw in str(value or "").replace("\n", " ").split(","):
+        token = normalize_whitespace(raw)
+        token_key = token.lower()
+        if token and token_key not in seen:
+            tokens.append(token)
+            seen.add(token_key)
+    return tokens
+
+
+def format_keywords(tokens: Iterable[str]) -> str:
+    return ",".join(split_keywords(",".join(str(token) for token in tokens)))
+
+
+def is_data_source_keyword(token: str) -> bool:
+    return normalize_whitespace(str(token)).lower().startswith(DATA_SOURCE_KEYWORD_PREFIX.lower())
+
+
+def is_canonical_data_source_keyword(token: str) -> bool:
+    return normalize_whitespace(str(token)) in CANONICAL_DATA_SOURCE_KEYWORD_SET
+
+
+def canonical_data_source_keyword_for_section(section: str) -> str:
+    return DATA_SOURCE_SECTION_TO_KEYWORD.get(normalize_text(str(section)), "")
+
+
+def split_section_labels(value: str) -> List[str]:
+    tokens: List[str] = []
+    seen = set()
+    for raw in re.split(r"[;|]", str(value or "")):
+        token = normalize_whitespace(raw)
+        token_key = token.lower()
+        if token and token_key not in seen:
+            tokens.append(token)
+            seen.add(token_key)
+    return tokens
+
+
+def canonical_data_source_keywords_for_sections(sections) -> List[str]:
+    if isinstance(sections, (list, tuple, set)):
+        raw_sections = [str(value) for value in sections]
+    else:
+        raw_sections = split_section_labels(str(sections or ""))
+    keywords: List[str] = []
+    seen = set()
+    for section in raw_sections:
+        keyword = canonical_data_source_keyword_for_section(section)
+        if keyword and keyword not in seen:
+            keywords.append(keyword)
+            seen.add(keyword)
+    return keywords
+
+
+def data_source_section_labels_from_keywords(keywords: str) -> List[str]:
+    labels: List[str] = []
+    seen = set()
+    for keyword in data_source_keywords_from_value(keywords):
+        label = DATA_SOURCE_KEYWORD_TO_SECTION.get(keyword, "")
+        if label and label not in seen:
+            labels.append(label)
+            seen.add(label)
+    return labels
+
+
+def section_value_from_data_source_keywords(keywords: str) -> str:
+    return "; ".join(data_source_section_labels_from_keywords(keywords))
+
+
+def canonicalize_data_source_keyword(token: str) -> str:
+    text = normalize_whitespace(str(token))
+    if text in CANONICAL_DATA_SOURCE_KEYWORD_SET:
+        return text
+    return LEGACY_DATA_SOURCE_KEYWORD_MAP.get(text.lower(), "")
+
+
+def data_source_keywords_from_value(value: str, *, canonical_only: bool = True) -> List[str]:
+    out = []
+    for token in split_keywords(value):
+        if canonical_only:
+            if is_canonical_data_source_keyword(token):
+                out.append(token)
+        elif is_data_source_keyword(token):
+            out.append(token)
+    return out
+
+
+def research_category_keywords_from_value(value: str) -> List[str]:
+    return [token for token in split_keywords(value) if token in RESEARCH_CATEGORY_KEYWORD_SET]
+
+
+def non_data_source_keywords_from_value(value: str) -> List[str]:
+    return [token for token in split_keywords(value) if not is_data_source_keyword(token)]
+
+
+def set_data_source_keywords(keywords: str, data_source_keywords: Iterable[str]) -> str:
+    canonical_keywords: List[str] = []
+    seen = set()
+    for keyword in data_source_keywords or []:
+        canonical = canonicalize_data_source_keyword(keyword)
+        if canonical and canonical not in seen:
+            canonical_keywords.append(canonical)
+            seen.add(canonical)
+    tokens = non_data_source_keywords_from_value(keywords)
+    return format_keywords(canonical_keywords + tokens)
+
+
+def set_data_source_keyword(keywords: str, data_source_keyword: str) -> str:
+    return set_data_source_keywords(keywords, [data_source_keyword])
+
+
+def strip_data_source_keywords(keywords: str) -> str:
+    return format_keywords(non_data_source_keywords_from_value(keywords))
+
+
+def migrate_keywords_for_data_source_section(section: str, keywords: str) -> dict:
+    before_tokens = split_keywords(keywords)
+    before_data_source_keywords = [token for token in before_tokens if is_data_source_keyword(token)]
+    non_data_source_tokens = [token for token in before_tokens if not is_data_source_keyword(token)]
+    canonical = canonical_data_source_keyword_for_section(section)
+    uncertain = bool(normalize_whitespace(str(section)) and not canonical)
+    after_tokens = ([canonical] if canonical else []) + non_data_source_tokens
+    after_keywords = format_keywords(after_tokens)
+    return {
+        "before_keywords": format_keywords(before_tokens),
+        "after_keywords": after_keywords,
+        "before_data_source_keywords": before_data_source_keywords,
+        "after_data_source_keywords": data_source_keywords_from_value(after_keywords),
+        "backfilled": bool(canonical and not normalize_whitespace(str(keywords))),
+        "changed": format_keywords(before_tokens) != after_keywords,
+        "uncertain": uncertain,
+        "canonical_keyword": canonical,
+    }
+
+
+def sanitize_bib_fields_for_export(fields: dict) -> OrderedDict:
+    out = OrderedDict()
+    for raw_name, raw_value in (fields or {}).items():
+        name = normalize_whitespace(str(raw_name)).lower()
+        value = normalize_whitespace(str(raw_value))
+        if not name or not value or name in BIB_EXPORT_BLOCKED_FIELDS:
+            continue
+        if name == "keywords":
+            tokens = []
+            for token in split_keywords(value):
+                if is_data_source_keyword(token) and not is_canonical_data_source_keyword(token):
+                    continue
+                tokens.append(token)
+            value = format_keywords(tokens)
+            if not value:
+                continue
+        out[name] = value
+    return out
+
+
+def parsed_bib_entry_from_record(record: dict) -> dict:
+    bib = record.get("bib", {}) or {}
+    fields = OrderedDict()
+    for field_name in BIB_FIELD_ORDER:
+        value = normalize_whitespace(str(bib.get(field_name, "")))
+        if value:
+            fields[field_name] = value
+    extras = bib.get("extra_fields", {}) or {}
+    for field_name in sorted(extras.keys()):
+        name = normalize_whitespace(str(field_name)).lower()
+        value = normalize_whitespace(str(extras[field_name]))
+        if name and value and name not in fields:
+            fields[name] = value
+    return {
+        "entry_type": normalize_whitespace(str(bib.get("entry_type", "misc"))).lower() or "misc",
+        "fields": sanitize_bib_fields_for_export(fields),
+    }
+
+
+def record_data_source_keywords(record: dict) -> List[str]:
+    bib = record.get("bib", {}) or {}
+    keywords = normalize_whitespace(str(bib.get("keywords", "")))
+    tokens = data_source_keywords_from_value(keywords)
+    if tokens:
+        return tokens
+    return canonical_data_source_keywords_for_sections(record.get("section", ""))
+
+
+def record_is_data_source(record: dict) -> bool:
+    if "is_data_source" in record:
+        value = record.get("is_data_source")
+        if isinstance(value, bool):
+            return value
+        return normalize_whitespace(str(value)).lower() in {"1", "true", "yes", "y"}
+    return bool(record_data_source_keywords(record))
+
+
+def _normalized_conflict_value(field_name: str, value: str) -> str:
+    if field_name in {"year", "doi"}:
+        return normalize_whitespace(str(value)).lower()
+    return normalize_text(str(value))
+
+
+def _is_url_like_field(field_name: str) -> bool:
+    name = normalize_whitespace(str(field_name)).lower()
+    return (
+        name == "url"
+        or name.startswith("url_")
+        or "file" in name
+        or "appendix" in name
+        or "replication" in name
+        or "codebook" in name
+        or "data" in name
+    )
+
+
+def _append_preserved_field(fields: OrderedDict, field_name: str, value: str) -> str:
+    if not normalize_whitespace(value):
+        return ""
+    existing_values = {normalize_whitespace(str(v)) for v in fields.values()}
+    if normalize_whitespace(value) in existing_values:
+        return ""
+    base = normalize_whitespace(field_name).lower()
+    idx = 2
+    while f"{base}_{idx}" in fields:
+        idx += 1
+    new_name = f"{base}_{idx}"
+    fields[new_name] = value
+    return new_name
+
+
+def _merge_keyword_values(existing_value: str, incoming_value: str) -> str:
+    return format_keywords(split_keywords(existing_value) + split_keywords(incoming_value))
+
+
+def _entry_source_label(source: dict) -> str:
+    if source.get("record_id"):
+        return normalize_whitespace(str(source.get("record_id", "")))
+    return normalize_whitespace(str(source.get("key", "")))
+
+
+def build_digital_library_entries(records: List[dict]) -> Tuple[Dict[str, dict], dict]:
+    items = []
+    for record in records:
+        key = normalize_whitespace(record.get("citekey", "")) or normalize_whitespace(record.get("source", ""))
+        if not key:
+            continue
+        is_data_source = record_is_data_source(record)
+        entry = parsed_bib_entry_from_record(record)
+        if not is_data_source:
+            fields = entry.get("fields", {}) or {}
+            fields["keywords"] = strip_data_source_keywords(fields.get("keywords", ""))
+        items.append(
+            {
+                "key": key,
+                "entry": entry,
+                "kind": "data_source" if is_data_source else "registry",
+                "record_id": normalize_whitespace(str(record.get("id", ""))),
+                "priority": 2 if is_data_source else 1,
+            }
+        )
+
+    merged: Dict[str, dict] = {}
+    source_meta: Dict[str, List[dict]] = {}
+    report = {
+        "duplicate_citekeys": [],
+        "keyword_unions": [],
+        "multi_data_source_keyword_exports": [],
+        "bibliographic_conflicts": [],
+        "preserved_url_like_fields": [],
+        "dropped_data_source_keywords": [],
+    }
+    duplicate_report_by_key = {}
+
+    for item in items:
+        key = item["key"]
+        if not key:
+            continue
+        entry = item["entry"]
+        dropped = []
+        original_keywords = normalize_whitespace(str((entry.get("fields", {}) or {}).get("keywords", "")))
+        for token in split_keywords(original_keywords):
+            if is_data_source_keyword(token) and not is_canonical_data_source_keyword(token):
+                dropped.append(token)
+        if dropped:
+            report["dropped_data_source_keywords"].append(
+                {"citekey": key, "source": _entry_source_label(item), "keywords": dropped}
+            )
+
+        if key not in merged:
+            merged[key] = {
+                "entry_type": entry.get("entry_type", "misc"),
+                "fields": OrderedDict(entry.get("fields", {}) or {}),
+                "_priority": item["priority"],
+            }
+            source_meta[key] = [item]
+            continue
+
+        if len(source_meta[key]) == 1:
+            duplicate_report_by_key[key] = {"citekey": key, "sources": [_entry_source_label(source_meta[key][0])]}
+            report["duplicate_citekeys"].append(duplicate_report_by_key[key])
+        duplicate_report_by_key[key]["sources"].append(_entry_source_label(item))
+
+        current = merged[key]
+        fields = current["fields"]
+        incoming_fields = entry.get("fields", {}) or {}
+        existing_priority = current.get("_priority", 0)
+        if item["priority"] > existing_priority:
+            current["entry_type"] = entry.get("entry_type", current.get("entry_type", "misc"))
+            current["_priority"] = item["priority"]
+
+        before_keywords = normalize_whitespace(str(fields.get("keywords", "")))
+        incoming_keywords = normalize_whitespace(str(incoming_fields.get("keywords", "")))
+        if incoming_keywords:
+            fields["keywords"] = _merge_keyword_values(before_keywords, incoming_keywords)
+            if normalize_whitespace(str(fields.get("keywords", ""))) != before_keywords:
+                report["keyword_unions"].append(
+                    {
+                        "citekey": key,
+                        "source": _entry_source_label(item),
+                        "keywords": fields.get("keywords", ""),
+                    }
+                )
+
+        for field_name, incoming_value in incoming_fields.items():
+            if field_name == "keywords" or field_name in BIB_EXPORT_BLOCKED_FIELDS:
+                continue
+            existing_value = normalize_whitespace(str(fields.get(field_name, "")))
+            if not existing_value:
+                fields[field_name] = incoming_value
+                continue
+            if _normalized_conflict_value(field_name, existing_value) == _normalized_conflict_value(field_name, incoming_value):
+                continue
+            if field_name in DIGITAL_LIBRARY_CONFLICT_FIELDS:
+                choose_incoming = item["priority"] > existing_priority
+                report["bibliographic_conflicts"].append(
+                    {
+                        "citekey": key,
+                        "field": field_name,
+                        "kept": incoming_value if choose_incoming else existing_value,
+                        "other": existing_value if choose_incoming else incoming_value,
+                        "incoming_source": _entry_source_label(item),
+                    }
+                )
+                if choose_incoming:
+                    fields[field_name] = incoming_value
+                continue
+            if _is_url_like_field(field_name):
+                if item["priority"] > existing_priority:
+                    old_value = existing_value
+                    fields[field_name] = incoming_value
+                    preserved_field = _append_preserved_field(fields, field_name, old_value)
+                    if preserved_field:
+                        report["preserved_url_like_fields"].append(
+                            {
+                                "citekey": key,
+                                "field": field_name,
+                                "preserved_as": preserved_field,
+                                "source": "previous",
+                            }
+                        )
+                else:
+                    preserved_field = _append_preserved_field(fields, field_name, incoming_value)
+                    if preserved_field:
+                        report["preserved_url_like_fields"].append(
+                            {
+                                "citekey": key,
+                                "field": field_name,
+                                "preserved_as": preserved_field,
+                                "source": _entry_source_label(item),
+                            }
+                        )
+                continue
+        source_meta[key].append(item)
+
+    for key, entry in merged.items():
+        fields = entry.get("fields", {}) or {}
+        ds_keywords = data_source_keywords_from_value(fields.get("keywords", ""))
+        if len(ds_keywords) > 1 and len(source_meta.get(key, [])) > 1:
+            report["multi_data_source_keyword_exports"].append(
+                {
+                    "citekey": key,
+                    "keywords": ds_keywords,
+                    "sources": [_entry_source_label(source) for source in source_meta.get(key, [])],
+                }
+            )
+        entry.pop("_priority", None)
+
+    return merged, report
+
+
 def render_bib_entry(key: str, record: dict) -> str:
     bib = record.get("bib", {})
     entry_type = bib.get("entry_type", "misc").strip().lower() or "misc"
@@ -388,12 +826,16 @@ def render_bib_entry(key: str, record: dict) -> str:
 
     fields = OrderedDict()
     for f in ordered_fields:
+        if f in BIB_EXPORT_BLOCKED_FIELDS:
+            continue
         val = bib.get(f, "")
         if normalize_whitespace(str(val)):
             fields[f] = str(val)
 
     extras = bib.get("extra_fields", {}) or {}
     for k in sorted(extras.keys()):
+        if normalize_whitespace(str(k)).lower() in BIB_EXPORT_BLOCKED_FIELDS:
+            continue
         val = normalize_whitespace(str(extras[k]))
         if val:
             fields[k] = val
@@ -414,11 +856,15 @@ def render_parsed_bib_entry(key: str, entry: dict, field_order: List[str] = None
 
     ordered_fields = OrderedDict()
     for field_name in order:
+        if normalize_whitespace(str(field_name)).lower() in BIB_EXPORT_BLOCKED_FIELDS:
+            continue
         value = normalize_whitespace(str(source_fields.get(field_name, "")))
         if value:
             ordered_fields[field_name] = value
 
     for field_name in sorted(source_fields.keys()):
+        if normalize_whitespace(str(field_name)).lower() in BIB_EXPORT_BLOCKED_FIELDS:
+            continue
         if field_name in ordered_fields or field_name in order:
             continue
         value = normalize_whitespace(str(source_fields.get(field_name, "")))
@@ -528,6 +974,42 @@ def read_sources_sheet(xlsx_path: Path) -> List[dict]:
     return out
 
 
+def read_source_alias_sheet(xlsx_path: Path) -> List[dict]:
+    load_workbook = _load_openpyxl_workbook()
+    workbook = load_workbook(xlsx_path, read_only=True, data_only=True)
+    try:
+        worksheet = None
+        expected_sheet_name = sanitize_sheet_name(SOURCE_ALIASES_SHEET_NAME)
+        for candidate in workbook.worksheets:
+            if sanitize_sheet_name(candidate.title) == expected_sheet_name:
+                worksheet = candidate
+                break
+        if worksheet is None:
+            return []
+
+        rows = list(worksheet.iter_rows(values_only=True))
+        if not rows:
+            return []
+        headers = [normalize_whitespace(str(value or "")) for value in rows[0]]
+        out = []
+        for values in rows[1:]:
+            row = {}
+            any_value = False
+            for idx, header in enumerate(headers):
+                if not header:
+                    continue
+                value = values[idx] if idx < len(values) else ""
+                value = "" if value is None else str(value)
+                row[header] = value
+                if normalize_whitespace(value):
+                    any_value = True
+            if any_value:
+                out.append(row)
+        return out
+    finally:
+        workbook.close()
+
+
 def xml_cell(col_idx: int, row_idx: int, value: str) -> str:
     col = column_name(col_idx)
     ref = f"{col}{row_idx}"
@@ -577,6 +1059,14 @@ def get_sources_worksheet(workbook):
     raise RuntimeError("Sources sheet not found in workbook")
 
 
+def get_or_create_worksheet(workbook, sheet_name: str):
+    expected_sheet_name = sanitize_sheet_name(sheet_name)
+    for worksheet in workbook.worksheets:
+        if sanitize_sheet_name(worksheet.title) == expected_sheet_name:
+            return worksheet
+    return workbook.create_sheet(sheet_name)
+
+
 def populate_sources_worksheet(worksheet, rows: List[dict]) -> None:
     if worksheet.max_row > 1:
         worksheet.delete_rows(2, worksheet.max_row - 1)
@@ -592,6 +1082,68 @@ def populate_sources_worksheet(worksheet, rows: List[dict]) -> None:
     worksheet.auto_filter.ref = f"A1:R{max_row}"
     if worksheet.freeze_panes == "A1":
         worksheet.freeze_panes = None
+
+
+def populate_source_aliases_worksheet(worksheet, rows: List[dict]) -> None:
+    if worksheet.max_row > 1:
+        worksheet.delete_rows(2, worksheet.max_row - 1)
+
+    for c_idx, header in enumerate(SOURCE_ALIAS_HEADERS, start=1):
+        worksheet.cell(row=1, column=c_idx, value=sanitize_excel_string(header))
+
+    for r_idx, row in enumerate(rows, start=2):
+        for c_idx, header in enumerate(SOURCE_ALIAS_HEADERS, start=1):
+            worksheet.cell(row=r_idx, column=c_idx, value=sanitize_excel_value(row.get(header, "")))
+
+    max_row = len(rows) + 1
+    last_col = column_name(len(SOURCE_ALIAS_HEADERS))
+    worksheet.auto_filter.ref = f"A1:{last_col}{max_row}"
+    if worksheet.freeze_panes == "A1":
+        worksheet.freeze_panes = None
+
+
+def source_aliases_from_record(record: dict) -> List[str]:
+    raw_aliases = record.get("source_aliases", [])
+    if isinstance(raw_aliases, str):
+        values = re.split(r"[,;|]", raw_aliases)
+    elif isinstance(raw_aliases, (list, tuple, set)):
+        values = raw_aliases
+    else:
+        values = []
+
+    source = normalize_whitespace(str(record.get("source", "")))
+    aliases: List[str] = []
+    seen = set()
+    for value in values:
+        alias = normalize_whitespace(str(value))
+        key = alias.lower()
+        if alias and alias != source and key not in seen:
+            aliases.append(alias)
+            seen.add(key)
+    return aliases
+
+
+def records_to_source_alias_sheet_rows(records: List[dict]) -> List[dict]:
+    rows = []
+    for record in records:
+        if not record_is_data_source(record):
+            continue
+        source = normalize_whitespace(str(record.get("source", "")))
+        citekey = normalize_whitespace(str(record.get("citekey", "")))
+        record_id = normalize_whitespace(str(record.get("id", "")))
+        if not source:
+            continue
+        for alias in source_aliases_from_record(record):
+            rows.append(
+                {
+                    "Alias": alias,
+                    "Source": source,
+                    "Citekey": citekey,
+                    "Record_ID": record_id,
+                    "Note": "Legacy dashboard/source-manager code mapped to canonical source code.",
+                }
+            )
+    return rows
 
 
 def write_xlsx_atomic(output_xlsx: Path, payload: bytes) -> None:
@@ -618,12 +1170,19 @@ def write_xlsx_atomic(output_xlsx: Path, payload: bytes) -> None:
         raise
 
 
-def write_sources_sheet(template_xlsx: Path, output_xlsx: Path, rows: List[dict]) -> None:
+def write_sources_sheet(
+    template_xlsx: Path,
+    output_xlsx: Path,
+    rows: List[dict],
+    source_alias_rows: List[dict] = None,
+) -> None:
     load_workbook = _load_openpyxl_workbook()
     workbook = load_workbook(template_xlsx)
     try:
         worksheet = get_sources_worksheet(workbook)
         populate_sources_worksheet(worksheet, rows)
+        alias_worksheet = get_or_create_worksheet(workbook, SOURCE_ALIASES_SHEET_NAME)
+        populate_source_aliases_worksheet(alias_worksheet, source_alias_rows or [])
         workbook_bytes = workbook_to_xlsx_bytes(workbook)
     finally:
         workbook.close()
@@ -646,8 +1205,12 @@ def normalize_record(raw: dict) -> dict:
 
 
 def record_to_sources_sheet_row(record: dict) -> dict:
+    return _record_to_sources_sheet_row(record, record.get("section", ""))
+
+
+def _record_to_sources_sheet_row(record: dict, section: str) -> dict:
     return {
-        "Section": record.get("section", ""),
+        "Section": section,
         "AggSource": record.get("aggsource", ""),
         "Legend": record.get("legend", ""),
         "Source": record.get("source", ""),
@@ -666,3 +1229,13 @@ def record_to_sources_sheet_row(record: dict) -> dict:
         "ARJreplies": record.get("arjreplies", ""),
         "SeeAggSourcelisthere": record.get("seeaggsourcelisthere", ""),
     }
+
+
+def record_to_sources_sheet_rows(record: dict) -> List[dict]:
+    if not record_is_data_source(record):
+        return []
+    keywords = (record.get("bib", {}) or {}).get("keywords", "")
+    sections = data_source_section_labels_from_keywords(keywords)
+    if not sections:
+        sections = split_section_labels(record.get("section", ""))
+    return [_record_to_sources_sheet_row(record, section) for section in sections]

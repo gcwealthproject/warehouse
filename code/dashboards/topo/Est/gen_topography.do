@@ -20,9 +20,8 @@ levelsof sector, local(sector_list)
 drop if area == "ME" // No data for Montenegro
 drop if area == "RS" // No data for Serbia
 drop if area == "AL" // No data for Serbia
+replace area = "EU27" if area == "EU27_2020"
 levelsof area, local(country_list)
-		
-		
 
 //list compositions and codes in memory 
 qui import excel using "${cmappings}/composition table NA.xlsx" , sheet("composition table") clear firstrow
@@ -47,6 +46,7 @@ foreach c in `codes' {
 
 qui di as result "There are `ncomp' different compositions available " ///
 	"for `ncodes' codes"
+	
 
 
 //save each composition's list of variables in memory 	
@@ -79,7 +79,19 @@ foreach cod in `codes' {
 	}	
 }	 
 
-
+*noi di as res "---- COMPOSITION MAP ----"
+*foreach cod in `codes' {
+*    local k = 1
+*    foreach com in `comp' {
+*        local dirty "``cod'`k'_dirty'"
+*        local clean "``cod'`k''"
+*        if "`dirty'"!="" | "`clean'"!="" {
+*            noi di as res "`cod'[" %2.0f `k' "]  " ///
+*                as txt "com=" "`com'" " | dirty: " "`dirty'" " | clean: " "`clean'"
+*        }
+*        local ++k
+*    }
+*}
 ** Crate topography by country-sector-concept triple
 
 foreach s in `sector_list'{
@@ -190,10 +202,8 @@ foreach s in `sector_list'{
 
 	}	
 }	
-
-
-
-
+ 
+ 
 drop _all
 
 //put all together 

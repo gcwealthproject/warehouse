@@ -20,7 +20,7 @@ global destination "${topo_dir_raw}/ECB_DWA_topo/intermediate"
 local counter = 1 
 
 
-qui use "${origin}/hh_dwa_24", clear
+qui use "${origin}/hh_dwa", clear
 
 qui rename key source_code
 
@@ -32,6 +32,7 @@ qui gen na_code= account_entry + "_A" + instr_asset
 replace na_code="NWA" if na_code=="N_ANWA"
 replace na_code="ANUB" if na_code=="A_ANUB"
 replace na_code="ANUN" if na_code=="A_ANUN" 
+replace na_code="XAF42LM" if na_code=="L_AF4B" 
 
 
 ** Dates column
@@ -139,6 +140,7 @@ foreach var of varlist L_* {
 qui replace NWA  = NWA *1000000
 qui replace ANUN  = ANUN *1000000
 qui replace ANUB  = ANUB *1000000
+qui replace XAF42LM = XAF42LM *1000000*(-1)
 
 	* Re-order
 qui order area sector source, after(quarter)

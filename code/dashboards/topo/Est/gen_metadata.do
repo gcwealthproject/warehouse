@@ -16,6 +16,7 @@ local general_source = "Est" // The source does not change across the do-file
 levelsof sector, local(sector_list)
 drop if area == "ME" // No data for Montenegro
 drop if area == "RS" // No data for Serbia
+replace area = "EU27" if area == "EU27_2020"
 levelsof area, local(country_list)
 
 

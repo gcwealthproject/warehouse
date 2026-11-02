@@ -1,26 +1,33 @@
+
+********************************************************************************
+// Bulid 2 datest:
+** 1) ECB_DWA_ineq as usual for Inequality Trends
+** 2) ECB_DWA_distr_topo with distributiuonal Topography Info
+********************************************************************************
+
 clear all
 
-
-*global path 	"`:env USERPROFILE'/Dropbox/gcwealth"
-*cd "$path"
-
 local source ECB_DWA_ineq
-run "code/mainstream/auxiliar/all_paths.do"
-run $memorize_labels
+* Dataset last update: 25 November 2025 11:00 CET
 
-//define internal paths 
-local sourcef "${ineq_dir_raw}/`source'"
-local rawdata "`sourcef'/raw data/data.csv"
-local results "`sourcef'/final_table/`source'"
 
-import delimited "`rawdata'" , clear
+** Working Directories Local
+********************************************************************************
+global ineq_dir_raw raw_data/ineq
 
+	local sourcef "${ineq_dir_raw}/`source'"
+	local rawdata "`sourcef'/raw data/data.csv"
+	local results "`sourcef'/final_table/`source'"
+********************************************************************************
+
+import delimited "`rawdata'", clear
+drop if obs_value==.
 drop 	ref_sector key valuation trans ///
 		obs_status conf_status title_compl data_comp compiling_org ///
 		pre_break_value comment_obs freq time_per_collect diss_org time_for comment_ts
 
 order ref_area time_period dwa_grp unit_measure obs_value unit_* decimals
-			
+recast double obs_value , force		
 
 ********************************************************************************	
 // Prepare
@@ -44,6 +51,8 @@ order ref_area time_period dwa_grp unit_measure obs_value unit_* decimals
 		rename time_period year
 		destring year, replace
 	
+	*keep if year==2020
+		
 	
 	// value
 	gen value=.
@@ -58,6 +67,9 @@ order ref_area time_period dwa_grp unit_measure obs_value unit_* decimals
 	replace percentile="p60p70" 	if dwa_grp=="D7"
 	replace percentile="p70p80" 	if dwa_grp=="D8"
 	replace percentile="p80p90" 	if dwa_grp=="D9"
+	replace percentile="p0p100"		if dwa_grp=="_Z"
+	replace percentile="p95p100"	if dwa_grp=="T5"
+	keep if percentile!=""
 	
 	// Varcode
 	gen varcode_1=""	
@@ -69,10 +81,30 @@ order ref_area time_period dwa_grp unit_measure obs_value unit_* decimals
 	gen source="`source'"
 	
 	
+	
+	tempfile STARTINGPOINT
+	save `STARTINGPOINT'
+	
+	
+	
+	
+	
+	
+	
+********************************************************************************
+** Extract Infomrations for "usual" Ineq Trends Estimates
+******************************************************************************** 	
+clear 	
+use `STARTINGPOINT'
+
+
 	// Drop Useless groups
-		foreach grp in  HSO HST WSE WSR WSS WSU WSX  {
+	foreach grp in  HSO HST WSE WSR WSS WSU WSX  {
 		drop if dwa_grp=="`grp'"
 	}
+	
+	** Drop IA series
+	drop if unit_measure=="EUR_R_POP"	
 	
 	
 	********************************************************************************
@@ -87,392 +119,364 @@ order ref_area time_period dwa_grp unit_measure obs_value unit_* decimals
 		
 		
 		keep area year value percentile varcode source
+		list in 1/10
 		
 		
 		tempfile gini
 		save `gini', replace
-	restore	
-
+	restore		
 	
 	
-	
-	****************************************************************************************
-	// Average Wealth Overall
-	****************************************************************************************
-	preserve 
-		*keep if unit_me=="EUR_MN"  & title=="Mean net wealth of households"
-		keep if dwa_grp=="_Z"  & (title=="Adjusted wealth (net) of households, per household" | ///
-								 title=="Adjusted wealth (net) of households, per capita")
+	********************************************************************************
+	// Top 5% Wealth Share - only available for Net Wealth
+	********************************************************************************
+	preserve
+		keep if unit_measure=="PT"	& dwa_grp=="T5"
 		
-		replace value=obs_value*10^unit_mult 
+		replace value=obs_value
+		replace varcode="t-hs-dsh-netwea-ho"	// HHs
+		replace percentile="p95p100"
 		
-		replace percentile="p0p100" 		
-		
-		replace varcode_1="t-hs-avg-netwea-"
-		replace varcode_2="ho"	if unit_measure=="EUR" | unit_measure=="EUR_R_NH"
-		replace varcode_2="ia"	if unit_measure=="EUR_R_POP"			
-		replace varcode=varcode_1+varcode_2	
 		
 		keep area year value percentile varcode source
 		
-		tempfile overall_averages
-		save `overall_averages', replace
-	restore
-	
-
-	****************************************************************************************
-	// Average Net Wealth By Percentiles
-	****************************************************************************************
-	preserve
-		keep if title1=="Adjusted wealth (net) of households" ///
-				& (unit_measure=="EUR_R_NH" |  unit_measure=="EUR_R_POP")
-	
-		replace value=obs_value*10^unit_mult
 		
-		
-		replace varcode_1="t-hs-avg-netwea-"
-		replace varcode_2="ho" 	if (unit_measure=="EUR_R_NH")
-		replace varcode_2="ia" 	if (unit_measure=="EUR_R_POP")
-		replace varcode=varcode_1+varcode_2	
-	
-		// Check
-		levelsof dwa_grp
-		
-		keep area year value percentile varcode source
-		
-		tempfile decile_averages
-		save `decile_averages', replace
-	restore
-	
-
-
-	********************************************************************************
-	//  Wealth Shares: directly availalbe: Bottom 50% , Top 10% and Top 5%
-	********************************************************************************
-	preserve
-		keep if unit_measure=="PT" &  ///
-				(dwa_grp=="B50" |  dwa_grp=="T10" | dwa_grp=="T5")
-			// Directly availalbe: Bottom 50% , Top 10% and Top 5%
-			
-			replace value=obs_value*10^unit_mult
-			
-			replace percentile="p90p100" 	if dwa_grp=="T10"
-			replace percentile="p95p100" 	if dwa_grp=="T5"	
-			replace percentile="p0p50" 		if dwa_grp=="B50"
-			
-			replace varcode_1="t-hs-dsh-netwea-"
-			replace varcode_2="ho" 	
-			replace varcode=varcode_1+varcode_2	
-			
-			// Check
-			levelsof title
-			
-			keep area year value percentile varcode source
-			
-			tempfile wealth_shares
-			save `wealth_shares', replace
-	restore
-
-	
-	
-*******************************************************************************
-clear 
-append using `gini'
-append using `overall_averages'
-append using `decile_averages'
-append using `wealth_shares'	
-
-sort area year varcode percentile
+		tempfile top5
+		save `top5', replace
+	restore		
+	drop if dwa_grp=="T5"
 	
 	
 	
-*save "C:/Users/mtarga/Desktop/DWA/data.dta", replace
-
-*use "C:/Users/mtarga/Desktop/DWA/data.dta" , replace
-bys varcode: tab percentile
-
-	
-	// Quick Check
-	***************************************************************************
-		preserve 
-		
-			// Calculate NW Total
-			keep if (varcode=="t-hs-avg-netwea-ho" | varcode=="t-hs-dsh-netwea-ho") & percentile!="p0p100"
-			
-			gen help=value if varcode!="t-hs-dsh-netwea-ho"
-			replace help=help*5 if percentile=="p0p50" & varcode!="t-hs-dsh-netwea-ho"
-			
-			sort area year varcode percentile
-			list in 1/10
-			
-			bys area year varcode: egen Wbar_tot=total(help) if varcode=="t-hs-avg-netwea-ho"
-		
-
-
-			// Check W Shares
-			gen htop10=(help/Wbar_tot)*100 if percentile=="p90p100"
-			gen hbot50=(help/Wbar_tot)*100 if percentile=="p0p50"
-			
-			bys area year percentile : egen bot50=max(hbot50) 
-			bys area year percentile : egen top10=max(htop10) 
-			
-			
-			list area year value percentile bot50 top10 in 1/100 ///
-						if (percentile=="p90p100" | percentile=="p0p50") ///
-						& varcode=="t-hs-dsh-netwea-ho"
-		
-			// Correct!
-			
-		restore
-		
-		
-		
 ********************************************************************************
-// Extensions
-	/*
-		Average NW	: Bottom 60, btoom 70, bottom 80, mid 40, top 20
-		Wealth Share: Bottom 60, btoom 70, bottom 80, mid 40, top 20
-					  ** t-hs-dsh-netwea-ia is fully missing!
-	*/
+// Calulate Totals, Averages and Shares
 ********************************************************************************
+clear 	
+use `STARTINGPOINT'
 
 		
-		// Account for Percentiles
-		gen help=value
-		replace help=help*5 if percentile=="p0p50"
-		replace help=. 		if percentile=="p0p100"
-		replace help=. 		if varcode=="t-hs-dsh-netwea-ho"
+	// Drop Useless groups - I only need Deciles
+	** Note that D1 D2 D3 D4 D5 --> only have "Adjusted debt to asset ratio of households" and we do not need it!
+		foreach grp in  HSO HST WSE WSR WSS WSU WSX ///
+						D1 D2 D3 D4 D5 T10 T5 /*_Z*/ {
+		drop if dwa_grp=="`grp'"
+	}
 	
-		bys area year varcode: egen Wbar_tot=total(help) 	
-		replace Wbar_tot=. if varcode=="t-hs-dsh-netwea-ho"
-		replace Wbar_tot=. if varcode=="t-hs-gin-netwea-ho"
-		replace Wbar_tot=. if varcode=="t-hs-dsh-netwea-ia"
-		replace Wbar_tot=. if varcode=="t-hs-gin-netwea-ia"
-		
-		
-		
-		// Av. Wealth
-		************************************************************************
-			// Bottom 90
-			gen hmu_bottom_90=1	if 	(percentile=="p0p50" ///
-								|	percentile=="p50p60" ///
-								|	percentile=="p60p70" ///
-								|	percentile=="p70p80" ///
-								|	percentile=="p80p90") 
-			bys area year varcode: egen mu_bottom_90=mean(help) if hmu_bottom_90==1	
-			
-			
-			// Mid 40%
-			gen hmu_mid_40=1	if 	(percentile=="p50p60" ///
-								|	percentile=="p60p70" ///
-								|	percentile=="p70p80" ///
-								|	percentile=="p80p90")
-			bys area year varcode: egen mu_mid_40=mean(help) if hmu_mid_40==1	
-			
-			// Top 20
-			gen hmu_top_20=1	if 	(percentile=="p90p100" ///
-								|	percentile=="p80p90") 
-			bys area year varcode: egen mu_top_20=mean(help) if hmu_top_20==1
-			
-			
-			// Top 10
-			gen hmu_top_10=1	if 	percentile=="p90p100" 
-			bys area year varcode: egen mu_top_10=mean(help) if hmu_top_10==1
+	
+	
+// 1.a rename "instr_asset" into GC-wealth VARIABLES names
+********************************************************************************
+qui gen na_code= account_entry + "_A" + instr_asset
+replace na_code="NWA" if na_code=="N_ANWA"
+replace na_code="ANUB" if na_code=="A_ANUB"
+replace na_code="ANUN" if na_code=="A_ANUN"			
+drop account_entry instr_asset sto
+
+
+// 1.b Select Assets to use - looking at column "compostion2" of "composition table DWA.xlsx""
+********************************************************************************
+keep if na_code=="NWA"	///
+		| na_code=="ANUB"	///
+		| na_code=="A_AF2M"	///
+		| na_code=="A_AF3"	///
+		| na_code=="A_AF52"	///
+		| na_code=="A_AF511"	///
+		| na_code=="A_AF51M"	///
+		| na_code=="A_AF62"	///
+		| na_code=="A_AF_NNA"	///
+		| na_code=="L_AF_NNA"	///
+		| na_code=="ANUN"	///
+		| na_code=="L_AF4B"	
+	
+	
+// 1.c Express value in Euros
+********************************************************************************
+replace value=obs_value*10^unit_mult 
+drop unit_mult decimals
+format  value %20.2fc
+	
+	
+// 1.d Focus on Totals and Averages
+********************************************************************************
+keep 	if unit_measure=="EUR" 			/// 	Total
+		|  unit_measure=="EUR_R_NH" 	/// 	Total divided number of HHs
+		/// |  unit_measure=="EUR_R_POP" 	/// 	Total divided number of Individuals
 				
+	
+	
+	
+	
+// 1.e Relevant Variables
+********************************************************************************
+		
+		** Net Wealth
+		global netwea ="NWA"
+		global netwea_label="Net Wealth"
+		
+		** Real Estate
+		global nfahou ="ANUN"
+		global nfahou_label="Housing & Land"
+	
+		** Fiancial Assets
+		global nnhass = "ANUB A_AF2M A_AF3 A_AF52 A_AF511 A_AF51M A_AF62"
+		global nnhass_label = "Financial Assets & Fixed Capital of Personal Businesses"
+		
+		** Durables - Not avialbe
+		
+		** Debt
+		global fliabi = "L_AF_NNA"
+		global fliabi_label="Debt"
+		
+		** All Assets
+		*global assets = "A_AF_NNA"
+		*global assets_label="Assets"
+		
 			
-		drop hmu*
+			
+// 1.e Adjust Varcode
+********************************************************************************
+
+
+// 1.f Isolate Relevant Variables
+********************************************************************************
+keep area year value percentile unit_measure source na_code
+
+
+
+
+// 1.d Extract populations for Calulation of Averages
+********************************************************************************
+	preserve
+		keep if na_code=="NWA"
+	
+			** Total Wealth
+			bys area year (unit_measure): gen help_tot=value if unit_measure=="EUR" & percentile=="p0p100"
+			bys area year (unit_measure): egen tot=max(help_tot)
+			
+			** Total Wealth by Percentile
+			bys area year percentile (unit_measure): gen help_tot_in_p=value if unit_measure=="EUR"
+			bys area year percentile (unit_measure): egen tot_in_p=max(help_tot_in_p)
+
+			** N of HHs and IAs
+			gen pop=tot_in_p/value
+	
+			keep area year percentile unit_measure pop
+			list 
+			
+			tempfile pop
+			save `pop', replace
+		restore
+	
+	merge m:1 area year percentile unit_measure using `pop'
+	drop _m
+	
+	
+
+	
+********************************************************************************
+// 2. Calulate Relevant Indicators by Asset Class
+********************************************************************************
+tempfile xxx
+save `xxx', replace
+
+foreach concept in netwea nfahou nnhass fliabi {
+	
+	clear
+	use `xxx' 
+	
+	** Create Asset Category
+	gen help=.
+	foreach var in ${`concept'} {
+		replace help=1 if na_code=="`var'"
+	}
+	
+	keep if help==1
+	
+	** Generate Value summing all assets intso relevant class
+	collapse (sum) value (max) pop, by(area year percentile unit_measure source)
+	
+	
+	************************************************************************
+	** Extract Totals
+	************************************************************************
+	preserve
+		keep if unit_measure=="EUR"
+		gen varcode="t-hs-tot-`concept'-ho" 
+		
+		** Reshape Data
+		reshape wide value, i(area year varcode source) j(percentile) string
+		
+			* Bottom cumulative shares 
+			gen valuep0p60   = valuep0p50  + valuep50p60              // Bottom 60
+			gen valuep0p70   = valuep0p60  + valuep60p70              // Bottom 70
+			gen valuep0p80   = valuep0p70  + valuep70p80              // Bottom 80
+			gen valuep0p90   = valuep0p80  + valuep80p90              // Bottom 90
+			
+			* Mid 40 (p50-p90)
+			gen valuep50p90  = valuep50p60 + valuep60p70 + valuep70p80 + valuep80p90
+
+			* Top 20 (p80-p100)
+			gen valuep80p100 = valuep80p90 + valuep90p100
+		
+		* Reshape new indicators back to long format 
+		reshape long value, i(area year varcode source) j(percentile) string
+		
+		drop unit pop
+		
+		** Save
+		tempfile tot
+		save `tot', replace
+	restore
+	
+	
+	************************************************************************
+	** Extract Averages
+	************************************************************************
+	preserve
+		keep if unit_measure=="EUR_R_NH"
+		gen varcode="t-hs-avg-`concept'-ho" 
+		
+		
+		** Reshape Data
+		reshape wide value pop, i(area year varcode source) j(percentile) string
+		
+			** Exapnd Averages - Note we do not have average in Top 5%
+			gen popp0p60   = popp0p50  + popp50p60
+			gen popp0p70   = popp0p60  + popp60p70
+			gen popp0p80   = popp0p70  + popp70p80
+			gen popp0p90   = popp0p80  + popp80p90
+			gen popp50p90  = popp50p60 + popp60p70 + popp70p80 + popp80p90
+			gen popp80p100 = popp80p90 + popp90p100
+			
+			* Bottom
+			gen valuep0p60   = (valuep0p50*popp0p50   + valuep50p60*popp50p60)  / (popp0p50  + popp50p60)
+			gen valuep0p70   = (valuep0p60*popp0p60   + valuep60p70*popp60p70)  / (popp0p60  + popp60p70)
+			gen valuep0p80   = (valuep0p70*popp0p70   + valuep70p80*popp70p80)  / (popp0p70  + popp70p80)
+			gen valuep0p90   = (valuep0p80*popp0p80   + valuep80p90*popp80p90)  / (popp0p80  + popp80p90)
+
+			* Mid 40
+			gen valuep50p90  = (valuep50p60*popp50p60 + valuep60p70*popp60p70 	///
+							+  valuep70p80*popp70p80 + valuep80p90*popp80p90)  ///
+							/ (popp50p60 + popp60p70 + popp70p80 + popp80p90)
+
+			* Top 20
+			gen valuep80p100 = (valuep80p90*popp80p90 + valuep90p100*popp90p100) / (popp80p90 + popp90p100)
+						
+			
+		* Reshape new indicators back to long format 
+		reshape long value, i(area year varcode source) j(percentile) string
+		drop pop* unit_measure
+		
+		list in 1/100
+		
+		** Save
+		tempfile avg
+		save `avg', replace
+	restore
+	
+	
+	
+	clear
+	use `tot'
+	append using `avg'
+	
+	
+	tempfile a`concept'
+	save `a`concept'', replace
+	
+}
+
+
+// 3. Append All Datasets, so far
+********************************************************************************
+clear
+use `gini'
+append using `top5' 
+
+foreach concept in netwea nfahou nnhass fliabi {
+	append using `a`concept''
+}
+
+
+
+
+// 3. Calulate Shares (dsh)
+********************************************************************************
+preserve
+	split varcode , p(-)
+	keep if varcode3=="tot"
+	
+	bys area year: gen help=value if varcode=="t-hs-tot-netwea-ho" & percentile=="p0p100"
+	bys area year: egen den=max(help)
+	
+	** Genrate Shares
+	replace value=(value/den)*100
+	drop help den
+	
+	** Rename Varcode
+	replace varcode3="dsh"
+	replace varcode=varcode1+"-"+varcode2+"-"+varcode3+"-"+varcode4+"-"+varcode5
+	drop varcode1 varcode2 varcode3 varcode4 varcode5
+	
+	tempfile dsh
+	save `dsh', replace
+restore
+
+
+// 4. Clean Dataset
+********************************************************************************
+append using `dsh'
+
+bys area year percentile varcode: gen N=_n
+tab N
+keep if N==1
+drop N
+
+drop if area=="I9"
+
+drop if varcode=="t-hs-dsh-netwea-ho" & percentile=="p0p100"	
+	
+	
+** Save
+//export
+order area year value percentile varcode source
+qui export delimited "`results'", replace 	
+	
+	
+
+
+/*
+// Checks
+********************************************************************************
+	preserve
+		keep if area=="IT"
+		keep if year==2020
 		list
 		
-		// Sotre new estimates to append
-		preserve 
-			foreach var in mu_bottom_90 mu_top_10 mu_top_20 mu_mid_40 {
-				bys area year varcode: egen hvalue_`var'=max(`var') 
-				drop if hvalue_`var'==.
-			}
-			bys area year varcode: gen N=_n
-			keep if N==1
-			drop N
-			keep area year varcode hvalue* source
-			list
-				expand 4 
-				list
-				bys area year varcode: gen N=_n
-				gen value=.
-				gen percentile=""
-				
-				bys area year varcode:replace value=hvalue_mu_bottom_90 	if _n==1
-				bys area year varcode:replace percentile="p0p90"			if _n==1
-				bys area year varcode:replace value=hvalue_mu_top_10 		if _n==2
-				bys area year varcode:replace percentile="p90p100"			if _n==2
-				bys area year varcode:replace value=hvalue_mu_top_20 		if _n==3
-				bys area year varcode:replace percentile="p80p100"			if _n==3
-				bys area year varcode:replace value=hvalue_mu_mid_40 		if _n==4
-				bys area year varcode:replace percentile="p50p90"			if _n==4
-				drop hvalue* N
-			list
-			
-			tempfile extra_averages
-			save `extra_averages' , replace
-		restore
+		** Isolate Percentiles valid for Distrib Topo 
+		foreach concept in nfahou nnhass fliabi {
+			gen value_`concept'=value  if varcode=="t-hs-dsh-`concept'-ho"
+		}
 		
+		// Display dshby by percentile
+		graph bar value_* , stack over(percentile , label(angle(45)))	name(a, replace)
 		
+		// Disply dsh/weath share by percentile
+		bys area year percentile: gen help=value if varcode=="t-hs-dsh-netwea-ho"  
+		bys area year percentile: egen nwshare=max(help)
 		
+		foreach concept in nfahou nnhass fliabi {
+			gen nwshare_`concept'=value/nwshare  if varcode=="t-hs-dsh-`concept'-ho"
+		}
 		
-		// Wealth Shares
-		************************************************************************
-			// Bottom 60
-			gen hmu_bottom_60=1	if 	(percentile=="p0p50" ///
-								|	percentile=="p50p60") 
-			bys area year varcode: egen s_bottom_60=total(help) if hmu_bottom_60==1	
-			replace s_bottom_60=s_bottom_60/Wbar_tot
-			
-			
-			// Bottom 70
-			gen hmu_bottom_70=1	if 	(percentile=="p0p50" ///
-								|	percentile=="p50p60" ///
-								|	percentile=="p60p70") 
-			bys area year varcode: egen s_bottom_70=total(help) if hmu_bottom_70==1	
-			replace s_bottom_70=s_bottom_70/Wbar_tot
-			
-			
-			// Bottom 80
-			gen hmu_bottom_80=1	if 	(percentile=="p0p50" ///
-								|	percentile=="p50p60" ///
-								|	percentile=="p60p70" ///
-								|	percentile=="p70p80") 
-			bys area year varcode: egen s_bottom_80=total(help) if hmu_bottom_80==1	
-			replace s_bottom_80=s_bottom_80/Wbar_tot
-			
-			
-			// Bottom 90
-			gen hmu_bottom_90=1	if 	(percentile=="p0p50" ///
-								|	percentile=="p50p60" ///
-								|	percentile=="p60p70" ///
-								|	percentile=="p70p80" ///
-								|	percentile=="p80p90") 
-			bys area year varcode: egen s_bottom_90=total(help) if hmu_bottom_90==1	
-			replace s_bottom_90=s_bottom_90/Wbar_tot
-			
-			
-			// Mid 40
-			gen hmu_mid_40=1	if 	 ///
-									(percentile=="p50p60" ///
-								|	percentile=="p60p70" ///
-								|	percentile=="p70p80" ///
-								|	percentile=="p80p90") 
-			bys area year varcode: egen s_mid_40=total(help) if hmu_mid_40==1	
-			replace s_mid_40=s_mid_40/Wbar_tot
-			
-			
-			// Top 20
-			gen hmu_top_20=1	if 	 ///
-									(percentile=="p80p90" ///
-								|	percentile=="p90p100") 
-			bys area year varcode: egen s_top_20=total(help) if hmu_top_20==1	
-			replace s_top_20=s_top_20/Wbar_tot
-			
-			
-			
-			***************************
-			// Bottom 50 - if varcode=="t-hs-avg-netwea-ia"
-			gen hmu_bottom_50=1	if 	 percentile=="p0p50" 
-			bys area year varcode: egen s_bottom_50=total(help) if hmu_bottom_50==1	
-			replace s_bottom_50=s_bottom_50/Wbar_tot
-			
-			
-			// Top 10 - if varcode=="t-hs-avg-netwea-ia"
-			gen hmu_top_10=1	if 	 percentile=="p90p100" 
-			bys area year varcode: egen s_top_10=total(help) if hmu_top_10==1	
-			replace s_top_10=s_top_10/Wbar_tot
-			***************************
-			
-			drop hmu*
-				
-			
-		// Sotre new estimates to append
-		preserve 
-			foreach var in s_bottom_50 s_bottom_60 s_bottom_70 s_bottom_80 s_bottom_90 s_mid_40 s_top_20 s_top_10 {
-				bys area year varcode: egen hvalue_`var'=max(`var') 
-				drop if hvalue_`var'==.
-			}
-			bys area year varcode: gen N=_n
-			keep if N==1
-			drop N
-			keep area year varcode hvalue* source
-			
-				expand 8
-				list
-				bys area year varcode: gen N=_n
-				gen value=.
-				gen percentile=""
-				
-				replace varcode="t-hs-dsh-netwea-ho" if varcode=="t-hs-avg-netwea-ho"
-				replace varcode="t-hs-dsh-netwea-ia" if varcode=="t-hs-avg-netwea-ia"
-				
-				bys area year varcode:replace value=hvalue_s_bottom_60 	if _n==1
-				bys area year varcode:replace percentile="p0p60"		if _n==1
-				bys area year varcode:replace value=hvalue_s_bottom_70 	if _n==2
-				bys area year varcode:replace percentile="p0p70"		if _n==2
-				bys area year varcode:replace value=hvalue_s_bottom_80 	if _n==3
-				bys area year varcode:replace percentile="p0p80"		if _n==3
-				bys area year varcode:replace value=hvalue_s_bottom_90 	if _n==4
-				bys area year varcode:replace percentile="p0p90"		if _n==4
-				bys area year varcode:replace value=hvalue_s_mid_40 	if _n==5
-				bys area year varcode:replace percentile="p50p90"		if _n==5
-				bys area year varcode:replace value=hvalue_s_top_20 	if _n==6
-				bys area year varcode:replace percentile="p80p100"		if _n==6
-				
-				bys area year varcode:replace value=hvalue_s_top_10 	if _n==7
-				bys area year varcode:replace percentile="p90p100"		if _n==7
-				bys area year varcode:replace value=hvalue_s_bottom_50 	if _n==8
-				bys area year varcode:replace percentile="p0p50"		if _n==8
-				
-				drop hvalue* N				
-				
-				// 0-100 scale
-				replace value=value*100 if varcode=="t-hs-dsh-netwea-ia" & value<1
-				replace value=value*100 if varcode=="t-hs-dsh-netwea-ho" & value<1
-			
-			tempfile extra_shares
-			save `extra_shares' , replace
-		restore	
-		
-	keep area year value percentile varcode source
-	bys varcode: tab percentile
-	
-	// Append Extra Shares and Averages
-	append using  `extra_shares'
-	append using  `extra_averages'
+		graph bar nwshare_* , stack over(percentile , label(angle(45)))	name(b, replace)
+		graph combine a b
+	restore
+*/
 	
 	
-	sort area year varcode percentile
-	bys area year varcode percentile: gen N=_n
-	tab N
-
-	drop if N==2
-	drop N
-			
-	
-	// Drop useless quantites
-	*drop if varcode =="t-hs-avg-netwea-ho" & percentile=="p50p60"
-	*drop if varcode =="t-hs-avg-netwea-ho" & percentile=="p60p70"
-	*drop if varcode =="t-hs-avg-netwea-ho" & percentile=="p70p80"
-	*drop if varcode =="t-hs-avg-netwea-ho" & percentile=="p80p90"
-	
-	*drop if varcode =="t-hs-avg-netwea-ia" & percentile=="p50p60"
-	*drop if varcode =="t-hs-avg-netwea-ia" & percentile=="p60p70"
-	*drop if varcode =="t-hs-avg-netwea-ia" & percentile=="p70p80"
-	*drop if varcode =="t-hs-avg-netwea-ia" & percentile=="p80p90"
 	
 	
-	// Keep only HO
-	tab varcode
-	drop if varcode=="t-hs-avg-netwea-ia"
-	drop if varcode=="t-hs-dsh-netwea-ia"
 	
-	drop if area=="I9"
-			
-*save "`results'", replace
-qui export delimited "`results'", replace 
-
-bys varcode: tab percentile
+	
+	

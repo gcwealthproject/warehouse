@@ -160,6 +160,55 @@
       "new": "EY2025b",
       "reason": "Edited via local UI",
       "updated_at": "2026-05-28T15:31:42Z"
+    },
+    {
+      "type": "source",
+      "old": "Shultz 1926",
+      "new": "Shultz1926",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-07-02T08:37:04Z"
+    },
+    {
+      "type": "source",
+      "old": "GermanTaxLaw_1951",
+      "new": "GermanTaxLaw1951",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-07-02T08:37:31Z"
+    },
+    {
+      "type": "citekey",
+      "old": "GermanTaxLaw_1951",
+      "new": "GermanTaxLaw1951",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-07-02T08:37:31Z"
+    },
+    {
+      "type": "source",
+      "old": "StatCan2025",
+      "new": "StatCan_DWA_topo",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-07-22T12:37:52Z"
+    },
+    {
+      "type": "citekey",
+      "old": "StatCan2025",
+      "new": "StatCan_DWA_topo",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-07-22T12:37:52Z"
+    },
+    {
+      "type": "source",
+      "old": "OECD_AnnualBalanceSheetsNonfinancialAssets",
+      "new": "OECD_NA",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-07-22T15:46:16Z"
+    },
+    {
+      "type": "citekey",
+      "old": "2005_NorthCarolinaEstateTaxForm",
+      "new": "2002_NorthCarolinaEstateTaxForm",
+      "reason": "Edited via local UI",
+      "updated_at": "2026-07-23T08:21:39Z"
     }
   ]
 }

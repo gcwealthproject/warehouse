@@ -5,7 +5,7 @@ on:
   push:
     branches: [main, master]
     paths:
-      - 'documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib'
+      - 'documentation/BibTeX files/digital_library.bib'
 
 permissions:
   contents: read
@@ -29,6 +29,6 @@ jobs:
           curl --fail --show-error --silent \
             -X POST "$BIBBASE_UPLOAD_URL" \
             -H "Authorization: Bearer $BIBBASE_API_TOKEN" \
-            -F "file=@documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"
+            -F "file=@documentation/BibTeX files/digital_library.bib"
 
           echo "Published .bib to BibBase endpoint"

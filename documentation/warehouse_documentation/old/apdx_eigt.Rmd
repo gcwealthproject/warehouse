@@ -1,0 +1,152 @@
+---
+title: 'Warehouse Documentation: Appendix to the Estate, Inheritance, and Gift Tax Database'
+author: "The GC Wealth project - Twisha Asher"
+date: "June 2023"
+output:
+  pdf_document:
+    citation_package: biblatex
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+    highlight: tango
+    df_print: kable
+    latex_engine: xelatex
+  html_document:
+    toc: no
+    toc_depth: '3'
+    df_print: paged
+header-includes:
+- \usepackage[margin=2.5cm]{geometry}
+- \usepackage{setspace}
+- \renewcommand{\chaptername}{Section}
+- \maxdeadcycles=1000
+urlcolor: blue
+documentclass: report
+bibliography: "../BibTeX files/BothLibraries.bib"
+link-citations: yes
+suppress-bibliography: no
+biblio-style: authoryear
+---
+
+
+\listoftables
+
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+```
+
+# Introduction
+
+
+# Full Conceptual Grid
+Data Creation Processes
+Information on Estate, Inheritance, and Gift taxes is collected from three broadly different source categories: 1) Legal tax documents from public entities, 2) information on tax codes and schedules from third-party sources, and 3) tax revenue data from the OECD or other international institutions. Depending on the source category, the information can be directly inserted into the Estate, Inheritance, and Gift Tax database (as is the case with tax revenue information) or be subject to interpretation and harmonization procedures (as is the case with detailed information on tax schedules and rates). 
+
+We only retrieve tax schedule information where interpretation of tax rates and schedules is unambiguous For instance, information from documents that provide a full tax schedule—from personal exemptions to specific tax rates for each bracket as well as lower and upper bounds of every bracket—can be easily added to the database. Sometimes, however, sources only provide a broad range of the tax schedule (e.g., 10-30% inheritance tax). In such cases we make use of the information that is evident (e.g., lowest inheritance tax rate being 10%, top inheritance tax rate being 30%) but refrain from filling tax schedule variables because the information is insufficient to determine exemptions, brackets, or tax due.
+
+To ensure comparability of Estate, Inheritance, and Gift tax schedules and rates across countries and over time, the information is stratified by transfer category (e.g., gift or inheritance) and donor relationship (i.e., only direct children). Estate, Inheritance, and Gift tax information that does not fit into the harmonized set of variables is documented in country-year-specific notes that will be made available soon. 
+
+Data Validation Processes
+Information on EIG taxes is validated along two dimensions: 1) external consistency of collected data using additional sources (wherever possible), and 2) internal consistency of harmonized information. The former crucially depends on the availability of external sources, either from legal tax documents or third-party tax information. The latter is validated within the EIG data based on a set of conditions. For instance, some countries report a positive value of EIG tax revenue despite not levying any EIG tax. In these cases, country-years are checked individually, as revenue is sometimes collected from estates and bequests dating back several years. 
+
+
+# Sources Included in the Estate, Inheritance, and Gift Tax Sections
+
+
+
+```{r appendix_topo_source, echo=FALSE, warning=FALSE, results = "asis", message=FALSE}
+##load dictionary
+sources <- read_excel("../../handmade_tables/dictionary.xlsx", sheet = "Sources", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+
+eig_viz <- read_csv("../../output/databases/EIGtax_wide_visualization.csv", col_names = TRUE, na = " ")
+
+sources_tab <- sources_tab %>% select(Source, `Download date`)
+
+whouse <- "../../output/databases/warehouse_viz.csv"
+whouse <- read_csv(whouse, na = c("", "NA"), quoted_na = FALSE)
+topo <- whouse  %>% 
+  filter(substr(varcode,1,1)=="p")
+topo_list <- topo[!duplicated(topo$source),] %>% arrange(source)
+topo_list <-  topo_list %>% select(source, legend, aggsource, legend, ref_link, citekey)
+topo_list$legend <- gsub("&", "\\\\&", topo_list$legend)
+
+#merge download date
+topo_list<- merge(topo_list, sources_tab %>% select(source = Source, download = `Download date`))
+
+
+topo_list <- topo_list %>% select(-source)
+
+
+#format cite key
+#topo_list <- topo_list %>% mutate(citekey = paste0("\\cite{",citekey, "}")) 
+topo_list <- topo_list %>% mutate(citekey = paste0("@",citekey)) 
+
+
+
+cap <- paste0("Sources in the Wealth Topography")
+lab <- paste0("\\label{tab:wtsourcesR}")
+
+topo_list <- topo_list %>% select(-ref_link)
+
+out_list <- list()
+out_list[1] <- print(
+  kable(topo_list, 
+        col.names = c("Source", 
+                      "Source Type", 
+                      "Bibliographic reference",
+                      "Download date"), 
+        format="latex", 
+        booktabs = T, 
+        escape = FALSE,
+        longtable = TRUE,
+        align = c('l','l', 'l'),
+        caption = paste0(lab, cap)) %>% 
+    kable_styling(font_size = 8) %>%
+    column_spec(1, width = "5cm") %>%
+    column_spec(2, width = "5cm") %>% 
+    column_spec(3, width = "5cm") %>% 
+    column_spec(4, width = "3cm") %>% 
+    landscape() 
+) 
+
+cat("\n")
+
+out_list[1]
+
+```
+
+
+
+```{r tsources, echo=F}
+sources_tab <- read_excel("docs/bible_wt_sources.xlsx", sheet = "sources", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(sources_tab, format="latex", align = "l", booktabs = T, longtable=T, caption = "Sources in the Wealth Topography") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "6cm") %>% 
+  column_spec(2, width = "3cm") %>% 
+  column_spec(3, width = "2cm") %>% 
+  column_spec(4, width = "3cm") 
+```
+
+# Source-Specific Documentation
+
+
+
+
+# Country-Specific Tables
+
+

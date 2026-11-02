@@ -24,8 +24,8 @@ label var A_AF2M "Deposits"
 gen A_AF3 = .
 label var A_AF3 "Debt securities"
 
-gen L_AF4B = .
-label var L_AF4B "Loans for house purchasing"
+gen XAF42LM = .
+label var XAF42LM "Loans for house purchasing"
 
 gen L_AF4X = .
 label var L_AF4X "Loans other than for house purchasing"

@@ -19,13 +19,13 @@ foreach p in `pctls' {
 //combine all dashboards 
 tempfile x 
 local iter = 1 
-foreach d in ineq eigt topo {
+foreach d in ineq taxw topo inhe {
 	di as result "appending `d' warehouse..."
 	//import and fill longname 
 	
 	qui import delimited "raw_data/`d'/`d'_ready.csv", clear varnames(1) 
 	cap drop metadata
-	if "`d'" != "eigt" {
+	if "`d'" != "taxw" {
 		di as text " filling longname..."
 		run $fill_longname
 	} 
@@ -42,8 +42,8 @@ foreach d in ineq eigt topo {
 	qui save `x', replace 
 }
 
-*filter old sources out 
-qui drop if inlist(source, "WID", "LWS")
+*canonicalize source aliases without dropping extensionless source names
+run $harmonize_source_aliases
 qui rename area GEO 
 
 //run checks and harmonize 
@@ -72,7 +72,11 @@ qui drop percentile2 percentile_label
 
 *filter out missing varcodes 
 qui gen varcode_length = length(varcode)
-assert varcode_length == 18
+
+///////remove cap and drop 
+cap assert varcode_length == 18
+qui drop if varcode_length != 18
+///////
 qui drop varcode_length
 
 foreach v in geo_long {
@@ -85,5 +89,4 @@ qui sort  GEO* year percentile varcode value
 
 //save temporary file 
 qui export delimited ///
-	"raw_data/eigt/intermediary_files/warehouse_ar.csv", replace 
-
+	"raw_data/taxw/intermediary_files/warehouse_ar.csv", replace 

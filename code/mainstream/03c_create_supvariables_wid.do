@@ -6,8 +6,8 @@ run "code/mainstream/auxiliar/all_paths.do"
 run "code/mainstream/auxiliar/version_control.do"
 
 ////////////////////////////////////////////////////////////////////////////
-//You either need to chose to wid_update supvars from wid (web) or to
-//define the version of the -already- stored data you want to use 
+//You need to chose between wid_update supvars from wid (web) or
+//defining the version of the -already- stored data you want to use 
 ////////////////////////////////////////////////////////////////////////////
 
 *IMPORT POLICAL COLOR DATA 
@@ -23,7 +23,7 @@ local popvars npopul npopem
 
 if "$wid_update" == "yes" {
 	//download population data 
-	qui wid, indicators(`popvars') ages(999 992) pop(i) meta clear
+	qui wid, indicators(`popvars') ages(999 992) pop(i) meta clear 
 	preserve 
 		qui replace variable = subinstr(variable, "999i", "", .)
 		qui replace variable = subinstr(variable, "992i", "", .)
@@ -39,7 +39,7 @@ if "$wid_update" == "yes" {
 	tempfile popdf
 	qui save `popdf'
 	//download other variables 
-	qui wid, indicators(`widvars') ages(999) pop(i) meta clear
+	wid, indicators(`widvars') ages(999) pop(i) meta clear  
 	
 	*get currency data 
 	preserve 

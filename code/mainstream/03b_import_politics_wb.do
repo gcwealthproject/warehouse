@@ -282,7 +282,6 @@ Of course, we replace the gov_party with comparative politics dta definition for
 	
 ** Export wide 
 	rename GEO country 
-	cap mkdir "output/databases/supplementary_variables/politics"
 	save "output/databases/supplementary_variables/politics/politics_wide.dta", replace 
 	
 
@@ -403,7 +402,6 @@ Of course, we replace the gov_party with comparative politics dta definition for
 	
 * Export - wide and long format 
 	drop GEO_long
-	cap mkdir "output/databases/supplementary_variables/wb"
 	save "output/databases/supplementary_variables/wb/geo_wide.dta", replace 
 	
 	encode Region_WB, gen(valueRegion)
@@ -413,5 +411,6 @@ Of course, we replace the gov_party with comparative politics dta definition for
 	label values valueIncome_group
 	
 	reshape long value, i(year GEO_WB GEO3 country) j(variable) string
+	
 	save "output/databases/supplementary_variables/wb/geo_long.dta", replace 
 

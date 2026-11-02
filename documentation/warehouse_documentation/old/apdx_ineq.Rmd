@@ -1,0 +1,368 @@
+---
+title: "Warehouse Documentation: Appendix to Wealth Inequality Trends Database"
+header-includes:
+  - \usepackage[margin=2.5cm]{geometry}
+  - \usepackage{setspace}
+  - \renewcommand{\chaptername}{Section}
+  - \maxdeadcycles=1000
+author: "The GC Wealth project"
+date: "May 2023"
+output: 
+  pdf_document:
+    citation_package: biblatex  
+    toc: true
+    toc_depth: 3
+    number_sections: false
+    highlight: tango
+    df_print: kable
+    latex_engine: xelatex
+urlcolor: blue    
+documentclass: report   
+bibliography: "../BibTeX files/BothLibraries.bib"
+link-citations: true
+suppress-bibliography: false
+biblio-style: authoryear
+---
+
+\listoftables
+
+# Introduction
+
+\doublespacing
+
+The Appendix to the Wealth Inequality Trends section of the GC Wealth Project provides additional information on the 
+
+In particular, this appendix provides
+
+\begin{itemize}
+  \item the full list of sources covered by the GC Wealth Project Wealth Inequality Trends Database
+    \item source-specific  information on raw data source, all source-specific composition tables reporting all composition rules used to obtain the wealth concepts, and additional tables on conceptual and manual mapping, 
+    \item source-specific documentation and information on the estimation method in case of sources for which we estimated wealth inequality measures ourselves and an explanation of the inclusion and exclusion of data points in the case of sources that (also) provide fully imputed wealth inequality estimates
+  \item country-specific information on the coverage of the GC Wealth Project Wealth Inequality Trends Database in terms of the time span, number of observations and the types of variables by source.
+
+\end{itemize}
+
+
+```{r , include=FALSE, warning=FALSE, message=FALSE}
+#Load libraries 
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+```
+
+# Sources Included in the Wealth Inequality Trends Section
+
+```{r appendix_ineq_sources, echo=FALSE,  warning=FALSE, message=FALSE}
+
+##load dictionary
+
+dict <- read_excel("../../handmade_tables/dictionary.xlsx", 
+    sheet = "Sources")
+dict_ineq <- dict %>% filter(Section == "Wealth Inequality Trends") %>%
+  filter(is.na(Inclusion_in_Warehouse))
+
+##currently excluded sources listed in dictionary
+
+exclude_sources_ineq <- read_excel("../../handmade_tables/exclude_sources_ineq.xlsx")
+covered_sources <- setdiff(dict_ineq$Source, exclude_sources_ineq$Excluded)
+dict_ineq <- dict %>% filter(Source %in% covered_sources)
+
+dict_ineq <- dict_ineq %>% select(Legend, Source, AggSource, key = Citekey)
+
+dict_ineq<- dict_ineq %>% mutate(key = paste0("\\cite{",key, "}")) %>% select(Source, key, Legend, AggSource)
+
+
+#dict_ineq$Source <- gsub("_", "\\\\_", dict_ineq$Source)
+
+#generate new source column 
+#dict_ineq$Source <- paste0(dict_ineq$Source, " (", dict_ineq$key, ")") 
+
+dict_ineq <- dict_ineq %>% select(-key)
+
+kable(dict_ineq,
+    col.names = c("Source",  "Legend", "Source Type"), 
+      booktabs = T, 
+      align = c('r','l', 'l'),
+      longtable = TRUE,
+      caption = c("Sources Covered by Wealth Inequality Trends Database")) %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, width = "7cm") %>%
+  column_spec(2, width = "10cm") %>%
+  column_spec(3, width = "5.5cm") %>%
+  landscape() 
+    
+```
+
+# Source-Specific Coverage
+
+```{r appendix_ineq_source_spec, echo=FALSE, results = 'asis', warning=FALSE, message=FALSE}
+##load dictionary
+dict <- read_excel("../../handmade_tables/dictionary.xlsx", 
+    sheet = "Sources")
+
+ineq_whouse <- "../../output/databases/warehouse_viz.csv"
+ineq_whouse <- read_csv(ineq_whouse)
+ineq_whouse <- ineq_whouse  %>% 
+  filter(substr(varcode,1,1)=="t") %>% arrange(GEO)
+out_list <- list()
+#list of countries
+cntries <- unique(ineq_whouse$GEO)
+geo_longs <- unique(ineq_whouse$GEO_long)
+srces <- unique(ineq_whouse$source)
+
+for(c in 1:length(srces)){
+  tmp <- ineq_whouse %>% filter(source==srces[c])
+  tmp_n <- tmp %>% group_by(GEO) %>% summarise(n = n(), 
+  min_y = min(year),max_y = max(year)) %>%
+    mutate(year_range = paste0(min_y, " - ", max_y))
+tmp_longnames <- tmp %>% group_by(GEO, longname) %>% 
+  summarise(n =n()) %>% ungroup() %>% group_by(GEO) %>% select(-n) %>% arrange(longname) %>% summarise(longnames  = paste(longname, collapse =", \n "), times = length(longname)) %>% select(-times)
+
+
+#merge cite key
+tmp_n<- merge(tmp_n, dict %>% select(source = Source,  key = Citekey)) 
+#format cite key
+tmp_n <- tmp_n %>% mutate(key = paste0("\\cite{",key, "}")) %>%
+  select(source, key, year_range, n)
+
+out <- merge(tmp_n, tmp_longnames)  
+for(r in 1:nrow(out)){
+  t_ln <- strsplit(out$longnames[r], "\n")
+  for(k in 1:length(t_ln[[1]])){
+    t_ln[[1]][k] <- trimws(t_ln[[1]][k])
+  }
+  t_ln <- unlist(t_ln)
+  for(l in 1:length(t_ln)){
+    t_ln[l] <- sub("\\ -.*", "", t_ln[l])
+  }
+  t_ln <- unique(t_ln)
+  t_ln <- paste(t_ln, collapse=', ')
+  out$longnames[r] <- t_ln
+}
+
+#line breaks 
+
+cntry_name <- geo_longs[c]
+src_name <-   srces[c]
+src_name <- gsub("_", "\\\\_", src_name)
+cap <- paste0("Countries, Time Span and Number of Observations for Source: " , src_name)
+
+lab <- paste0("\\label{tab:", src_name,"}")
+
+out$source <- gsub("_", "\\\\_", out$source)
+
+#generate new source column 
+out$source <- paste0(out$source, " (", out$key, ")")
+out <- out %>% select(-key)
+out_list[c] <- print(
+  kable(out, 
+        col.names = c("Country", 
+                      "Period Covered", 
+                      "Observations",
+                      "Variable Types"), 
+        format="latex", 
+        booktabs = T, 
+        escape = FALSE,
+        longtable = TRUE,
+        align = c('r','c', 'c', 'l'),
+        caption = paste0(lab, cap)) %>% 
+    kable_styling(font_size = 8) %>%
+    column_spec(1, width = "9cm") %>%
+    column_spec(2, width = "2cm") %>% 
+    column_spec(3, width = "1.5cm") %>% 
+    column_spec(4, width = "9.5cm") %>%
+    landscape() 
+) 
+
+cat("\n")
+
+out_list[c]
+
+}
+```
+
+
+# Source-Specific Documentation
+
+For the Wealth Inequality Trends database of the GC Wealth Project, the **Methodological Tables** provide a detailed documentation of each `source`; thus the primary source-specific documentation is provided in these tables. In this appendix, we  summarize the most important aspects for two types of sources: \textit{i)} sources for which we estimated measures of wealth inequality based on microdata [@HouseholdFinanceandConsumptionNetwork2021; @LIS_LuxembourgWealthStudyDatabase], and \textit{ii)} sources where we could not cover the full range of estimates available in the raw data of a source, especially because data points provided by the source are fully imputed [@CreditSuisse_CreditSuisseGlobalWealthReport; @WorldInequalityDatabase_Data]. 
+
+## Household Finance and Consumption Survey (HFCS_ineq)
+We have estimated wealth inequality using data from waves one to three of the Household Finance and Consumption Survey  [@HouseholdFinanceandConsumptionNetwork2021]. As the HFCS is a multiply imputed data set, we obtained all estimates by applying Rubin's Rule; that is, they are the mean of the estimates across the five implicates. Second, we have used the household level weights provided in the dataset for the estimations. Third, our estimates rely on the variable `dn3001`, which is net wealth at the household level. This definition does not encompass private or occupational pension wealth, while private pension wealth is included even if it is not (directly) marketable (at the same value). Fourth, the HFCS is an ex ante harmonized survey; it is coordinated by the European Central Bank but conducted by the national central banks of the Eurosystem, and all countries survey, in principle, the same concept of net wealth. There are, however, important differences in the precise survey methodologies across countries and the resulting quality of the data, especially in terms of the coverage of the upper tail and the valuation of assets. Thus, while the survey is conceptually harmonized, the country-specific survey designs differ substantially. Some countries use (external) administrative data of different types to attach values to single components of net wealth, especially Finland, Estonia, Ireland, Latvia, and Lithuania. While sampling in most countries includes some type of oversampling of the upper tail, others do not even attempt to counterbalance the higher non-response rate at the top (Austria, Italy, Netherlands, Malta, and Slovenia). For the countries with over-sampling strategies, the precise procedure varies and is based on either individual, household, or region-specific estimates of wealth or wealth correlates. In summary, the effective oversampling rates of the top 5 percent ranges from -15% (Austria) to 413% (Spain) in the last wave of the survey,  according to @HouseholdFinanceandConsumptionNetwork2021. Finally, we work with an identical definition of net wealth that excludes all private and occupational pension wealth. This might hide important aspects in country comparisons in light of (statutory) differences in the (relative) importance of the first, second, and third tier of pensions systems. 
+
+
+The HFCS reports wealth only at the household level, and, at the moment, our database only covers estimates of wealth inequality referring to the distribution among households.
+
+## Luxembourg Wealth Study (LWS_ineq)
+The Luxembourg Wealth Study (LWS, @LIS_LuxembourgWealthStudyDatabase) provides cross-country harmonized micro-data on household wealth. Except for one country, Norway, the underlying original data has been obtained via surveys and is published by the Luxembourg Wealth Study via five implicates. The estimates covered in the Wealth Inequality Trends database are thus the average across the implicate-specific estimates. For Norway, a single dataset is available, as, in contrast to all other countries, the original data is a sample of administrative data. Furthermore, we have used household-level weights in the computation of the wealth inequality measures.
+
+Our preferred wealth definition is net wealth including private and pension and life insurance plans (total real assets inclusive of consumer goods such as vehicles and other valuables, plus total financial assets, inclusive of long-term savings via life insurances and voluntary individual pensions plans, minus total liabilities). We were able to implement this concept could for the following countries: Austria, Canada, Chile, Germany, Spain, Estonia, Finland, Greece, Italy after 2000, Luxembourg, Norway, Sweden, South Africa, Slovak Republic, Slovenia, the United Kingdom, and the United States. For other countries, certain types of assets and liabilities are not available via the Luxembourg Wealth Study. For instance, valuables are not available for Finland, and we thus had to exclude them from the net wealth definition for Finland, while valuables are part of the net wealth definition in all other countries. Given the absence of data, the net wealth concept for the following countries does not include private pension plans: Australia, Italy up to 2000, Japan, Sweden, and South Africa (variable dnw). We accessed the Luxembourg Wealth Study to estimate the wealth inequality measures on March 29, 2023.
+
+## World Inequality Database (WID_ineq)
+
+The World Inequality Database @WorldInequalityDatabase_Data provides estimates of wealth inequality for most countries of the world. From among these estimates, we have selected those that are consistent with our principle of not being fully imputed wealth inequality data.  Our database thus includes estimates that are based on either survey or administrative data on the distribution of wealth for at least one single year. In the case of the @WorldInequalityDatabase_Data, this still implies generous coverage, as, for many European countries with time-series data published on the @WorldInequalityDatabase_Data, the number of years for which micro data on the wealth distribution has been used is much smaller than the number of years for which the estimates derive from (backwards) extrapolation.
+
+Furthermore, wealth inequality estimates are available for multiple units of analysis, including equal-split adults (or households). As the set of estimates referring to equal-split adults is the most complete among the sources that qualify for our database, we have chosen these estimates, while not reporting statistics referring to other units of analysis.
+
+Table \ref{tab:wid_qual} lists the countries covered by the GC Wealth Project Wealth Inequality Trends database and, for each country, the primary origin of the distributional data underlying the WID estimates as well as the data type according to our classification, pointing to a substantial methodological heterogeneity underlying. We downloaded the estimates on November 22, 2022.
+
+```{r wid_qual, echo=FALSE}
+wid_qual <- "../../raw_data/ineq/WID_ineq/raw data/data_quality_table.xlsx"
+
+wid_qual <- read_excel(wid_qual, na = "NA") %>% select(-area)
+
+kbl(wid_qual %>% drop_na() %>% select(Country, Original_Source, Data_type),
+    col.names = c("Country", "Primary Origin", "Data Type"), 
+    align = c('r', 'l', 'l'), 
+    longtable = TRUE, centering = TRUE, booktabs = TRUE,
+    caption = "WID\\_ineq - Countries Covered by GC Wealth Warehouse") %>% 
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "5cm") %>%
+  column_spec(3, width = "10cm") %>%
+  kable_styling(font_size = 8)
+
+
+```
+
+### Credit Suisse Global Wealth Report (CS_ineq)
+
+Credit Suisse (@CreditSuisse_CreditSuisseGlobalWealthReport) aims at providing estimates of wealth inequality around the globe and by country. Generally, the approach of @CreditSuisse_CreditSuisseGlobalWealthReport is based on combining estimates of per capita aggregate wealth from macroeconomic balance sheets (household sector balance sheets, HBS, and financial balance sheets , FBS) with estimates of the interpersonal distribution of wealth. As, for most countries, no wealth distribution data is available, @CreditSuisse_CreditSuisseGlobalWealthReport, in practice, relies on distributional estimates of income inequality instead of wealth inequality for most countries. Ovaerll,  @CreditSuisse_CreditSuisseGlobalWealthReport uses a large variety of data sources to estimate per capita wealth and wealth distribution, including survey data on wealth, administrative data on wealth, rich list observations, and survey data on income or estimates of income inequality. Following our principle of not covering fully imputed wealth inequality estimates, we can only keep a subset of the countries for which Credit Suisse publishes data. The countries in our database are listed in Table \ref{tab:cs_qual}.  Importantly, we also, as in the case of WID_ineq, classify an estimate of not fully imputed even though the distributional information has not been directly obtained from microdata (such as the HFCS micro data) but indirectly via available databases or research papers. 
+In general, we have obtained data points referring to years prior to 2000 from the 2016 Databook and the 2017 Databook, data points referring to the period 2000–2014 derive from the 2014 Databook, while we sourced and data points referring to more recent years primarily from the 2019 Databook. Furthermore, we do not cover the full
+available time-series for countries where the unit of analysis (such as households, or tax units) changes along the series. Such a change tends to result in substantial jumps in estimates of wealth inequality in the @CreditSuisse_CreditSuisseGlobalWealthReport. The decisions affects Italy and Canada, for which the original series provided by @CreditSuisse_CreditSuisseGlobalWealthReport is longer than the series covered by our warehouse. In addition, we excluded some estimates of the Gini index well above 100 (affecting Denmark). While the Gini index for net worth can be above 100 in the case of net wealth (due to negative net wealth), some values published by @CreditSuisse_CreditSuisseGlobalWealthReport are well above 100 and not covered by our warehouse.
+
+Table \ref{tab:cs_qual} shows for each country covered by the GC Wealth Project Wealth Inequality Trends Database the data source for the estimate of per capita wealth; the  the data source for the estimate of wealth inequality which can be a published research paper or report, a database, official statistics, or microdata; the reference years of the source providing distributional data; and the reference years for which @CreditSuisse_CreditSuisseGlobalWealthReport has used micro-level wealth distribution data, rather than wealth inequality estimates published by another source. 
+
+```{r cs_qual, echo=FALSE, message=FALSE}
+cs_qual <- "../../raw_data/ineq/CS_ineq/raw data/data_quality_table.xlsx"
+
+#compare to warehouse
+whouse <- read_delim("../../output/databases/warehouse.csv") 
+cs_dat<- whouse %>% filter(source=="CS_ineq")
+rm(whouse)
+
+cs_qual <- read_excel(cs_qual, na = "NA") %>% 
+  select(Country = GEO_Long, Source_Mean_W = Source_Macro, 
+         Source_Micro = Source_Micro, Ref_Years = Ref_Years, 
+         Ref_Micro = Ref_Years_Micro)
+setdiff(cs_dat$GEO_long, cs_qual$Country)
+
+kbl(cs_qual %>% drop_na(), 
+    format="latex",
+    caption = "CS\\_ineq: Countries Covered by GC Wealth Warehouse", 
+    longtable = T,
+    centering = T,
+    booktabs = T,
+    col.names = c("Country", 
+                  "Source: Per Capita Wealth", 
+                  "Source: Distribution", 
+                  "Reference Years (Distribution)",
+                  "Reference Years (Micro Data)"),
+    align = c('r', 'l', 'l', 'r', 'r')) %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "4.3cm") %>%
+  column_spec(4, width = "9.5cm") %>%
+  column_spec(5, width = "4.5cm") %>%
+  kable_styling(font_size = 8) %>% landscape()
+```
+
+# Country-Specific Coverage
+
+```{r appendix_ineq, echo=FALSE, results = 'asis', warning=FALSE, message=FALSE}
+##load dictionary
+dict <- read_excel("../../handmade_tables/dictionary.xlsx", 
+    sheet = "Sources")
+
+ineq_whouse <- "../../output/databases/warehouse_viz.csv"
+ineq_whouse <- read_csv(ineq_whouse)
+ineq_whouse <- ineq_whouse  %>% 
+  filter(substr(varcode,1,1)=="t") %>% arrange(GEO)
+out_list <- list()
+#list of countries
+cntries <- unique(ineq_whouse$GEO)
+geo_longs <- unique(ineq_whouse$GEO_long)
+
+for(c in 1:length(cntries)){
+  tmp <- ineq_whouse %>% filter(GEO==cntries[c])
+  tmp_n <- tmp %>% group_by(source) %>% summarise(n = n(), 
+  min_y = min(year),max_y = max(year)) %>%
+    mutate(year_range = paste0(min_y, " - ", max_y))
+tmp_longnames <- tmp %>% group_by(source, longname) %>% 
+  summarise(n =n()) %>% ungroup() %>% group_by(source) %>% select(-n) %>% arrange(longname) %>% summarise(longnames  = paste(longname, collapse =", \n "), times = length(longname)) %>% select(-times)
+
+
+#merge cite key
+tmp_n<- merge(tmp_n, dict %>% select(source = Source,  key = Citekey)) 
+#format cite key
+tmp_n <- tmp_n %>% mutate(key = paste0("\\cite{",key, "}")) %>%
+  select(source, key, year_range, n)
+
+out <- merge(tmp_n, tmp_longnames)  
+for(r in 1:nrow(out)){
+  t_ln <- strsplit(out$longnames[r], "\n")
+  for(k in 1:length(t_ln[[1]])){
+    t_ln[[1]][k] <- trimws(t_ln[[1]][k])
+  }
+  t_ln <- unlist(t_ln)
+  for(l in 1:length(t_ln)){
+    t_ln[l] <- sub("\\ -.*", "", t_ln[l])
+  }
+  t_ln <- unique(t_ln)
+  t_ln <- paste(t_ln, collapse=', ')
+  out$longnames[r] <- t_ln
+}
+
+#line breaks 
+
+cntry_name <- geo_longs[c]
+  
+cap <- paste0("Sources, Time Span and Number of Observations on " , cntry_name)
+lab <- paste0("\\label{tab:", cntries[c],"}")
+
+out$source <- gsub("_", "\\\\_", out$source)
+
+#generate new source column 
+out$source <- paste0(out$source, " (", out$key, ")")
+out <- out %>% select(-key)
+out_list[c] <- print(
+  kable(out, 
+        col.names = c("Source", 
+                      "Period Covered", 
+                      "Observations",
+                      "Variable Types"), 
+        format="latex", 
+        booktabs = T, 
+        escape = FALSE,
+        longtable = TRUE,
+        align = c('r','c', 'c', 'l'),
+        caption = paste0(lab, cap)) %>% 
+    kable_styling(font_size = 8) %>%
+    column_spec(1, width = "9cm") %>%
+    column_spec(2, width = "2cm") %>% 
+    column_spec(3, width = "1.5cm") %>% 
+    column_spec(4, width = "9.5cm") %>%
+    landscape() 
+) 
+
+cat("\n")
+
+out_list[c]
+
+}
+```
+
+
+
+
+
+

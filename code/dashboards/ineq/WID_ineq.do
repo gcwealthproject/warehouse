@@ -2,29 +2,47 @@
 clear all
 local source WID_ineq
 
-*global path 	"`:env USERPROFILE'/Dropbox/gcwealth"
-*cd "$path"
+** Working Directories Local
+********************************************************************************
+global ineq_dir_raw raw_data/ineq
+global supvar_wid_dwld raw_data/wid	
 
-run "code/mainstream/auxiliar/all_paths.do"
-run $memorize_labels
+	local sourcef "${ineq_dir_raw}/`source'"
+	local rawdata "`sourcef'/raw data/`source'.csv"
+	local results "`sourcef'/final_table/`source'"
+	local clear_c "`sourcef'/raw data"
+********************************************************************************
+
+
+*run "code/mainstream/auxiliar/all_paths.do"
+*run $memorize_labels
 
 //define internal paths 
-local sourcef "${ineq_dir_raw}/`source'"
-local rawdata "`sourcef'/raw data/`source'.csv"
-local results "`sourcef'/final_table/`source'"
-local clear_c "`sourcef'/raw data"
-di "`clear_c'"
+*local sourcef "${ineq_dir_raw}/`source'"
+*local rawdata "`sourcef'/raw data/`source'.csv"
+*local results "`sourcef'/final_table/`source'"
+*local clear_c "`sourcef'/raw data"
+*global supvar_wid_dwld raw_data/wid	
+*di "`clear_c'"
 
 
 //file with countries to keep
+** Check: https://wid.world/document/global-wealth-inequality-on-wid-world-estimates-and-imputations-world-inequality-lab-technical-note-2025-01/
 import excel "`clear_c'/data_quality_table.xlsx", sheet("keep") firstrow clear
+
+** Chile not yet updated with Flores at al. 2026 JPubE series??
+*insobs 1, after(_N)
+*replace area="CL" if _n==_N
 drop if missing(area)
 keep area
 tempfile geo_file_b
 save `geo_file_b'
 
-//save inflation rates in memory 
-qui import delimited "${supvar_wid_dwld}/supvars_wide_4Nov2022.csv", clear 
+
+//save inflation rates in memory - Undated to "supvars_wide_18Jul2025"
+* qui import delimited "${supvar_wid_dwld}/supvars_wide_4Nov2022.csv", clear 
+qui import delimited "${supvar_wid_dwld}/supvars_wide_18Jul2025.csv", clear 
+tab year 
 qui keep country year inyixx 
 qui keep if !missing(inyixx)
 tempfile tf_infl 
@@ -33,6 +51,7 @@ qui save `tf_infl'
 
 //import
 import delimited "`rawdata'", clear
+
 
 //clean
 drop if missing(value)
@@ -51,12 +70,12 @@ gen specific = ""
 	qui replace specific = "es" if  pop=="j"
 	qui replace specific = "tu" if  pop=="t"
 	qui replace specific = "ia" if  pop=="i"
-	
+
 drop variable pop
 drop if missing(specific)
 drop if specific == "tu"
 drop if specific == "ia"
-//1 160 obs deleted (labeled as m (male) or f (female)
+
 
 //changing gini and dsh values
 qui replace value = value * 100 if vartype=="gin" | vartype=="dsh"
@@ -103,22 +122,7 @@ qui drop inyixx
 order area year value percentile source varcode
 
 
-
-// Keep relevant Info
-*********************************************************
-
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p10" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p20" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p30" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p40" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p50" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p60" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p70" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p80" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p90" 
-drop if varcode=="t-hs-thr-netwea-es" & percentile=="p0p99" 
-
-
-
 //export
-qui export delimited "`results'", replace
+order area year value percentile varcode source
+qui export delimited "`results'", replace 	
+

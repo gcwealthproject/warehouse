@@ -1,0 +1,403 @@
+---
+output:
+  pdf_document: default
+header-includes:
+  - \usepackage{multirow}
+---
+
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+#library(devtools)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+library(data.table)
+library(dplyr)
+
+if (!exists("warehouse_version")) {
+  warehouse_version <- "2"
+}
+warehouse_path <- paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")
+taxw_warehouse <- read_csv(warehouse_path, show_col_types = FALSE) %>%
+  filter(substr(varcode, 1, 1) == "x")
+```
+
+# Appendix to the Taxes on Wealth Section
+
+## Introduction
+
+The Appendix of the Taxes on Wealth section of the GC Wealth Project provides additional information on the data creation and data validation processes and the full list of sources included.
+
+## Data Creation Process
+
+Information on estate, inheritance, and gift taxes is collected from three broadly different source categories: 1) legal tax documents from public entities, 2) information on tax codes and schedules from third-party sources, and 3) tax revenue data from the OECD [@OECDStatistics_RevenueStatisticsOECDCountriesComparative]. 
+
+The construction of the database relies on a structured data pipeline that transforms heterogeneous, country‑level tax schedule information into a harmonized and standardized warehouse. The process starts with manual data input from standardized Excel templates compiled for each source–country pair. To ensure comparability of Estate, Inheritance, and Gift tax schedules and rates across countries and over time, the information is stratified by transfer category (estate, inheritance, and gift) and donor relationship. Estate, Inheritance, and Gift tax information that does not fit into the harmonized set of variables is documented in country-year-specific Note. Table \ref{tab:legend_table} below reports the scheme for inputting tax information from each source for a country.
+
+```{r legend_table, results='asis', echo=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+file_path <- "../../handmade_tables/taxw_input_format.xlsx"
+
+legend_df <- read_excel(
+  path  = file_path,
+  sheet = "legend"
+) %>%
+  select(1:4) %>%
+  filter(if_any(everything(), ~ !is.na(.))) %>%
+  mutate(across(everything(), ~ ifelse(is.na(.), "", .)))
+
+kable(
+  legend_df,
+  format     = "latex",
+  booktabs   = FALSE,
+  longtable  = TRUE,
+  escape     = TRUE,
+  align      = c("l", "l", "r", "l"),
+  caption    = "Legend: variable definitions and coding rules",
+) %>%
+  kable_styling(
+    latex_options = c("repeat_header", "hold_position"),
+    font_size = 8
+  ) %>%
+  collapse_rows(columns = 1:2, valign = "middle") %>%  
+  column_spec(1, width = "3.2cm") %>%
+  column_spec(2, width = "4cm") %>%
+  column_spec(3, width = "3cm") %>%
+  column_spec(4, width = "5cm")
+
+```
+
+A first round of cleaning and standardization enforces basic validity requirements, including the presence of mandatory variables, admissible values, and coherent year ranges. Controlled‑vocabulary variables (such as country identifiers and currencies) are systematically validated against reference tables from the project dictionary to ensure cross‑dataset comparability and consistent naming conventions.
+
+Subsequent stages address the analytical harmonization of the tax schedules. In cases where a tax is inactive or fully exempt, fiscal parameters are automatically filled according to predefined rules, ensuring internal consistency across variables. Reported tax schedules are then decomposed into numeric components, checked for logical coherence, and adjusted for exemptions or tax credits which are embedded in the schedule structure. Adjacent brackets with identical marginal rates are merged, and the dataset is reshaped so that each row corresponds to a single tax bracket. Finally, general indicators — such as tax type, top marginal rate, and top rate lower bound — are filled where missing, variables are renamed and labeled according to the dictionary, and the fully harmonized dataset is saved in a long format suitable for integration into the main warehouse.
+
+All monetary variables in the database are harmonized following a standardized currency framework defined in the project dictionary. While the Excel is filled with the values as reported in the original source, during the harmonization process the monetary values are converted to local currency units used in the World Inequality Database in 2025 to allow comparability. Automatic warnings flag non‑standard or outdated currency codes, while manual validation ensures coherence in cases of monetary unions, dollarized economies, or historical currency changes. 
+For 30 countries (Australia, Austria, Belgium, Chile, Croatia, Cyprus, Czechia, El Salvador, Equatorial Guinea, Finland, France, Germany, Gibraltar, Greece, Ireland, Italy, Jamaica, Lithuania, Luxembourg, Mauritania, Mexico, Netherlands, New Zealand, Norway, Peru, Portugal, Spain, Turkey, Venezuela, Zambia), the sources report tax schedules in a historical national currency in place in a given year (for instance, German Mark in Germany prior to the introduction of the Euro). We convert those historical currency values to the local currency unit by using the fixed conversion rate established at the time of currency exchange in each country. 
+For Barbados, Belize, Bolivia, Chile, Cuba, Guyana, Isle of Man, Somalia, Uzbekistan, and Zimbabwe, for which the sources report the tax schedule in a different currency (not a historical one), we use the market exchange rate to get the national currency. Table \ref{tab:eig_curr} below reports the fixed conversion rates we applied. 
+
+```{r eig_curr, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
+
+eig_curr <- read_excel("../../handmade_tables/taxw_currency.xlsx", sheet = "conversion") %>%
+  mutate_all(~ ifelse(is.na(.), " ", as.character(.)))
+
+
+eig_curr <- read_excel(
+  "../../handmade_tables/taxw_currency.xlsx",
+  sheet = "conversion"
+) %>%
+  filter(`fixed_rate` == 1) %>%     
+  select(-`fixed_rate`) %>%       
+  mutate(across(everything(), ~ ifelse(is.na(.), " ", as.character(.))))
+
+#, linesep = "\\addlinespace"
+eig_curr %>%
+ kbl(format="latex", align = "l",
+  caption = "Currency fixed conversion rates for Taxes on Wealth adjusted tax schedules", 
+  booktabs = T, linesep="",
+  )%>% 
+  kable_styling(
+    latex_options = c("repeat_header", "hold_position"),
+    font_size = 8
+  ) %>%
+    column_spec(1, width="3cm")%>% 
+    column_spec(2, width="2cm")%>% 
+    column_spec(3, width="2cm")%>% 
+    column_spec(4, width="2cm") %>% 
+    column_spec(5, width="3cm") 
+
+```
+
+
+## Data Quality Assessment
+
+Data quality is assessed through a combination of automatic and manual checks applied at different stages of the pipeline. Automated verification routines implemented in Stata systematically detect errors and inconsistencies, such as inadmissible values, negative entries where positive amounts are expected, incoherent combinations of tax status and exemptions, or overlapping information across sources. When multiple sources are available for the same country–year observation, a hierarchical selection mechanism assigns a single reference source based on data completeness, temporal coverage, and preference for legislative material. In cases of disagreement, the most reliable information is retained, while discrepancies are explicitly documented in the notes.
+
+Beyond internal consistency checks, data quality is further evaluated through ex‑post validation using coverage diagnostics. Country‑level and cross‑country data coverage graphs are produced to assess the temporal availability of key tax dimensions, including tax status, exemptions, marginal rates, full tax schedules, and revenues. These visual tools support the identification of gaps, inconsistencies, and implausible patterns over time, enabling targeted corrections before release. Together, this multi‑layered validation framework ensures that the final Taxes on Wealth v2.0 dataset is internally coherent, transparent in its sourcing decisions, and suitable for comparative and longitudinal analysis. Figure~\ref{fig:coverage_italy} illustrates an example of country-level data coverage for Italy. 
+
+\begin{landscape}
+\begin{figure}[htbp]
+\centering
+\caption{Example of country-level data coverage for Italy in the Taxes on Wealth database}
+```{r coverage_italy, echo=FALSE, results='asis'}
+coverage_italy <- file.path(
+  doc_root, "..", "..", "raw_data", "taxw", "country_sheets",
+  "data_coverage", "Italy", "coverage_Italy.pdf"
+)
+coverage_italy <- render_path(coverage_italy)
+cat("\\includegraphics[page=1, width=1.5\\textheight]{", coverage_italy, "}\n", sep = "")
+```
+\label{fig:coverage_italy}
+\end{figure}
+\end{landscape}
+
+## Data Expansion
+
+Version 2.0 of the Taxes on Wealth database substantially expands both the geographical coverage and the temporal depth of the Taxes on Wealth section. The release introduces 31 newly covered countries, accounting for 447 new country‑year observations, and extends the historical coverage for 93 countries already included in previous versions, adding 2,017 additional country‑year observations.
+
+Table \ref{tab:new_data_table} summarizes all additions introduced in version 2.0 relative to version 1.2. 
+
+```{r new_data_table, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+
+# Panel A: new countries
+panel_a <- tribble(
+  ~Country, ~Years,
+  "Benin", "2008–2025",
+  "Burundi", "2012–2025",
+  "Central African Rep.", "2009–2025",
+  "Comoros", "2009–2025",
+  "Curaçao", "2011–2023",
+  "Djibouti", "2012–2025",
+  "Dominica", "2010–2025",
+  "Eritrea", "2010–2025",
+  "Gambia", "2010–2025",
+  "Guinea-Bissau", "2010–2024",
+  "Kiribati", "2008, 2015",
+  "Liberia", "2009–2025",
+  "Libya", "2009–2023",
+  "Micronesia", "2010–2025",
+  "Montenegro", "2009–2025",
+  "Myanmar", "2009–2025",
+  "Nepal", "2009–2025",
+  "Palau", "2015–2025",
+  "Saint Martin", "2011–2023",
+  "Sao Tome and Principe", "2016–2023",
+  "Sierra Leone", "2010–2024",
+  "South Sudan", "2014–2023",
+  "St. Kitts and Nevis", "2009–2025",
+  "St. Vincent and the Grenadines", "2010–2025",
+  "Sudan", "2010–2025",
+  "Suriname", "2001–2008",
+  "Tajikistan", "2015–2025",
+  "Tonga", "2009–2025",
+  "Turkmenistan", "2009–2025",
+  "Vanuatu", "2009–2025",
+  "Yemen", "2012–2025"
+)
+
+# Panel B: extensions
+panel_b <- tribble(
+  ~Country, ~Years,
+  "Afghanistan", "1919–1972, 2024–2025",
+  "Albania", "1913–1989, 2024–2025",
+  "Andorra", "1940–1992, 2019–2025",
+  "Angola", "1932–2005, 2024–2025",
+  "Antigua and Barbuda", "2024–2025",
+  "Armenia", "2024–2025",
+  "Austria", "2025",
+  "Azerbaijan", "1918–1990, 2024–2025",
+  "Barbados", "1982",
+  "Belize", "2023–2025",
+  "Bolivia", "2024–2025",
+  "Brazil", "1822–1933",
+  "Bulgaria", "1900, 1908, 1914, 2025",
+  "Cameroon", "2024–2025",
+  "Canada", "1960–1964",
+  "Cayman Islands", "2006–2007, 2024",
+  "China", "1949–2005",
+  "Congo", "2023",
+  "Costa Rica", "1942–1989",
+  "Croatia", "1993–1994",
+  "Cuba", "1903–1930, 1932–1993",
+  "Cyprus", "1960–2005, 2025",
+  "Dominican Rep.", "1938–1989, 2024–2025",
+  "Ecuador", "2024–2025",
+  "Egypt", "1938–2001, 2024–2025",
+  "Estonia", "1991–1994",
+  "Fiji", "1970, 2006–2007",
+  "France", "2025",
+  "Germany", "2025",
+  "Ghana", "1965",
+  "Greece", "1880–1896, 1899–1909",
+  "Grenada", "2016",
+  "Guam", "2006–2007",
+  "Guinea", "2023–2025",
+  "Honduras", "1939–1981, 2023–2024",
+  "Hong Kong", "2006–2007",
+  "Hungary", "1867",
+  "Iceland", "2024–2025",
+  "India", "1986–2007, 2025",
+  "Isle of Man", "2006–2007, 2009–2023",
+  "Jamaica", "1962",
+  "Jersey", "2006–2007",
+  "Jordan", "1921–2007, 2024–2025",
+  "Kenya", "1963–2004, 2024",
+  "Kuwait", "2006–2007",
+  "Latvia", "2024–2025",
+  "Lebanon", "2024–2025",
+  "Lesotho", "2006–2007",
+  "Liechtenstein", "1884–1912",
+  "Lithuania", "2024–2025",
+  "Luxembourg", "2024",
+  "Macao", "2001–2007, 2009–2020",
+  "Malaysia", "1957–1989, 2007, 2009–2011, 2017–2019, 2022–2023",
+  "Mauritania", "2007–2008, 2023",
+  "Mauritius", "2023",
+  "Moldova", "2006–2007, 2024–2025",
+  "Monaco", "2025",
+  "Mongolia", "2023",
+  "Morocco", "2023",
+  "Nicaragua", "1962, 1982",
+  "Nigeria", "1979, 2006–2007",
+  "North Macedonia", "1993",
+  "Oman", "2020",
+  "Pakistan", "2024–2025",
+  "Paraguay", "1953–1989",
+  "Peru", "1980–1989",
+  "Philippines", "1946",
+  "Poland", "1919, 1983, 2025",
+  "Portugal", "1839–1843, 1845–1911",
+  "Puerto Rico", "2010–2023",
+  "Romania", "1877–1900",
+  "Russia", "1882–1909",
+  "Serbia", "1914, 2006–2007",
+  "Singapore", "1965–1977",
+  "Slovakia", "1993",
+  "Somalia", "1971",
+  "Spain", "1814–1835, 1845–1914, 2025",
+  "Switzerland", "1798–1914",
+  "Syrian Arab Republic", "1952–1998, 2004–2005",
+  "Taiwan", "1973, 2012–2023",
+  "Thailand", "1933–1999",
+  "Trinidad and Tobago", "1962, 1982",
+  "Tunisia", "1956–1993, 2024–2025",
+  "Turkey", "1820, 1926–1958",
+  "Ukraine", "2006–2007, 2009–2011",
+  "United Arab Emirates", "2024–2025",
+  "United Kingdom", "1780–1852, 2024",
+  "United States", "1863, 1865–1869, 1871–1897, 1899",
+  "Uruguay", "1857, 1914, 1982",
+  "Uzbekistan", "2006–2007, 2009–2023",
+  "Venezuela", "1831, 1960, 1982, 2024–2025",
+  "Viet Nam", "2023–2025",
+  "Zimbabwe", "2012–2023"
+)
+
+tab_df <- bind_rows(panel_a, panel_b)
+
+kable(
+  tab_df,
+  format   = "latex",
+  booktabs = TRUE,
+  longtable = TRUE,
+  linesep  = "",
+  align    = c("l", "l"),
+  caption  = "New countries and extensions of historical coverage in Taxes on Wealth v2.0. The table aggregates additions from record-level differences between versions."
+) %>%
+  kable_styling(
+    latex_options = c("repeat_header", "hold_position"),
+    font_size = 8
+  ) %>%
+  pack_rows(
+    "Panel A: Newly covered countries",
+    1, nrow(panel_a),
+    italic = TRUE, bold = TRUE
+  ) %>%
+  pack_rows(
+    "Panel B: Extensions of historical coverage",
+    nrow(panel_a) + 1, nrow(tab_df),
+    italic = TRUE, bold = TRUE
+  ) %>%
+  column_spec(1, width = "7cm") %>%
+  column_spec(2, width = "7cm")
+```
+
+## Sources Included in the Taxes on Wealth Section
+
+All data sources included in the current version of the Taxes on Wealth section are reported in Table \ref{tab:appendix_taxw_source}.
+
+```{r appendix_taxw_source, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+library(readr)
+library(readxl)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(data.table)
+
+# ------------------------------------------------------------
+# 1. Read final dataset and extract unique sources
+# ------------------------------------------------------------
+eig_viz <- taxw_warehouse
+
+eig_src <- eig_viz %>%
+  select(source) %>%
+  distinct() %>%
+  rename(Source = source)
+
+setDT(eig_src)
+
+# ------------------------------------------------------------
+# 2. Read dictionary and merge source metadata
+# ------------------------------------------------------------
+sources <- read_excel(
+  "../../handmade_tables/dictionary.xlsx",
+  sheet = "Sources",
+  na = " "
+)
+
+setDT(sources)
+
+taxw_list <- sources[eig_src, on = "Source"] %>%
+  filter(!is.na(Legend)) %>%
+  select(Source, AggSource, Legend)
+
+# ------------------------------------------------------------
+# 3. LaTeX-safe formatting 
+# ------------------------------------------------------------
+latex_escape <- function(x) {
+  x %>%
+    gsub("\\\\", "\\\\textbackslash{}", .) %>%
+    gsub("_", "\\\\_", .) %>%
+    gsub("%", "\\\\%", .) %>%
+    gsub("&", "\\\\&", .)
+}
+
+taxw_list <- taxw_list %>%
+  mutate(
+    Source    = latex_escape(as.character(Source)),
+    Legend    = latex_escape(as.character(Legend)),
+    AggSource = latex_escape(as.character(AggSource))
+  ) %>%
+  arrange(Legend)
+
+# ------------------------------------------------------------
+# 4. Table output 
+# ------------------------------------------------------------
+kable(
+  taxw_list,
+  format     = "latex",
+  booktabs   = FALSE,
+  longtable  = TRUE,
+  escape     = FALSE,
+  align      = c("l","l","l"),
+  col.names  = c("Source", "Source type", "Source description"),
+  caption    = "Sources in the Taxes on Wealth Section",
+  linesep    = ""  
+) %>%
+  kable_styling(
+    font_size = 8,
+    latex_options = c("repeat_header", "hold_position")
+  ) %>%
+  column_spec(1, width = "3.5cm") %>%
+  column_spec(2, width = "4.5cm") %>%
+  column_spec(3, width = "7cm") 
+
+```

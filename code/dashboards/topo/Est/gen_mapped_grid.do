@@ -61,7 +61,10 @@ save `temp_2'
 // Import
 * import delimited "${origin}/nasa_10_f_bs__custom_3518312_linear.csv",  varnames(1) delimiter(";") clear // June 2023 Version
 *import delimited "${origin}/nasa_10_f_bs__custom_7119296_linear.csv",  varnames(1) clear // August 2023 Version
-import delimited "${origin}/nasa_10_f_bs__custom_11875082_linear.csv",  varnames(1) clear // Juni 2024 Version			
+*import delimited "${origin}/nasa_10_f_bs__custom_11875082_linear.csv",  varnames(1) clear // Juni 2024 Version			
+*import delimited "${origin}/nasa_10_f_bs__custom_18259401_linear.csv",  varnames(1) clear // October 2025 Version			
+import delimited "${origin}/nasa_10_f_bs__custom_20747415_linear.csv",  varnames(1) clear // March 2026 Version	
+
 
 // drop vars we don't need
 drop dataflow lastupdate freq obs_flag
@@ -88,8 +91,9 @@ rename geo area // Rename area
 
 drop finpos // finpos already included in na_code
 
-drop if area == "EU27_2020"
-drop if area == "EA20" 
+//drop if area == "EU27_2020"
+//drop if area == "EA20" 
+replace area = "EU27" if area == "EU27_2020"
 replace sector = "S1M" if sector == "S14_S15"
 
 // keep only sector, na_code and area (old: for which there are data in 2019)
@@ -105,36 +109,45 @@ replace sector = "hs" if sector == "S14"
 replace sector = "np" if sector == "S15"
 
 levelsof sector, local(loc_sector)
+quietly levelsof area, local(areas) clean
+local n : word count `areas'
 
 tempfile temp_sector
 save `temp_sector'
 
+* 1) ensure a clean workbook for this run
+cap erase "${destination}/grid.xlsx"
+
 foreach s of local loc_sector {
 
-	use `temp_sector', clear
-	
-	keep if sector ==  "`s'" 
+    use `temp_sector', clear
+    keep if sector == "`s'"
 
-	tempfile temp_area
-	save `temp_area'
+    tempfile temp_area
+    save `temp_area'
 
-	levelsof area, local(loc_area)
+    * get list of areas for this sector
+    levelsof area, local(loc_area) clean
+    di as res "Areas to export for sector `s': `loc_area'"
 
-	foreach a of local loc_area {
+    foreach a of local loc_area {
 
-		use `temp_area', clear
+        use `temp_area', clear
+        keep if area == "`a'"
 
-		keep if area ==  "`a'" 
-			
-		merge 1:1 na_code using "`temp_2'", update 
+        * merge additional info (assumes `temp_2' exists with key na_code)
+        merge 1:1 na_code using "`temp_2'", update
 
-		drop if sector == ""
-		drop _merge sector area 
-		drop if source_code == ""
+        * tidy up
+        drop if sector == ""
+        drop _merge sector area
+        drop if source_code == ""
 
-		qui export excel "${destination}/grid", sheet("`a'_`s'", replace) firstrow(variables) 
-
-
+        * 2) write/update the sheet for this area×sector
+        export excel using "${destination}/grid.xlsx", ///
+            sheet("`a'_`s'") firstrow(variables) sheetreplace
+    }
 }
-}
+
+ 
 

@@ -1,4 +1,4 @@
-*(inequality is done in 03a)
+
 
 //general settings 
 clear all 
@@ -76,14 +76,21 @@ run $harmonize_ctries
 qui rename GEO area 
 
 //order 
+run $harmonize_source_aliases
 qui sort source area _2_sector_lab
 qui order source area _2_sector_lab _4_concept_lab metadata label 
 qui export excel "output/metadata/metadata_topo.xlsx", ///
-	sheet("meta", replace) firstrow(variables)		
+	sheet("meta", replace) firstrow(variables)	
+	
+//2. INEQ ----------------------------------------------------------------------
 
-//2. EIGT SECTION --------------------------------------------------------------
+shell Rscript "code/dashboards/ineq/metadata/create_ineq_metadata.R"
+
+//3. TAXW SECTION --------------------------------------------------------------
 
 /*
-EIGT metadata are already generated in the code: 1_0_EIGT_Warehouse in gcwealth\code\dashboards\eigt and saved in 
-file "output/metadata/metadata_eigt.csv"
+TAXW metadata are already generated in the code: 1_0_TAXW_Warehouse in gcwealth\code\dashboards\taxw and saved in 
+file "output/metadata/metadata_taxw.csv"
 */
+
+//4. INHE (pending)

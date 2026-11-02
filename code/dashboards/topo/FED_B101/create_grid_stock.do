@@ -5,20 +5,10 @@ global origin "${topo_dir_raw}/FED_B101/raw data"
 
 
 * Import dates
-import delimited "${origin}/FRB_Z1.csv", numericcols(1) delimiter(comma) clear
- 
-
-gen n = _n
-order n, first
-
-drop if n == 1 | n == 2 | n == 3 | n == 4 | n == 5 | n == 6
-
-keep v1
-rename v1 year
-
-
-
-* Non-financial assets
+import delimited "${origin}/b101.csv", delimiter(comma) varnames(1) clear 
+keep if substr(date, -2, 2) == "Q4"
+gen year = real(substr(date, 1, 4))
+keep year
 
 gen AN = .
 label var AN "Produced and non-produced non-financial assets"
@@ -419,6 +409,9 @@ label var L_AF81 "Trade credits and advances"
 gen L_AF89 = .
 label var L_AF89 "Other accounts payable"	
 
+gen XAF42LM = .
+label var XAF42LM "Long term loans secured by mortgage"
+
 gen B90 = .
 label var B90 "Net worth"	
 
@@ -431,19 +424,3 @@ foreach var of varlist AN- BF90{
 }
 
 sort year
-
-
-
-* Save quarterly grid
-*save "C:\Users\grella\Dropbox\GC Wealth Project\Data\Raw data\Create general grid\grid_q_stock.dta", replace
-*save "${path}/grid_q_stock.dta", replace
-
-
-
-* Generate and save annual grid
-
-*save "C:\Users\grella\Dropbox\GC Wealth Project\Data\Raw data\Create general grid\grid_a_stock.dta", replace
-save "${path}/grid_a_stock.dta", replace
-
-
-

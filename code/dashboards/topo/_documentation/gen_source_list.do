@@ -101,7 +101,7 @@ save `full'
 
 	use `full', clear 
 		
-	keep if Section == "Wealth Inequality Trends"
+		keep if Section == "Wealth Inequality"
 	
 	gen date = ""
 
@@ -126,7 +126,7 @@ save `full'
 
 	use `full', clear 
 	
-	keep if Section == "Estate, Inheritance, and Gift Taxes"
+	keep if Section == "Taxes on Wealth"
 
 	gen date = ""
 
@@ -143,5 +143,4 @@ save `full'
 	label var date "Download date"
 	
 	//export excel using "${output_documentation}/bible_eig_sources.xlsx", sheet("sources") firstrow(varlabels) replace	
-
 

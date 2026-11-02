@@ -1,0 +1,459 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(glue)
+library(stringr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(readr)
+library(expss)
+```
+
+
+
+# Wealth Inequality {#sec:ineq}
+## Introduction to the Wealth Inequality Section
+The Wealth Inequality section presents a large comprehensive compilation of cross-national time-series data on wealth inequality. This section contains wealth inequality indicators (such as top shares and Gini coefficients) for many countries, as estimated in the existing literature and as derived from existing micro data sources. These data are accompanied by Methodological Tables that provide systematic assessments of the underlying concepts, methods, and sources for the estimation of wealth inequality trends.
+This section provides access to, and detailed information about, wealth inequality across countries and over time. To date, there is no comprehensive database that offers off the shelf indicators on wealth inequality levels and trends for a variety of different sources. Estimates of wealth distributions are much less settled than those of income distributions, and there is substantial controversy about how wealth inequality has evolved in recent years. A core value-added of this section is that users have access to detailed information about the values provided and methodological information that will help them to navigate the inevitable complexity. Users can also exploit our classification of data types, source types, and units of analysis to guide the choice of the most suitable indicator for their purpose.
+
+
+## The Structure of the Wealth Inequality Section
+In the Wealth Inequality database, each estimate of wealth inequality (`value`) is  uniquely identified by the combination of the reference country indexed by a two-digit identifier (`GEO`) and the country name (`GEO_long`), the reference year  (`year`), the data source (`source`), the `varcode`, and a `percentile`. 
+
+Table \ref{tab:show_wh_ineq} provides a small extract from the Wealth Inequality database. This table displays data sourced from the HFCS for Austria in the year 2010. The series reported in the `value` column correspond to an inequality indicator (`varcode`) calculated across various percentiles (`percentile`). Specifically, the `varcode` column provides details about the unit of analysis and the type of wealth inequality measure, while the `percentile` column indicates which segment of the distribution the estimate pertains to. The subsequent sections elaborate on the variables `varcode` and `percentile`
+
+```{r show_wh_ineq, echo=FALSE, show_col_types = FALSE, warning=FALSE, message=FALSE}
+source(file.path("render_support", "render_config.R"))
+whouse <- read_delim(paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")) 
+sketch_AT <- whouse %>% select(source, GEO, GEO_long, year, varcode, percentile, value) %>% filter(source=="HFCS_ineq") %>% filter(GEO=="AT") %>% filter(year==2010) %>% filter(varcode=="t-hs-dsh-netwea-ho")
+kbl(sketch_AT, 
+    format="latex", booktabs = T, 
+    digits=8, 
+    align = "c", 
+    caption = "\\label{tab:intro_ineq} Introducing the GC Wealth Inequality Database -  Snippet") %>% 
+  kable_styling(latex_options = "striped")
+```
+
+## The `varcode` in the Wealth Inequality Section{#subsec:ineq_varcode}
+In the Wealth Inequality section, two of the five elements of `varcode` are fixed across the entire database. The constant elements are the first, that identifies the Section of the GC Wealth Project and takes the value `t`, , and the second, that indexes the household sector and takes the value `hs`. The `Variable Type`, the `Concept`,  and the  `Section-Specific` parts of the `varcode` vary within a source and across sources and are explained in detail in what follows. Hence, `varcode` takes the following form:
+
+\begin{equation}
+\notag \underbrace{\textcolor{blue}{t}}_{\text{Section}} - \underbrace{\textcolor{blue}{hs}}_{\text{Sector}} - \underbrace{CCC}_{\text{Variable Type}} -     \underbrace{DDDDDD }_{\text{Concept}} - \underbrace{ZZ}_{\text{Section-Specific}} 
+\end{equation}
+
+<!--### `Section`: Wealth Inequality -->
+<!--*`Section`* The first element of the varcode identifies the  *section*, which always equals *t*, i.e. our code for the Wealth Inequality database. -->
+<!--### `Sector`: Household Sector -->
+<!--*`Sector`* The second element of the varcode identifies the *sector*, which is set to *hs*, i.e.,  our code for the household sector.  -->
+
+
+\clearpage
+### `Variable Type`
+
+
+The third element of the  `varcode` identifies the broad type of inequality measure. Table \ref{tab:vartype_ineq} provides the permitted strings of the `Variable Type`  within the `varcode` in the Inequality Trends database, together with a label and a description. Note that data on monetary units (averages, thresholds, and totals) are always shown in national currency, in nominal term with no adjustment to inflation. The supplementary variables (see Section \ref{subsec:supplement_var}) could be used to transform all monetary values into other currencies and to adjust for inflation dynamics.
+
+```{r load_ineq_tabs, include=F, echo=F}
+meta_b <- "../../handmade_tables/dictionary.xlsx"
+```
+
+```{r vartype_ineq, echo=FALSE}
+d3 <- read_excel("../../handmade_tables/dictionary.xlsx", 
+                 sheet = "d3_vartype") %>% 
+  filter(code %in% c("avg", "dsh", "gin", "owr", "thr", "tot")) %>%
+  select(Code = code, Label = label, Description = description) 
+
+kbl(d3, format="latex", 
+    align = c('l', 'l', 'l'), 
+    caption = "Wealth Inequality: Variable Type", booktabs = T)  %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "11cm") %>%
+kable_styling(latex_options = "striped")
+```
+
+
+\clearpage
+### `Concept`
+The fourth element of the `varcode` identifies the `Concept`. In the Wealth Inequality database, a concept is the asset category the indicator refers to. The nomenclature and definitions are borrowed from the Wealth Topography Section and detailed in Table \ref{tab:concept_ineq}. The Table reports the concepts and the corresponding identifiers used in the  `varcode` of the Wealth Inequality database, together with a detailed description and the list of available `Variable Type` associated with each concept. For example, with respect to total net wealth (`netwea`), the available indicators include averages (`avg`), shares (`dsh`), thresholds (`thr`), and totals (`tot`) held by different segments of the distribution (further specified by the variable `percentile`), as well as overall Gini (`gin`) estimates.
+
+
+```{r concept_ineq, echo=FALSE, warning=FALSE, message=FALSE}
+# 1. Importa e dividi varcode in 5 parti
+df <- read_csv("../../raw_data/ineq/ineq_ready.csv",
+               col_names = c("area","year","value","percentile","varcode","source"),
+               show_col_types = FALSE)
+
+df <- df %>%
+  separate(varcode, into = c("varcode1","varcode2","varcode3","varcode4","varcode5"),
+           sep = "-", extra = "merge", fill = "right")
+
+# 2. Var_type per ogni concetto
+table_df <- df %>%
+  group_by(code = varcode4) %>%
+  summarise(Var_type = paste(unique(varcode3), collapse = ", "), .groups = "drop")
+
+# 3. Dizionario
+dictionary <- read_excel("../../handmade_tables/dictionary.xlsx",
+                         sheet = "d4_concept") %>%
+  select(code, label) %>%
+  filter(!is.na(code) & code != "")
+
+# 4. Merge
+table_df <- table_df %>%
+  inner_join(dictionary, by = "code") %>%
+  select(code, label, Var_type)
+
+# 5. Ordina con priorità
+table_df <- table_df %>%
+  mutate(sort_order = case_when(
+    code == "netwea" ~ 1,
+    code == "nnhass" ~ 2,
+    code == "nfahou" ~ 3,
+    code == "fliabi" ~ 4,
+    TRUE ~ 5
+  )) %>%
+  arrange(sort_order, code) %>%
+  select(-sort_order)
+
+# 6. Tabella
+kbl(table_df,
+    format = "latex",
+    booktabs = T,
+    align = c('l', 'l', 'l'),
+    col.names = c("Code", "Label", "Var Type"),
+    caption = "Wealth Inequality: Concept Dictionary") %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "8cm") %>%
+  column_spec(3, width = "5cm") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
+```
+
+
+
+\clearpage
+### `Section-Specific`
+In the Wealth Inequality database, the section-specific part of the `varcode` refers to the unit of analysis of the wealth inequality indicator. The databases distinguishes four types of units of analysis: individual adults (`ia`), individual adults with equal split (`es`), tax units (`tu`), and households (`ho`). The list of permitted strings and a short description is provided in Table \ref{tab:dboard_ineq}. 
+
+<!-- Importantly, the *`section-specific`* part does refer to the unit of analysis to which the wealth inequality estimate refers to, and it does, by contrast, **not describe the unit of observation of the data sources used in the underlying research or the level at which the underlying data has been collected**. To give an example of the difference between the unit of analysis of the estimate and the unit of observation: several surreys collect data on wealth at the household level while researchers infer the distribution among adult individuals under specific assumption, such as an equal split of wealth among adult household members, and publish estimates speaking to wealth inequality among individuals. In this case, the *`section-specific`* part of the  `varcode` will refer to individual adults (the unit of analysis) and not to households (the unit of observation). If relevant, we explain difference between the unit of analysis of an estimate of wealth inequality covered by the database and the unit of observation in the underling data source, as well as any assumptions involved in the construction of a new unit of analysis, in detailed in the Methodological Table of the source.  -->
+
+```{r dboard_ineq, echo=FALSE}
+d5 <- read_excel("../../handmade_tables/dictionary.xlsx",
+                 sheet = "d5_dboard_specific") %>% 
+  filter(code %in% c( "ia",  "es", "tu", "ho")) %>%
+  select(Code = code, Label = label, Description = description)
+
+
+kbl(d5, format="latex", 
+    align = c('l', 'l', 'l'), 
+    caption = "Wealth Inequality: Section-Specific", booktabs = T)  %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "11cm") %>%
+kable_styling(latex_options = "striped")
+```
+
+
+
+\clearpage
+## The `percentile` variable in the Wealth Inequality Section
+
+In addition to the `varcode`, values are indexed by the  `percentile` variable. This variable identifies the reference segment of the net wealth distribution for each inequality indicator. In particular it specifies the lower-bound and the upper-bound percentiles delimiting the reference group. For the share of wealth held by the richest 1\%, for instance, the `percentile` variable corresponds to *p99p100*. If the index refers to the overall population, as in the case of the overall net wealth or the Gini index, the `percentile` variable corresponds to *p0p100*. We provide a selection of permitted percentiles in Table \ref{tab:percentiles_tab}; the full list can be found in the `dictionary.xlsx`. 
+
+```{r percentiles_tab, echo=FALSE}
+perc <- read_excel("../../handmade_tables/dictionary.xlsx",
+                 sheet = "percentiles") %>%
+  select(Code = percentile, Label = label_percentile, 
+         Description= description_percentile) %>%
+  filter(Code %in% c("p0p10", "p0p100", "p90p99", "p99p100", "p99.999p100"))
+
+
+kbl(perc %>% drop_na(), 
+    format="latex",
+    booktabs = T,  longtable=T,
+    caption = "Wealth Inequality: Selected Percentiles", 
+    align = c('l', 'l', 'l')) %>%
+  column_spec(1, width = "2.5cm") %>%
+  column_spec(2, width = "5cm") %>%
+  column_spec(3, width = "8cm") %>%
+  kable_styling(latex_options = "striped")
+
+```
+
+## Construction of the Wealth Inequality Section
+
+The procedure used to construct the Wealth Inequality database is outlined in Figure \ref{fig:flow_chunk}. First, we identify the relevant sources and obtain the raw data. Second, we transform and harmonize the raw data to fit our standards in terms of format and structure. Third, we run a set of tests and append the source-specific estimates to the database. Concurrently, we develop and write a detailed **Methodological Table**.
+
+```{r flow_chunk, echo=FALSE, out.width = "40%", fig.align = "center", fig.cap = "Wealth Inequality Workflow"}
+knitr::include_graphics(
+  render_path(file.path(doc_root, "docs", "stylized_flow_chart_ineq.png")),
+  rel_path = FALSE
+)
+```
+
+
+### Step 1: Identification and Classilfication of Sources
+The starting point is the identification of relevant data on wealth inequality estimates. These estimates can originate from different *types* of sources, like academic, government, and corporate research, as well as cross-national research and official statistics. Table \ref{tab:source_type_tab} provides an overview of the permitted types of source. 
+
+
+```{r source_type_tab, echo=FALSE}
+perc <- read_excel("../../handmade_tables/dictionary.xlsx",
+                 sheet = "source_type") %>%
+  select(Label = label, Description = description) 
+  
+
+kbl(perc %>% drop_na(), 
+    format="latex",
+    booktabs = T,  longtable=T,
+    caption = "Wealth Inequality: Source Types", 
+    align = c('l', 'l')) %>%
+   column_spec(1, width = "4cm") %>%
+  column_spec(2, width = "10cm") %>%
+  kable_styling(latex_options = "striped")
+
+```
+
+
+Each source estimates inequality indicators using different types of data, such as household surveys, administrative data, and national accounts. To track these differences, we categorize each source according to the type of data used, as detailed in the taxonomy listed in Table \ref{tab:data_type_tab}. 
+
+
+```{r data_type_tab, echo=F}
+#data type labels
+
+data_type <- read_excel(meta_b,
+                        sheet = "data_type", na = "NA")
+
+kbl(data_type %>% drop_na(), format="latex",
+    booktabs = T,  
+    centering = T,
+        col.names = c("Label", 
+                      "Description"), 
+    caption = "Data Type", align = c('r', 'l')) %>%
+  column_spec(1, width = "8cm") %>%
+  column_spec(2, width = "8cm") %>%
+  kable_styling(latex_options = "striped")
+```
+
+
+As the data type classification is source-specific, the exercise of assigning a type to each source turns out to be less precise for cross-national sources, as we do not differentiate across countries specificities within the same source. For instance, in the case of the Luxembourg Wealth Study Database [@LIS_LuxembourgWealthStudyDatabase] and the OECD Wealth Distribution Database [@OECD2021_WealthDistributionDatabase], we classify the data type as *Household survey*. However, data for one country, Norway, does not come from a wealth survey but from various administrative sources. Similarly, we classify the World Inequality Database [@WorldInequalityDatabase_Data] as a *Mix of sources and methods* to reflect the variety of data sources and estimation methods underlying this source. All these details features in the source-specific **Methodological Table**.
+
+<!-- Among them, the largest group are published research paper or working papers together with appendixes, (additional) documents made available to us by the authors of the (working) paper, and research reports. The second group consists of available databases on wealth inequality, such as the World Inequality Database (@WorldInequalityDatabase_Data) and the OECD Wealth Distribution Database (OECD_ineq). The third group is consists of government-official statistics already publishing wealth inequality estimates, and the forth group is micro data on wealth, which in our case encompasses cross-country harmonized survey-data. In addition, the raw data of this types of sources is provided/available in many different formats, including .pdf documents, .xlsx or .csv files and we are agnostic about the original format and strucutre in which the data is provided. -->
+
+
+Eventually, once the relevant source is identified and correctly classified, we acquire the raw data. 
+
+For sources classified as Cross-national official survey data, we produce our own estimates starting from micro data. In these cases, only the resulting statistics are made available in the warehouse, without releasing the underlying micro data. The code to produce the estimates for each source from the raw micro data is publicly available. Researchers interested in replicating the estimates we provide, should independently request access to the raw micro data from the original data provider.  These sources are: Demographic and Health Surveys [@dhs_various], Global Findex Database [@Findex_ineq], WAEMU Harmonized Household Living Conditions Surveys [@phmecv_various], Household Finance and Consumption Survey [@HouseholdFinanceandConsumptionNetwork2021], Living Standards Measurement Study [@lsms_various], and Luxembourg Wealth Study Database [@LIS_LuxembourgWealthStudyDatabase]. For all other sources, we use the raw data as published.
+
+
+
+### Step 2: Transformation and Harmonization of Raw Data
+
+The published raw data may come in various shapes or formats, including .pdf documents, and .xlsx or .csv files. Therefore, we need to process this information and harmonize the source-specific series to conform to the warehouse standards. This involves assigning each data point (`value`) with relevant information, including its data source (`source`), reference year (`year`), country code (`GEO`, `GEO_long`), type of inequality indicator (`varcode`), and the percentiles of the distribution it represents (`percentile`). This procedure ensures a consistent data structure across all sources.
+If feasible, we derive additional indicators from the available data. For example, if a source provides estimates for the wealth share of the richest 1\% (p99p100) and the wealth share of the richest 10\% (p90p100), we calculate the wealth share of the Next 9\% (90th–99th percentiles) based on these estimates.
+It is important to note that when a source provides multiple estimates for the same inequality series, we select only one of these values, typically the benchmark estimate as defined in the underlying research paper or database. In future releases of the GC Wealth Project, we aim to explore the within-source variation of wealth inequality estimates by incorporating the full range of estimates that reflect different methodological assumptions. 
+Finally, the current version of the Wealth Inequality database does not publish fully imputed estimates of wealth inequality. An estimate is defined as fully imputed if no wealth distribution data was used in the estimation of wealth inequality indicators for a specific country. Wealth distribution data may derive directly from micro-level data or from databases that publish wealth inequality measures estimated on the basis of micro data. This definition implies that the database still includes time series in which wealth distribution data has been used only in one or selected years, with missing years filled through interpolation. This has implications for a handful of sources, such as Credit Suisse [@CreditSuisse_CreditSuisseGlobalWealthReport] and the World Inequality Database [@WorldInequalityDatabase_Data], which are discussed in the Appendix (Section \ref{sec:ineq_appendix_sourcespec}).
+
+
+
+
+
+### Step 3: Testing and Appending
+After making sure the acquired, derived, and estimated wealth inequality indicators follow our formatting standards, we run a set of consistency checks and tests before we append them to the Wealth Inequality database.
+
+<!-- ## Inclusion and exclusion of wealth inequality estimates -->
+<!-- ### Estimates published in the Wealth Inequality Section -->
+<!-- For each specific wealth inequality measure (a specific combination of `varcode`, `percentile`, `GEO`, `year`, and `source`) we provide only one single estimate, which is typically the benchmark estimate as defined in the underlying research paper or the documentation of a database.  -->
+<!-- Publications on the evolution of wealth inequality, particularly when following the capitalization and mortality-multiplier framework, rest on  assumptions that we document in the Methodological Tables, and researchers tend to report a range of estimates for a specific wealth inequality measure to address the sensitivity of the estimate to variations in these assumptions. We do currently not cover such additional estimates, but an important direction for future work of the GC Wealth Project Team is to explore the within-source variation of wealth inequality estimates. Furthermore, we currently cover only estimates of average wealth and percentiles (thresholds) if they are reported in national currency, nominal terms, in the underlying source.  -->
+<!-- ### Exlcusion of fully imputed series -->
+<!-- The Wealth Inequality database of the GC Wealth Project does not publish estimates of wealth inequality that are fully imputed. We define an estimate as fully imputed if no data on the distribution of wealth at the micro level across observational units, such as households, individuals or tax units, has been used in the estimation of the distribution of wealth and its evolution over time. Two implications of this definition are noteworthy. First, our definition of **fully imputed** implies that we still cover estimates that start with (publicly) available estimates of wealth inequality, rather than the underlying micro data, which may or may not have been re-scaled to match macroeconomic aggregates. Second, we also cover full time-series on wealth inequality even in cases where micro data on wealth inequality has not been used in the estimation of the series in each single year (interpolation across years thus is permitted). This implication is particularly relevant regarding the @WorldInequalityDatabase_Data which publishes time-series on wealth inequality by relying on micro data for recent years and extrapolating the series backwards, particularly for many European countries where mircodata became available via the @HouseholdFinanceandConsumptionNetwork2021 starting in 2010.  -->
+<!-- In general, we observe that researchers increasingly estimate wealth inequality indicators for countries in which no data source on wealth at the micro level exists, most of them developing countries. Broadly speaking, such approaches follow a two step procedure. First, the correlation between income and wealth inequality among countries for which estimates of both income and wealth inequality are available is estimated. Second, wealth inequality estimates for a particular country with no micro-level data on the distribution of wealth are inferred using an estimate of income inequality, or close correlates, and the estimated correlation between income and wealth inequality. As imputations, inter- and extrapolations are an important, if not essential, ingredient of many approaches that allow estimating population-wide wealth inequality, we cover the resulting estimates of the wealth distribution only if these methods have been used in conjunction with wealth distribution data, irrespective of whether such data derives from a survey or administrative and tax data on the stock or transfer of wealth. -->
+
+\clearpage
+## Methodological Tables{#m_tables}
+The **Methodological Tables** summarize for each source, among other things: the type of data used, where the work sources its data, the unit of analysis, the methods of estimation, how different assets are valued, how specific types of assets are treated, any adjustments made to the data, important underlying assumptions, and more. We provide a brief description of the content of the **Methodological Tables** in Table \ref{tab:mtable_cells}. 
+
+```{r mtable_cells, echo=F}
+#methodological table fields explanation
+
+labels_ineqtr <-"../../handmade_tables/dictionary.xlsx"
+
+m_tables <- read_excel(labels_ineqtr,  
+                       sheet = "mtable_fields", na = "NA") 
+
+kbl(m_tables %>% drop_na(), 
+    format="latex",
+    booktabs = T, 
+    longtable = T,
+    centering = T,
+    caption = "Methodological Tables - Content Description", 
+    align = c('r', 'l')) %>%
+  column_spec(1, width = "5cm") %>%
+  column_spec(2, width = "12cm") %>%
+  kable_styling(latex_options = "striped", 
+                font_size = 8)
+```
+
+
+\clearpage
+## Wealth Inequality Section — Innovative Features of Version 2.0 of the Warehouse
+
+Version 2.0 of the Wealth Inequality section introduces two innovations with respect to earlier versions of the warehouse: the Distributional Topography module and the Asset and Liability Ownership Rates module.
+
+
+
+### The Distributional Topography Module
+The Distributional Topography module aims to provide estimates of wealth portfolios across the net wealth distribution. Rather than focusing solely on aggregate inequality indicators, this module documents how the composition of assets and liabilities varies across different segments of the distribution, offering a more granular picture of wealth structures.
+
+The module builds on the Distributional Wealth Accounts published by the European Central Bank [@ EuropeanCentralBank2024_DistributionalWealthAccounts] and on the Distributional Financial Accounts published by the Federal Reserve (FED) [@FED_DWA_ineq], which both provide breakdowns of asset holdings by position in the wealth distribution. We complement and extend these estimates by integrating micro data from the Luxembourg Wealth Study Database (LWS) [@LIS_LuxembourgWealthStudyDatabase] and the Household Finance and Consumption Survey (HFCS) [@HouseholdFinanceandConsumptionNetwork2021], thereby broadening both the country coverage and the level of detail potentially available.
+
+To ensure comparability across sources, we decompose the net wealth (`varcode` concept `netwea`) held by different wealth sub-populations into Financial Assets & Fixed Capital of Personal Businesses (`nnhass`), Housing & Land (`nfahou`), where available durables (`nfadur `), and Debt (`fliabi`). For each of these assets and liabilities, we provide averages (`avg`), totals (`tot`), and assets shares on total net wealth (`dsh`) held by the sub-group of the population indicated in the variable `percentile`.  As in the rest of the warehouse, data on monetary units (averages and totals) are always shown in national currency, in nominal terms with no adjustment for inflation. The supplementary variables (see Section \ref{subsec:supplement_var}) can be used to transform all monetary values into other currencies and to adjust for inflation.
+
+To better illustrate the functioning of the module, Table \ref{tab:snapshot_distrib_topo} presents a selection of estimates from the Distributional Topography module for Italy (IT) in 2024, sourced from the ECB Distributional Wealth Accounts (ECB_DWA_ineq). All observations refer to the bottom 50% of the wealth distribution (p0p50), with households as the unit of analysis (ho).
+
+```{r snapshot_distrib_topo, echo=FALSE, warning=FALSE, message=FALSE}
+# 1. Importa dati
+df <- read_csv("../../raw_data/ineq/ineq_ready.csv",
+               col_names = c("area","year","value","percentile","varcode","source"),
+               show_col_types = FALSE)
+
+# 2. Filtra
+varcodes_sel <- c(
+  "t-hs-avg-netwea-ho", "t-hs-avg-fliabi-ho",
+  "t-hs-avg-nfahou-ho", "t-hs-avg-nnhass-ho",
+  "t-hs-dsh-netwea-ho", "t-hs-dsh-fliabi-ho",
+  "t-hs-dsh-nfahou-ho", "t-hs-dsh-nnhass-ho"
+)
+
+snapshot <- df %>%
+  filter(area == "IT",
+         year == 2024,
+         source == "ECB_DWA_ineq",
+         percentile == "p0p50",
+         varcode %in% varcodes_sel) %>%
+  select(varcode, percentile, value) %>%
+  mutate(value = round(as.numeric(value), 3))
+
+# 3. Tabella
+kbl(snapshot,
+    format = "latex",
+    booktabs = TRUE,
+    align = c('l', 'l', 'r'),
+    col.names = c("Varcode", "Percentile", "Value"),
+    caption = "Distributional Topography: Italy 2022, ECB DWA, Bottom 50\\%") %>%
+  column_spec(1, width = "6cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "3cm") %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+The varcode follows the structure `t-hs-[Variable Type]-[Concept]-ho`. Two variable types are shown: averages (`avg`) and shares (`dsh`). For each, net wealth (`netwea`) is decomposed into Housing & Land (`nfahou`), Financial Assets & Fixed Capital of Personal Businesses (`nnhass`), and Debt (`fliabi`).
+
+For example, the row with `varcode t-hs-avg-netwea-ho` indicates that the average net wealth of households in the bottom 50% is 63,950 (in nominal national currency), which can be further decomposed into an average of 64,350 in Housing & Land, 23,330 in Financial Assets & Fixed Capital, and 23,740 in Debt. 
+
+Similarly, the row with `varcode t-hs-dsh-netwea-ho` indicates that the net wealth held by households in the bottom 50% of the net wealth distribution amounts to approximately 7.46% of aggregate net wealth. The corresponding decomposition reveals that the Housing & Land held by this group is worth 7.51% of aggregate net wealth, while their Financial Assets & Fixed Capital of Personal Businesses account for only 2.72% of aggregate net wealth, suggesting that the wealth portfolio of the bottom half is overwhelmingly concentrated in real assets rather than financial ones.
+
+Formally:
+
+\begin{equation}
+\text{dsh}_{c,p} = \frac{\text{tot}_{c,p}}{\text{tot}_{\text{netwea}, \, p0p100}} \times 100
+\end{equation}
+
+where $c \in \{\text{netwea}, \text{nfahou}, \text{nnhass}, \text{fliabi}\}$ denotes the asset concept, $p$ denotes the percentile group, $\text{tot}_{c,p}$ is the total value of concept $c$ held by the population in percentile group $p$, and $\text{tot}_{\text{netwea}, \, p0p100}$ is the aggregate net wealth of the entire population.
+Note that the within-asset-class share — i.e., the fraction of total concept $c held by percentile group $p — can be recovered as:
+
+\begin{equation} 
+\frac{\text{tot}_{c,p}}{\text{tot}_{c,p0p100}} = \text{dsh}_{c,p}\times\frac{\text{tot}_{netwea,p0p100}}{\text{tot}_{c,p}} \end{equation}
+
+
+
+
+### The Asset and Liability Ownership Rates module.
+The Asset and Liability Ownership Rates module provides survey-based estimates of ownership rates for countries where conventional wealth data are not available. In particular, the module leverages a series of micro data and statistics produced through international programs designed to generate harmonized, cross-nationally comparable data. These programs include the Demographic and Health Surveys Program, the World Bank’s Living Standards Measurement Study Program (LSMS) and Global Findex Database, and the joint initiative by of the World Bank and the West Africa Economic and Monetary Union’s “Harmonized Survey on Household Living Conditions (EHCVM)”. The sources used are: Demographic and Health Surveys [@dhs_various], WAEMU Harmonized Household Living Conditions Surveys [@phmecv_various], Living Standards Measurement Study [@lsms_various], and the Global Findex Database [@Findex_ineq]. 
+
+The Asset and Liability Ownership Rates module fills a critical gap in global wealth measurement by providing survey-based estimates of asset ownership rates for countries where conventional wealth data are unavailable. Low and Middle Income countries are typically underrepresented in global analyses of wealth, due to the scarce availability of complete wealth data. In low- and middle-income countries, housing and land are often the most significant assets held by households, especially where financial inclusion remains low. Capturing ownership of these assets, alongside deposits, is therefore an important first step to understanding household wealth in developing economies. Crucially, the inclusion of this module extends the country coverage of the GC wealth Project’s data warehouse by 111 countries, significantly expanding the geographic reach of the GC wealth database into low- and middle-income settings. 
+
+Table \ref{tab:owr_tab} reports, for each source, the country coverage and the core asset classes included in the Wealth Inequality warehouse. To allow for comparisons with countries where richer wealth data are available, we also compute ownership rates from the Luxembourg Wealth Study Database (LWS) [@LIS_LuxembourgWealthStudyDatabase] and the Household Finance and Consumption Survey (HFCS) [@HouseholdFinanceandConsumptionNetwork2021].
+
+
+```{r owr_tab, echo=FALSE, warning=FALSE, message=FALSE}
+# 1. Importa e dividi varcode
+df <- read_csv("../../raw_data/ineq/ineq_ready.csv",
+               col_names = c("area","year","value","percentile","varcode","source"),
+               show_col_types = FALSE) %>%
+  separate(varcode, into = c("varcode1","varcode2","varcode3","varcode4","varcode5"),
+           sep = "-", extra = "merge", fill = "right") %>%
+  filter(varcode3 == "owr")
+
+# 2. Lista aree per source
+areas_df <- df %>%
+  distinct(area, source) %>%
+  arrange(source, area) %>%
+  group_by(source) %>%
+  summarise(areas = paste(unique(area), collapse = ", "), .groups = "drop")
+
+# 3. Lista concetti per source
+concepts_df <- df %>%
+  distinct(varcode4, source) %>%
+  arrange(source, varcode4) %>%
+  group_by(source) %>%
+  summarise(concepts = paste(unique(varcode4), collapse = ", "), .groups = "drop")
+
+# 4. Merge aree e concetti
+table_df <- areas_df %>%
+  inner_join(concepts_df, by = "source")
+
+# 5. Dizionario Sources
+dictionary <- read_excel("../../handmade_tables/dictionary.xlsx",
+                         sheet = "Sources") %>%
+  rename(source = Source) %>%
+  select(source, Legend) %>%
+  filter(!is.na(source) & source != "")
+
+# 6. Merge con dizionario
+table_df <- table_df %>%
+  inner_join(dictionary, by = "source") %>%
+  select(source, Legend, areas, concepts)
+
+# 7. Ordina con priorità
+table_df <- table_df %>%
+  mutate(sort_order = case_when(
+    source == "DHS_ineq"  ~ 1,
+    source == "LSMS_ineq" ~ 2,
+    source == "WAEMU_ineq"~ 3,
+    source == "HFCS_ineq" ~ 4,
+    source == "LWS_ineq"  ~ 5,
+    TRUE ~ 6
+  )) %>%
+  arrange(sort_order, source) %>%
+  select(-sort_order)
+
+# 8. Tabella
+kbl(table_df,
+    format = "latex",
+    booktabs = TRUE,
+    align = c('l', 'l', 'l', 'l'),
+    col.names = c("Source", "Legend", "Areas", "Concepts"),
+    caption = "Wealth Inequality: Ownership Rates Sources") %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "5cm") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
+```
+
+
+
+## Additional Information on the Wealth Inequality Section
+For additional information about the Wealth Inequality section, we refer the reader the to the Appendix of this Documentation, where we provide a list of all sources included in the Wealth Inequality database, country-specific information on the coverage of the Wealth Inequality database, and additional information on the precise treatment of selected sources.
+
+

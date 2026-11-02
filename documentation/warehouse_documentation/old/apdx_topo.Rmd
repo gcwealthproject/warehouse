@@ -1,0 +1,528 @@
+---
+title: 'Warehouse Documentation: Appendix to Wealth Topography Database'
+author: "The GC Wealth project - Giacomo Rella"
+date: "May 2023"
+output:
+  pdf_document:
+    citation_package: biblatex
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+    highlight: tango
+    df_print: kable
+    latex_engine: xelatex
+  html_document:
+    toc: no
+    toc_depth: '3'
+    df_print: paged
+header-includes:
+- \usepackage[margin=2.5cm]{geometry}
+- \usepackage{setspace}
+- \renewcommand{\chaptername}{Section}
+- \maxdeadcycles=1000
+urlcolor: blue
+documentclass: report
+bibliography: "../BibTeX files/BothLibraries.bib"
+link-citations: yes
+suppress-bibliography: no
+biblio-style: authoryear
+---
+
+
+\listoftables
+
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+```
+
+# Introduction
+The Appendix of the Wealth Topography section of the GC Wealth Project provides additional information on the calculation of wealth concepts included in the Wealth Topography and detailed source- and country-specific documentation. In particular, this appendix provides:
+\begin{itemize}
+  \item the full conceptional grid used in the GC Wealth Project,
+  \item the full list of sources included in the Wealth Topography,
+  \item source-specific detailed information on raw data source, all source-specific composition tables reporting all composition rules used to obtain the wealth concepts, and additional tables on conceptual and manual mapping,
+  \item country-specific tables reporting available sources, wealth concepts, and sectors for each country included in the Wealth Topography.
+\end{itemize}
+
+
+# Full Conceptual Grid
+In the GC Wealth Project, we harmonize raw data from various sources using the a Conceptual Grid, or simply \textit{the} grid. The grid is a table that assigns an alphanumeric identifier to each item or instrument of the balance sheet, and its construction of the grid is inspired by national accounting. The full grid is reported in Table \ref{tab:tgrid_full} in Appendix. An extract of the grid, can be seen in Table \ref{tab:tgrid_extract}. Under the column `Code`, we report the code that identifies each item of the balance sheet (e.g., `AN111` stands for `Dwellings`). The code consists of two elements (letters and numbers), and by a special character, only for the case of financial assets and liabilities. The alphabetic part of the code identifies whether a specific balance sheet component falls in the category of non-financial assets (`AN`), financial assets (`A_AF`) or liabilities (`L_AF`). Numbers, instead, identifies the class of assets and liabilities to which the instrument belongs. 
+
+
+```{r tgrid_full, echo=F}
+concepts_tab <- read_excel("docs/bible_wt_tables.xlsx", sheet = "general_grid_full", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(concepts_tab, format="latex", align = "l", booktabs = T, longtable=T, caption = "Full GC Wealth Topogragy Conceptual Grid") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "1.5cm") %>%
+  column_spec(2, width = "9.5cm") %>% 
+  column_spec(3, width = "3cm") 
+```
+
+# Sources included in the Wealth Topography
+All data sources included in the current version of the Wealth Topography are reported in Table\ref{tab:tsources}. The table reports the code associated to each source (`Source`), the name (`Name`), the account (`Account`), the source type (`Source type`), and the consultation date (`Download date`). All source included Wealth Topography can be distinguished according to types of national accounts:
+\begin{itemize}
+\item Balance Sheets contain holdings of non-financial assets (e.g., real estate assets or machinery), financial assets (e.g., deposits or equities), and liabilities (e.g., home mortgages) at a point in time.
+\item Financial Accounts contain holdings of financial assets (e.g., deposits or equities), and liabilities (e.g., home mortgages) at a point in time.
+\end{itemize}
+In other words, in the Wealth Topography, Financial Accounts are financial balance sheets in which only holdings of financial assets and liabilities are reported. In both cases, we report stocks or outstanding levels, that is holdings of assets and liabilities at the end of each accounting period (year) which reflect changes in transactions, nominal holding gains/losses, and other changes occurred throughout the year.
+
+
+```{r appendix_topo_source, echo=FALSE, warning=FALSE, results = "asis", message=FALSE}
+##load dictionary
+sources_tab <- read_excel("docs/bible_wt_sources.xlsx", sheet = "sources", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+sources_tab <- sources_tab %>% select(Source, `Download date`)
+
+whouse <- "../../output/databases/warehouse_viz.csv"
+whouse <- read_csv(whouse, na = c("", "NA"), quoted_na = FALSE)
+topo <- whouse  %>% 
+  filter(substr(varcode,1,1)=="p")
+topo_list <- topo[!duplicated(topo$source),] %>% arrange(source)
+topo_list <-  topo_list %>% select(source, legend, aggsource, legend, ref_link, citekey)
+topo_list$legend <- gsub("&", "\\\\&", topo_list$legend)
+
+#merge download date
+topo_list<- merge(topo_list, sources_tab %>% select(source = Source, download = `Download date`))
+
+
+topo_list <- topo_list %>% select(-source)
+
+
+#format cite key
+#topo_list <- topo_list %>% mutate(citekey = paste0("\\cite{",citekey, "}")) 
+topo_list <- topo_list %>% mutate(citekey = paste0("@",citekey)) 
+
+
+
+cap <- paste0("Sources in the Wealth Topography")
+lab <- paste0("\\label{tab:wtsourcesR}")
+
+topo_list <- topo_list %>% select(-ref_link)
+
+out_list <- list()
+out_list[1] <- print(
+  kable(topo_list, 
+        col.names = c("Source", 
+                      "Source Type", 
+                      "Bibliographic reference",
+                      "Download date"), 
+        format="latex", 
+        booktabs = T, 
+        escape = FALSE,
+        longtable = TRUE,
+        align = c('l','l', 'l'),
+        caption = paste0(lab, cap)) %>% 
+    kable_styling(font_size = 8) %>%
+    column_spec(1, width = "5cm") %>%
+    column_spec(2, width = "5cm") %>% 
+    column_spec(3, width = "5cm") %>% 
+    column_spec(4, width = "3cm") %>% 
+    landscape() 
+) 
+
+cat("\n")
+
+out_list[1]
+
+```
+
+
+
+```{r tsources, echo=F}
+sources_tab <- read_excel("docs/bible_wt_sources.xlsx", sheet = "sources", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(sources_tab, format="latex", align = "l", booktabs = T, longtable=T, caption = "Sources in the Wealth Topography") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "6cm") %>% 
+  column_spec(2, width = "3cm") %>% 
+  column_spec(3, width = "2cm") %>% 
+  column_spec(4, width = "3cm") 
+```
+
+# Source-Specific Documentation
+This section provides source-specific detailed information on raw data source, all source-specific composition tables reporting all composition rules used to obtain the wealth concepts, and additional tables on conceptual and manual mapping. According to the type of raw data source, we distinguish between three types of raw data sources:
+\begin{enumerate}
+\item raw data sources published by central banks and national statistical institutes that use the SNA2008/ESA2010 framework to organize and disseminate the data (or Type I source),
+\item raw data sources published by central banks and national statistical institutes that use variants of the SNA2008/ESA2010 framework or other frameworks to organize and disseminate the data (or Type II source),
+\item raw data sources contained in surveys and academic papers or published by central banks and research institutes that do not use or use variants of the SNA2008/ESA2010 framework to organize and disseminate the data (or Type III source).
+\end{enumerate}
+
+
+## Bank of Italy - Financial Accounts (`BoI_FA`)
+The Bank of Italy provides financial balance sheets of the Households and NPISH sector as parts of its quarterly financial accounts publication, so-called \textit{Conti Finanziari} @BankofItaly_HouseholdsNonprofitInstitutionsServingHouseholds. While raw data are published at quarterly frequency, we use the end-year observation. Relative to the mapping procedure, this raw data source is classified as Type I source, that is mapping is automatic since the Bank of Italy organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tBoI_FA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+```{r tBoI_FA, echo=F}
+BoI_FA <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "BoI_FA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(BoI_FA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Bank of Italy - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+\newpage
+
+### Bank of Italy & ISTAT - Balance Sheet (`BoI_NA`)
+The source Bank of Italy & ISTAT - Balance Sheet (`BoI_NA`) is based on the joint Bank of Italy and ISTAT estimates of wealth published as The wealth of Italy's institutional sector @BankofItalyIstat2022_WealthInstitutionalSectorsItaly20052020. This publication provides annual estimates of net wealth, assets, and liabilities of households and other institutional sectors, together with a cross-country comparison on the evolution of balance sheets. Relative to the mapping procedure, this raw data source is classified as Type I source, that is mapping is automatic since the Bank of Italy organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tBoI_NA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used.  
+
+
+```{r tBoI_NA, echo=F}
+BoI_NA <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "BoI_NA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(BoI_NA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Bank of Italy and ISTAT - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+\newpage
+
+### European Central Bank Non-EU - Financial Accounts (`ECB_IDCSA`)
+The European Central Bank provides estimates of financial balance sheet for non-EU countries on its Statistical Data Warehouse. These data are included in the source European Central Bank Non-EU (`ECB_IDCSA`), which corresponds to the IDCS - Sector accounts in the International Data Cooperation Task Force Context @EuropeanCentralBank2022_IDCSSectorAccountsInternationalData. The underlying database collects financial accounts (both flows and levels) for each institutional sector as publishes by Eurostat, OECD, and the United Nations. Data are originally published at both quarterly and annual frequency. This raw data source is classified as Type I source, that is mapping is automatic since the European Central Bank organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tECB_IDCSA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+
+```{r tECB_IDCSA, echo=F}
+ECB_IDCSA <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "ECB_IDCSA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(ECB_IDCSA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: European Central Bank Non-EU - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+\newpage
+
+
+### European Central Bank EU - Financial Accounts (`ECB_QSA`)
+The source European Central Bank EU (`ECB_QSA`) corresponds to the Quarterly Sector Accounts published by the European Central Bank on the Statistical Data Warehouse @EuropeanCentralBank2022_QSAQuarterlySectorAccountsMUFA. The Quarterly Sector Accounts provide quarterly estimates of outstanding levels of financial assets and liabilities for the EE countries, together with a detailed breakdown of institutional sectors and financial instruments. The original frequency of data is quarterly but we retain the end-year observation. Relative to the mapping procedure, this raw data source is classified as Type I source, that is mapping is automatic since the European Central Bank organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tECB_QSA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+```{r tECB_QSA, echo=F}
+ECB_QSA <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "ECB_QSA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(ECB_QSA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: European Central Bank EU - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+\newpage
+
+
+### Eurostat - Financial Accounts (`Est`)
+The data source Eurostat - Financial Accounts (`Est`) corresponds to the  Financial Flows and Stocks publication of Eurostat, the statistical office of the European Union @Eurostat2022_FinancialBalanceSheetsAnnualData. This data source reports financial assets held and the liabilities outstanding at the end of each year, for each institutional sector of the economy, according to the SNA2008/ESA2010 framework. Therefore, this is a type I source for which mapping of raw data to national accounting concepts is automatic. Table \ref{tab:tEst} provides an overview of the source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the correspondent composition rule is used. 
+
+
+```{r tEst, echo=F}
+Est <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "Est", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(Est, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Eurostat - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+\newpage
+
+### Federal Reserve Board B.101 - Balance Sheet (`FED_B101`)
+The source Federal Reserve Board B.101 - Balance Sheet (`FED_B101`) corresponds to the table B.101: Balance Sheet of Households and Nonprofit Organizations published by the Federal Reserve Board in the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the households and nonprofit organizations sector. Relative to the mapping procedure, this raw data source is classified as Type II source. Hence, we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_B101_matching} for the manual mapping). Table \ref{tab:tFED_B101} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+```{r tFED_B101, echo=F}
+FED_B101 <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "FED_B101", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Federal Reserve Board B.101 - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tFED_B101_matching, echo=F}
+FED_B101_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_B101", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board B.101 - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+\newpage
+
+### Federal Reserve Board B.101.H - Balance Sheet (`FED_B101h`)
+The source Federal Reserve Board B.101.H - Balance Sheet (`FED_B101h`) corresponds to the table B.101.h: Balance Sheet of Households published by the Federal Reserve Board as supplementary table in the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the households and is obtained as a residual - that is by subtracting assets and liabilities of the nonprofit sector from the combined balance sheet of households and nonprofit organizations sector (table B.101). Relative to the mapping procedure, this raw data source is classified as Type II source. Hence, we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_B101h_matching} for the manual mapping). Table \ref{tab:tFED_B101h} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+```{r tFED_B101h, echo=F}
+FED_B101h <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "FED_B101h", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101h, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Federal Reserve Board B.101.H - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape() 
+```
+
+
+```{r tFED_B101h_matching, echo=F}
+FED_B101h_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_B101h", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101h_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board B.101.H - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+\newpage
+
+### Federal Reserve Board B.101.N - Balance Sheet (`FED_B101n`)
+The source Federal Reserve Board B.101.N - Balance Sheet (`FED_B101n`) corresponds to the table B.101.n: Balance Sheet of Nonprofit Organizations published by the Federal Reserve Board as supplementary table in the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the nonprofit organizations sectors. Relative to the mapping procedure, this raw data source is classified as Type II source. Hence, we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_B101n_matching} for the manual mapping). Table \ref{tab:tFED_B101n} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+```{r tFED_B101n, echo=F}
+FED_B101n <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "FED_B101n", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101n, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Federal Reserve Board B.101.N - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tFED_B101n_matching, echo=F}
+FED_B101n_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_B101n", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101n_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board B.101.N - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+\newpage
+
+### Federal Reserve Board S.3.a (IMA) - Balance Sheet (`FED_S3a_IMA`)
+The source Federal Reserve Board S.3.a (IMA) - Balance Sheet (`FED_S3a_IMA`) corresponds to the table S.3.a: Households and Nonprofit Institutions Serving Households published by the Federal Reserve Board in the Integrated Macroeconomic Accounts section of the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the households and nonprofit organizations sector but the underlying data source is different from that used to obtain table B.101. In fact, the Integrated Macroeconomic Accounts combine production, income and saving, and capital formation from the National Income and Product Accounts (NIPA) and financial transactions and asset revaluations from the Financial Accounts with changes in net wealth from the balance sheet (table B.101). Relative to the mapping procedure, this raw data source is classified as Type II source. Hence, we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_S3a_IMA} for the manual mapping). Table \ref{tab:tFED_S3a_IMA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+
+```{r tFED_S3a_IMA, echo=F}
+FED_S3a_IMA <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "FED_S3a_IMA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_S3a_IMA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Federal Reserve Board S.3.a (IMA) - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tFED_S3a_IMA_matching, echo=F}
+FED_B101n_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_S3a_IMA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101n_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board S.3.a (IMA) - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+\newpage
+
+
+### OECD - Financial Accounts (`OECD_FA`)
+The source OECD - Financial Accounts (`OECD_FA`) corresponds to the OECD's table Households' Financial Assets and Liabilities (QASA_7HH table) which provides a detailed breakdown of households' loans, investment funds shares, life insurance and annuity entitlements, and pension entitlements @OECD_HouseholdsFinancialAssetsLiabilities. The raw data source assembles various sources from central banks and national statistical institutes. Relative to the mapping procedure, this raw data source is classified as Type I source because the OECD organizes and disseminate data according to the SNA2008/ESA2010 framework. Therefore, mapping of raw data into national accounts concepts is automatic. Table \ref{tab:tOECD_FA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+```{r tOECD_FA, echo=F}
+OECD_FA <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "OECD_FA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(OECD_FA, format="latex", align = "l", booktabs = T, longtable=T,  caption = "Composition table: OECD - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "4cm") %>%
+  column_spec(4, width = "4cm")
+```
+\newpage
+
+### Luxembourg Wealth Study Database - Balance Sheet (`LWS_topo`)
+The source Luxembourg Wealth Study Database - Balance Sheet (`LWS_topo`) is the Luxembourg Wealth Study Database which provides cross-national harmonized micro-data (household- and individual-level data) on assets, liabilities, and net wealth @LIS_LuxembourgWealthStudyDatabase. Aggregate concepts are obtained multiplying household-level micro-data by the population weight and they are the average across five implicates (Rubin's Rule). The organization of assets and liabilities in the Luxembourg Wealth Study Database is not directly comparable to the GC Wealth Project conceptual grid. Therefore, this raw data source is classified as Type III source for which we introduce a source-specific conceptual grid (see Table \ref{tab:tLWS_topo_matching}) and composition table (see Table \ref{tab:tLWS_topo}). In the composition table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+```{r tLWS_topo, echo=F}
+LWS_topo <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "LWS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(LWS_topo, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Luxembourg Wealth Study Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tLWS_topo_matching, echo=F}
+LWS_topo_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "LWS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(LWS_topo_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Luxembourg Wealth Study Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+\newpage
+
+### Household Finance and Consumption Survey - Balance Sheet (`HFCS_topo`)
+The source Household Finance and Consumption Survey - Balance Sheet (`HFCS_topo`) corresponds to the Household Finance and Consumption Survey (HFCS), a collection of harmonized micro-data on households' balance sheets and consumption @HouseholdFinanceandConsumptionNetwork2021. The HFCS is housed at the European Central Bank but the survey is conducted nationally, mostly by central banks. To obtain aggregate concepts from household-level data, we used household-level weights. Moreover, aggregate data reported in the Wealth Topography are an average across all five implicates (Rubin's Rule). The organization of assets and liabilities in the Household Finance and Consumption Survey is not directly comparable to the GC Wealth Project conceptual grid. Therefore, this raw data source is classified as Type III source for which we introduce a source-specific conceptual grid (see Table \ref{tab:tHFCS_topo_matching}) and composition table (see Table \ref{tab:tHFCS_topo}). In the composition table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+
+```{r tHFCS_topo, echo=F}
+HFCS_topo <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "HFCS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(HFCS_topo, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition table: Household Finance and Consumption Survey - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tHFCS_topo_matching, echo=F}
+HFCS_top_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "HFCS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(HFCS_top_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Household Finance and Consumption Survey - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "8cm") 
+```
+\newpage
+
+### World Inequality Database - Balance Sheet (`WID_topo`)
+The source World Inequality Database - Balance Sheet (`WID_topo`) corresponds to the World Inequality Database (WID), the largest repository of data on income and wealth distribution across the world @WorldInequalityDatabase_Data. The concepts included in the Wealth Topography are the WID aggregate wealth variables, converted in nominal values using the country-specific price deflator provided by WID. Among the WID estimates, we have included in the Wealth Topography only countries with wealth data available for all asset groups or for at least two asset group. Our warehouse thus exclude those estimates of wealth aggregated that are heavily imputed with data available only for one asset asset group or for few asset sub-components. The organization of assets and liabilities in the World Inequality Database - Balance Sheet is not directly comparable to the GC Wealth Project conceptual grid. Therefore, this raw data source is classified as Type III source for which we introduce a source-specific conceptual grid (see Table \ref{tab:tWID_topo_matching}) and composition table (see Table \ref{tab:tWID_topo_matching}). In the composition table, the column `Frequency` reports the number of source-sector-concept triples for which the corresponding composition rule is used.
+
+
+```{r tWID_topo, echo=F}
+WID_topo <- read_excel("old/bible_wt_source_composition.xlsx", sheet = "WID_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(WID_topo, format="latex", align = "l", booktabs = T, longtable=T,  caption = "Composition table: World Inequality Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "4cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "5cm") %>%
+  landscape()
+```
+
+```{r tWID_topo_matching, echo=F}
+WID_top_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "WID_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(WID_top_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: World Inequality Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "4cm") %>% 
+  column_spec(3, width = "3cm") 
+```
+
+
+# Country-Specific Tables
+
+This section provides detailed country-specific information on the data available for each country in the Wealth Topography. More specifically, country-specific tables provide available:
+\begin{itemize}
+ \item sources, 
+ \item wealth concepts and sectors (Variable Types),
+ \item number of observations, 
+ \item and historical period (in years) covered,
+\end{itemize}
+for that specific country.
+
+\doublespacing
+
+```{r appendix_topo, echo=FALSE, warning=FALSE, results = "asis", message=FALSE}
+##load dictionary
+dict <- read_excel("../../handmade_tables/dictionary.xlsx", 
+    sheet = "Sources")
+
+topo_whouse <- "../../output/databases/warehouse_viz.csv"
+topo_whouse <- read_csv(topo_whouse)
+topo_whouse_p <- topo_whouse  %>% 
+  filter(substr(varcode,1,1)=="p") %>% arrange(GEO)
+out_list <- list()
+#list of countries
+cntries <- unique(topo_whouse_p$GEO)
+geo_longs <- unique(topo_whouse_p$GEO_long)
+for(c in 1:length(cntries)){
+  tmp <- topo_whouse_p %>% filter(GEO==cntries[c])
+  tmp_n <- tmp %>% group_by(source) %>% summarise(n = n(), 
+  min_y = min(year),max_y = max(year)) %>%
+    mutate(year_range = paste0(min_y, " - ", max_y))
+ 
+  tmp$longname <- sub(", of", " of", tmp$longname)
+  tmp$longname <- sub("  ", " ", tmp$longname) 
+  tmp$longname <- gsub("&", "\\\\&", tmp$longname)
+  
+  tmp_longnames <- tmp %>% group_by(source, longname) %>% 
+  summarise(n =n()) %>% ungroup() %>% group_by(source) %>% select(-n) %>% arrange(longname) %>% summarise(longnames  = paste(longname, collapse =", \n "), times = length(longname)) %>% select(-times)
+
+#merge cite key
+tmp_n<- merge(tmp_n, dict %>% select(source = Source, 
+                                        key = Citekey)) 
+#format cite key
+tmp_n <- tmp_n %>% mutate(key = paste0("\\cite{",key, "}")) %>%
+  select(source, key, year_range, n)
+
+
+out <- merge(tmp_n, tmp_longnames)  
+for(r in 1:nrow(out)){
+  t_ln <- strsplit(out$longnames[r], "\n")
+  for(k in 1:length(t_ln[[1]])){
+    t_ln[[1]][k] <- trimws(t_ln[[1]][k])
+  }
+  t_ln <- unlist(t_ln)
+#  for(l in 1:length(t_ln)){
+#    t_ln[l] <- sub("\\ -.*", "", t_ln[l])
+#  }
+  t_ln <- unique(t_ln)
+  t_ln <- paste(t_ln, collapse=' ')
+  out$longnames[r] <- t_ln
+}
+
+#line breaks 
+
+cntry_name <- geo_longs[c]
+  
+cap <- paste0("Sources, Time Span and Number of Observations on " , cntry_name)
+lab <- paste0("\\label{tab:topo_", cntries[c],"}")
+
+out$source <- gsub("_", "\\\\_", out$source)
+
+#generate new source column 
+out$source <- paste0(out$source, " (", out$key, ")")
+out <- out %>% select(-key)
+out_list[c] <- print(
+  kable(out, 
+        col.names = c("Source", 
+                      "Period Covered", 
+                      "Observations",
+                      "Variable Types"), 
+        format="latex", 
+        booktabs = T, 
+        escape = FALSE,
+        longtable = TRUE,
+        align = c('r','c', 'c', 'l'),
+        caption = paste0(lab, cap)) %>% 
+    kable_styling(font_size = 8) %>%
+    column_spec(1, width = "5cm") %>%
+    column_spec(2, width = "2cm") %>% 
+    column_spec(3, width = "1.5cm") %>% 
+    column_spec(4, width = "13cm") %>%
+    landscape() 
+) 
+
+cat("\n")
+
+out_list[c]
+
+}
+```

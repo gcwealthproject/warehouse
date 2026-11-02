@@ -8,8 +8,8 @@ from typing import Callable, Dict, List, Optional
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from common import normalize_url, normalize_whitespace, now_utc
-from source_paths import DEFAULT_DATA_BIB_PATH, DEFAULT_REGISTRY_PATH
+from common import normalize_url, normalize_whitespace, now_utc, record_is_data_source
+from source_paths import DEFAULT_DIGITAL_BIB_PATH, DEFAULT_REGISTRY_PATH
 
 
 OUTER_PAYLOAD_RE = re.compile(r"var bibbase_data = (.*); document\.write\(bibbase_data\.data\);?\s*$", re.S)
@@ -134,7 +134,7 @@ def fetch_and_scan_registry_ref_links(
             "status": "not_configured",
             "message": f"bibbase_profile_source_url is not configured in {DEFAULT_REGISTRY_PATH}.",
         }
-    local_bib_path = Path(cfg.get("bib_output", DEFAULT_DATA_BIB_PATH))
+    local_bib_path = Path(cfg.get("digital_bib_output", DEFAULT_DIGITAL_BIB_PATH))
     local_bib_text = local_bib_path.read_text(encoding="utf-8")
     fetch_impl = fetch_text or _fetch_text
     if stage_callback:
@@ -142,7 +142,7 @@ def fetch_and_scan_registry_ref_links(
     hosted_bib = fetch_impl(benchmark_source_url, timeout_seconds)
     show_payload = fetch_impl(build_bibbase_show_url(benchmark_source_url), timeout_seconds)
     if stage_callback:
-        total = len(registry.get("records", []))
+        total = len([record for record in registry.get("records", []) if record_is_data_source(record)])
         stage_callback("comparing_registry", f"Comparing registry records (0 / {total})")
     scan = scan_registry_ref_links(
         registry,
@@ -246,7 +246,7 @@ def scan_registry_ref_links(
 
     ready_to_apply = []
     needs_review = []
-    records = list(registry.get("records", []))
+    records = [record for record in registry.get("records", []) if record_is_data_source(record)]
     total_records = len(records)
     for idx, record in enumerate(records, start=1):
         citekey = normalize_whitespace(record.get("citekey", ""))

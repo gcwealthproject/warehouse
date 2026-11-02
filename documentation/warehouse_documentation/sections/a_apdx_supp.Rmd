@@ -1,0 +1,52 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+```
+
+\appendix
+
+# Supplementary Variables {#sec:asupp}
+
+```{r tsupp, echo=FALSE}
+new_obs <- data.frame(
+  variable = c("nomgdp", "nomnni"),
+  shortname = c("Nominal GDP", "Nominal national income"),
+  simpledes = c(
+    "Nominal GDP adjusted using the national income price index.",
+    "Nominal national income adjusted using the national income price index."
+  )
+)
+
+#clean table 
+widcodes <- read.csv("docs/widvars.csv", header = TRUE, sep = ",", quote = "\"", fill = TRUE) %>% rbind(new_obs) %>%
+  mutate(simpledes = str_replace(simpledes, "Number of individuals in a group.", "Number of individuals."),
+         simpledes = str_remove(simpledes, "//.*"), 
+         simpledes = str_replace_all(simpledes, "To be improved.", "")) %>% arrange(variable)
+#display
+ kbl(widcodes, format="latex", digits=2, align = "l", 
+  booktabs = T, caption = "Variables from wid.world", col.names=c("Variable", "Short Name", "Simple descrpition (original)"),  longtable = T) %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "4cm") %>%
+  column_spec(3, width = "11cm") %>%
+  kable_styling(latex_options = "striped")
+```
+

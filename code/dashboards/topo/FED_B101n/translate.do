@@ -1,33 +1,30 @@
-
+* paths 
 global origin "${topo_dir_raw}/FED_B101n/raw data"
 global aux "${topo_dir_raw}/FED_B101n/auxiliary files"
 global intermediate_to_erase "${topo_dir_raw}/FED_B101n/intermediate to erase"
 global intermediate "${topo_dir_raw}/FED_B101n/intermediate"
 
-	
 * Import dates
-import delimited "${origin}/FRB_Z1.csv", numericcols(1) delimiter(comma) clear
-
-gen n = _n
-order n, first
-
-drop if n == 1 | n == 2 | n == 3 | n == 4 | n == 5 
-	
-drop v32 v33 // duplicate
-
-// assing varname_source	
-foreach var of varlist v2-v31{
-	
-	replace `var' = subinstr(`var', ".", "", .) if _n == 1
-
-	rename `var' `=`var'[1]'
-	
+import delimited "${origin}/b101n.csv", delimiter(comma) varnames(1) clear 
+ds
+foreach v of varlist `r(varlist)' {
+    rename `v' `=upper("`v'")'
 }
+rename DATE year 
+ds year, not
+local others `r(varlist)'
 
-drop if n == 6
-drop n	
-rename v1 year
+* Convert numeric vars among `others` to string
+tostring `others', replace force usedisplayformat
 
+* Ensure all those strings are width str24
+recast str24 `others'
+ds, has(type string)
+if "`r(varlist)'" != "" {
+    foreach v of varlist `r(varlist)' {
+        replace `v' = "" if ustrupper(trim(`v'))=="ND"
+    }
+}
 
 preserve
 
@@ -36,7 +33,7 @@ preserve
 
 	gen n = _n
 	order n, first
-	drop if n >= 31
+	drop if n >= 28
 	
 	keep source_code na_code
 	replace source_code = subinstr(source_code, ".", "", .)
@@ -106,8 +103,3 @@ order area sector source, after(year)
 
 * save
 save "${intermediate}/populated_grid.dta", replace
-
-
-
-
-

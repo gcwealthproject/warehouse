@@ -1,5 +1,7 @@
 //settings
 clear all
+*global path 	"`:env USERPROFILE'/Dropbox/gcwealth"
+*cd "$path"
 
 local source Assouad2021
 run "code/mainstream/auxiliar/all_paths.do"

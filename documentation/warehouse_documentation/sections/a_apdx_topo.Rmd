@@ -1,0 +1,491 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+```
+
+
+# Appendix to the Wealth Topography Section {#sec:topo_appendix}
+
+## Introduction
+The Appendix of the Wealth Topography section of the GC Wealth Project provides additional information on the concepts included in the Wealth Topography and detailed source-specific documentation. In particular, this appendix provides:
+\begin{itemize}
+  \item the full list of sources included in the Wealth Topography (Section \ref{sec:topo_appendix_sourcelist}),
+  \item the full conceptual grid used in the GC Wealth Project (Section \ref{sec:topo_appendix_grid}),
+  \item source-specific detailed information on raw data source, all source-specific composition tables reporting all composition rules used to obtain the wealth concepts, and additional tables on conceptual and manual mapping (Section \ref{sec:topo_appendix_sourcedoc}).
+\end{itemize}
+
+
+## Sources Included in the Wealth Topography Section {#sec:topo_appendix_sourcelist}
+
+All data sources included in the current version of the Wealth Topography database are reported in Table \ref{tab:appendix_topo_source}. In addition to the source name and bibliographic reference, the table reports the source type and the consultation date ("Download date"). All sources included in the Wealth Topography database can be distinguished according to types of national accounts:
+\begin{itemize}
+\item Balance Sheets contain holdings of non-financial assets (e.g., real estate assets or machinery), financial assets (e.g., deposits or equities), and liabilities (e.g., home mortgages) at a point in time.
+\item Financial Accounts contain holdings of financial assets (e.g., deposits or equities), and liabilities (e.g., home mortgages) at a point in time.
+\end{itemize}
+In other words, in the Wealth Topography databse, Financial Accounts are financial balance sheets in which only holdings of financial assets and liabilities are reported. In both cases, we report stocks or outstanding levels, i.e., holdings of assets and liabilities at the end of each accounting period (year). Outstanding levels reflect changes in transactions, nominal holding gains/losses, and other changes occurred throughout the year.
+
+
+```{r appendix_topo_source, echo=FALSE, warning=FALSE, results = "asis", message=FALSE}
+##load dictionary
+sources_tab <- read_excel("docs/bible_wt_sources.xlsx", sheet = "sources", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+sources_tab <- sources_tab %>% select(Source, `Download date`)
+
+source(file.path("render_support", "render_config.R"))
+whouse <- paste0("../../output/databases/warehouse/warehouse_meta_v", warehouse_version, ".csv")
+whouse <- read_csv(whouse, na = c("", "NA"), quoted_na = FALSE)
+topo <- whouse  %>% 
+  filter(substr(varcode,1,1)=="p")
+topo_list <- topo[!duplicated(topo$source),] %>% arrange(source)
+topo_list <-  topo_list %>% select(source, legend, source_type, legend, ref_link, citekey)
+topo_list$legend <- gsub("&", "\\\\&", topo_list$legend)
+
+#merge download date
+topo_list<- merge(topo_list, sources_tab %>% select(source = Source, download = `Download date`))
+
+
+topo_list <- topo_list %>% select(-source)
+
+#format cite key
+topo_list <- topo_list %>% mutate(citekey = paste0("\\cite{",citekey, "}")) 
+
+#concatenate legend and citekey
+topo_list <- topo_list%>% mutate(legend = paste0(legend," ",citekey))
+topo_list <- topo_list %>% select(-citekey)
+topo_list <- topo_list %>% select(-ref_link)
+
+
+cap <- paste0("Sources in the Wealth Topography")
+lab <- paste0("\\label{tab:wtsourcesR}")
+
+
+out_list <- list()
+out_list[1] <- print(
+  kable(topo_list, 
+        col.names = c("Source", 
+                      "Source Type", 
+                      "Download Date"), 
+        format="latex", 
+        booktabs = T, 
+        escape = FALSE,
+        longtable = TRUE,
+        align = c('l','l', 'l'),
+        caption = paste0(lab, cap)) %>% 
+    kable_styling(font_size = 8) %>%
+    column_spec(1, width = "8cm") %>%
+    column_spec(2, width = "5cm") %>% 
+    column_spec(3, width = "3cm") %>% 
+    landscape() 
+) 
+
+cat("\n")
+
+
+```
+
+## Full Conceptual Grid {#sec:topo_appendix_grid}
+Once raw data have been obtained and classified, we harmonize them using the Wealth Topography Conceptual Grid, a table that assigns an alphanumeric identifier to each item or instrument of the balance sheet. The full grid is reported in Table \ref{tab:tgrid_full}. Under the column `Code`, we report the code that identifies each item of the balance sheet (e.g., `AN111` stands for `Dwellings`). The code consists of two elements (letters and numbers), and, in the case of financial assets and liabilities, it also contains a special character. The alphabetic part of the code identifies whether a specific balance sheet component falls in the category of non-financial assets (`AN`), financial assets (`A_AF`) or liabilities (`L_AF`). The numeric part of the code identifies the class of assets and liabilities to which the instrument belongs. 
+
+
+```{r tgrid_full, echo=F}
+concepts_tab <- read_excel("docs/bible_wt_tables.xlsx", sheet = "general_grid_full", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(concepts_tab, format="latex", align = "l", booktabs = T, longtable=T, caption = "Full GC Wealth Topography Conceptual Grid") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "1.5cm") %>%
+  column_spec(2, width = "9.5cm") %>% 
+  column_spec(3, width = "3cm") 
+```
+
+
+## Source-Specific Documentation {#sec:topo_appendix_sourcedoc}
+This section provides source-specific detailed information on raw data source, all source-specific composition rules used to obtain the macro-categories of the Wealth Topography (`concept`), and additional tables on mapping. We recall that raw data sources included in the Wealth Topography database can be classified in three macro groups:
+\begin{enumerate}
+\item Raw data sources published by central banks and national statistical institutes that use the SNA2008/ESA2010 framework to organize and disseminate the data. We refer to this raw data sources simply as cross-national official statistics.
+\item Raw data sources published by central banks and national statistical institutes that use variants of the SNA2008/ESA2010 framework or other frameworks to organize and disseminate the data. We refer to these raw data sources as cross-national official statistics that use variants of SNA2008/ESA2010 framework.
+\item Raw data sources contained in surveys and academic papers or published by central banks and research institutes that use frameworks different from the SNA2008/ESA2010 framework to organize and disseminate the data. We refer to these data sources as cross-national official survey data or cross-national academic research that do not use the SNA2008/ESA2010 framework.
+\end{enumerate}
+
+When formulating the composition rules, we construct rules that can be applied to all years during which all sub-components of each concept can be observed. This formulation of composition rules allows us to preserve time consistency in the construction of concepts. 
+
+
+```{r build_workbook, include=FALSE, eval=TRUE}
+source("docs/build_composition_workbook.R")
+```
+
+### Bank of Italy - Financial Accounts (`BoI_FA`)
+The Bank of Italy provides financial balance sheets of the Households and NPISH sector as parts of its quarterly financial accounts publication, so-called \textit{Conti Finanziari} @BankofItaly_HouseholdsNonprofitInstitutionsServingHouseholds. While raw data are published at quarterly frequency, we use the end-of-year observation. This raw data source is classified as cross-national official statistics, and its mapping is automatic since the Bank of Italy organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tBoI_FA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+### Bank of Italy & ISTAT - Balance Sheet (`BoI_NA`)
+The source Bank of Italy & ISTAT - Balance Sheet (`BoI_NA`) is based on the joint Bank of Italy and ISTAT estimates of wealth published as "The Wealth of Italy's Institutional Sectors" @BankofItalyIstat2022_WealthInstitutionalSectorsItaly20052020. This publication provides annual estimates of net wealth, assets, and liabilities of households and other institutional sectors, together with a cross-country comparison on the evolution of balance sheets. This raw data source is classified as cross-national official statistics, and its mapping is automatic since the Bank of Italy organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tBoI_NA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this source, we obtain "Net Wealth" (`netwea`) as the sum of "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) and "Housing & Land" (`nfahou`), net of "Debt" (`fliabi`).
+
+
+### European Central Bank Non-EU - Financial Accounts (`ECB_IDCSA`)
+The European Central Bank provides estimates of financial balance sheet for non-EU countries on its Statistical Data Warehouse. These data are included in the source European Central Bank Non-EU (`ECB_IDCSA`), which corresponds to the IDCS - Sector accounts in the International Data Cooperation Task Force Context @EuropeanCentralBank2022_IDCSSectorAccountsInternationalData. The underlying database collects financial accounts (both flows and levels) for each institutional sector as publishes by Eurostat, OECD, and the United Nations. Data are originally published at both quarterly and annual frequency. This raw data source is classified as cross-national official statistics for which mapping is automatic since the European Central Bank organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tECB_IDCSA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+### European Central Bank EU - Financial Accounts (`ECB_QSA`)
+The source European Central Bank EU (`ECB_QSA`) corresponds to the Quarterly Sector Accounts published by the European Central Bank on the Statistical Data Warehouse @EuropeanCentralBank2022_QSAQuarterlySectorAccountsMUFA. The Quarterly Sector Accounts provide quarterly estimates of outstanding levels of financial assets and liabilities for the European Union (EU) countries, together with a detailed breakdown of institutional sectors and financial instruments. The original frequency of data is quarterly but we retain the end-year observation. This raw data source is classified as cross-national official statistics, and its mapping is automatic since the European Central Bank organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tECB_QSA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+### European Central Bank EU Distributional Wealth Accounts - Balance Sheet (`ECB_DWA_topo`)
+The source European Central Bank EU Distributional Accounts (`ECB_DWA_topo`) are experimental statistics produced by the European System of Central Banks (ESCB). The complement macroeconomic sector accounts with distributional information for the household sector. The DWA links European Central Bank EU (`ECB_QSA`) data with Household Finance and Consumption Survey - Balance Sheet (`HFCS_topo`) with a view to providing an assessment of the distribution of household wealth that is consistent with the aggregates compiled in the sector accounts. This raw data source is classified as cross-national official statistics, and its mapping is automatic since the European Central Bank organizes and disseminates raw data according to the SNA2008/ESA2010 guidelines. Table \ref{tab:tECB_DWA} provides an overview of the general and source-specific composition rules used to compute the concepts. Housing wealth in the original source is provided in net values, therefore, we add housing loans to compile the gross aggregate. 
+
+### Eurostat - Financial Accounts (`Est`)
+The data source Eurostat - Financial Accounts (`Est`) corresponds to the  Financial Flows and Stocks publication of Eurostat, the statistical office of the European Union @Eurostat2022_FinancialBalanceSheetsAnnualData. This data source reports financial assets held and the liabilities outstanding at the end of each year, for each institutional sector of the economy, according to the SNA2008/ESA2010 framework. This is a cross-national official statistics source type, and its mapping is automatic. Table \ref{tab:tEst} provides an overview of the source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the correspondent composition rule is used. 
+
+
+### Federal Reserve Board B.101 - Balance Sheet (`FED_B101`)
+The source Federal Reserve Board B.101 - Balance Sheet (`FED_B101`) corresponds to the table B.101: Balance Sheet of Households and Nonprofit Organizations published by the Federal Reserve Board in the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the households and nonprofit organizations sector. Relative to the mapping procedure, this raw data source is classified as cross-national official statistics that use variants of SNA2008/ESA2010 framework. Hence, we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_B101_matching} for the manual mapping). Table \ref{tab:tFED_B101} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this source, we obtain "Net Wealth" (`netwea`) as the sum of "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) and "Housing & Land" (`nfahou`), net of "Debt" (`fliabi`).
+
+### Federal Reserve Board B.101.H - Balance Sheet (`FED_B101h`)
+The source Federal Reserve Board B.101.H - Balance Sheet (`FED_B101h`) corresponds to the table B.101.h: Balance Sheet of Households published by the Federal Reserve Board as supplementary table in the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the households and is obtained as a residual - that is by subtracting assets and liabilities of the nonprofit sector from the combined balance sheet of households and nonprofit organizations sector (table B.101). This raw data source is classified as cross-national official statistics that use variants of the SNA2008/ESA2010 framework, and we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_B101h_matching} for the manual mapping). Table \ref{tab:tFED_B101h} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this source, we obtain "Net Wealth" (`netwea`) as the sum of "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) and "Housing & Land" (`nfahou`), net of "Debt" (`fliabi`).
+
+### Federal Reserve Board B.101.N - Balance Sheet (`FED_B101n`)
+The source Federal Reserve Board B.101.N - Balance Sheet (`FED_B101n`) corresponds to the table B.101.n: Balance Sheet of Nonprofit Organizations published by the Federal Reserve Board as supplementary table in the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the nonprofit organizations sectors. This raw data source is classified as cross-national official statistics that use variants of the SNA2008/ESA2010 framework, and we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_B101n_matching} for the manual mapping). Table \ref{tab:tFED_B101n} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this source, we obtain "Net Wealth" (`netwea`) as the sum of "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) and "Housing & Land" (`nfahou`), net of "Debt" (`fliabi`).
+
+### Federal Reserve Board S.3.a (IMA) - Balance Sheet (`FED_S3a_IMA`)
+The source Federal Reserve Board S.3.a (IMA) - Balance Sheet (`FED_S3a_IMA`) corresponds to the table S.3.a: Households and Nonprofit Institutions Serving Households published by the Federal Reserve Board in the Integrated Macroeconomic Accounts section of the Z.1 Financial Accounts of the United States @BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease. The table covers the entire balance sheet of the households and nonprofit organizations sector but the underlying data source is different from that used to obtain table B.101. In fact, the Integrated Macroeconomic Accounts combine production, income and saving, and capital formation from the National Income and Product Accounts (NIPA) and financial transactions and asset revaluations from the Financial Accounts with changes in net wealth from the balance sheet (table B.101). This raw data source is classified as cross-national official statistics that use variants of the SNA2008/ESA2010 framework, and we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tFED_S3a_IMA} for the manual mapping). Table \ref{tab:tFED_S3a_IMA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this source, we obtain "Net Wealth" (`netwea`) as the sum of "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) and "Housing & Land" (`nfahou`), net of "Debt" (`fliabi`).
+
+### OECD - Financial Accounts (`OECD_FA`)
+The source OECD - Financial Accounts (`OECD_FA`) corresponds to the OECD's table Households' Financial Assets and Liabilities (QASA_7HH table) which provides a detailed breakdown of households' loans, investment funds shares, life insurance and annuity entitlements, and pension entitlements @OECD_HouseholdsFinancialAssetsLiabilities. This raw data source assembles various sources from central banks and national statistical institutes. This raw data source is classified as cross-national official statistics, and its mapping is automatic since the OECD organizes and disseminates data according to the SNA2008/ESA2010 framework. Table \ref{tab:tOECD_FA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used.
+
+### OECD - Nonfinancial Accounts (`OECD_NA`)
+The source OECD - Financial Accounts (`OECD_NA`) corresponds to the OECD's table Annual balance sheets for non-financial assets (SNA_TABLE9B table) which provides a detailed breakdown of produced and non-produced non-financial assets for different institutional sectors, including the household sector @OECD_AnnualBalanceSheetsNonfinancialAssets. This raw data source is classified as cross-national official statistics, and its mapping is automatic since the OECD organizes and disseminates data according to the SNA2008/ESA2010 framework. Table \ref{tab:tOECD_NA} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used.
+
+
+
+### Luxembourg Wealth Study Database - Balance Sheet (`LWS_topo`)
+The source Luxembourg Wealth Study Database - Balance Sheet (`LWS_topo`) is the Luxembourg Wealth Study Database which provides cross-national harmonized micro-data (household- and individual-level data) on assets, liabilities, and net wealth @LIS_LuxembourgWealthStudyDatabase. Aggregate concepts are obtained multiplying household-level micro-data by the population weight and they are the average across five implicates (Rubin's Rule). The organization of assets and liabilities in the Luxembourg Wealth Study Database is not directly comparable to the GC Wealth Project conceptual grid. Therefore, this raw data source is classified as cross-national academic research that do not use the SNA2008/ESA2010 framework for which we introduce a source-specific conceptual grid (see Table \ref{tab:tLWS_topo_matching}) and composition table (see Table \ref{tab:tLWS_topo}). In the composition table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this specific source, "Net Wealth" (`netwea`) is obtained ex-post, that is by combining the available concepts of the Wealth Topography. More specifically, "Net Wealth" is computed as "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) plus "Housing & Land" (`nfahou`) minus "Debt" (`fliabi`). Deposits are constructed from the variable Deposit Accounts And Cash (`hafc`). In countries where this variable includes cash according to the original survey, the GC wealth Project's data warehouse does not report the concept "Deposits" based on the LWS. 
+ 
+
+### Household Finance and Consumption Survey - Balance Sheet (`HFCS_topo`)
+The source Household Finance and Consumption Survey - Balance Sheet (`HFCS_topo`) corresponds to the Household Finance and Consumption Survey (HFCS), a collection of harmonized micro-data on households' balance sheets and consumption @HouseholdFinanceandConsumptionNetwork2021. The HFCS is housed at the European Central Bank but the survey is conducted nationally, mostly by central banks. To obtain aggregate concepts from household-level data, we used household-level weights. Moreover, aggregate data reported in the Wealth Topography are an average across all five implicates (Rubin's Rule). The organization of assets and liabilities in the Household Finance and Consumption Survey is not directly comparable to the GC Wealth Project conceptual grid. Therefore, this raw data source is classified as cross-national official survey data that do not use the SNA2008/ESA2010 framework, and we introduce a source-specific conceptual grid (see Table \ref{tab:tHFCS_topo_matching}) and composition table (see Table \ref{tab:tHFCS_topo}). In the composition table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. 
+
+### World Inequality Database - Balance Sheet (`WID_topo`)
+The source World Inequality Database - Balance Sheet (`WID_topo`) corresponds to the World Inequality Database (WID) @WorldInequalityDatabase_Data. The concepts included in the Wealth Topography database are the WID aggregate wealth variables, converted in nominal values using the country-specific price deflator provided by WID. Among the WID estimates, we have included in the Wealth Topography database only countries with wealth data available for at least two asset group. Thus, our databse excludes those estimates of wealth aggregates that are heavily imputed with data available only for one asset group or for few asset sub-components. The organization of assets and liabilities in the World Inequality Database - Balance Sheet is not directly comparable to the GC Wealth Project conceptual grid. Therefore, this raw data source is classified as cross-national academic research that does not use the SNA2008/ESA2010 framework, and we introduce a source-specific conceptual grid (see Table \ref{tab:tWID_topo_matching}) and composition table (see Table \ref{tab:tWID_topo_matching}). In the composition table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this source, "Net Wealth" (`netwea`) may be different from the sum of "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) and "Housing & Land" (`nfahou`), net of "Debt" (`fliabi`) because of discrepancies present in the raw data source.
+
+### Atlas of the Offshore World - Financial Accounts (`AOW`)
+The source Atlas of the Offshore World (`AOW`) is based on a research project by the EU Tax Observatory and Skatteforsk - Centre for Tax Research to inform the global debate around international tax evasion and avoidance. It offers up-to-date information about the dynamic of profit shifting by multinational companies and offshore wealth. Household offshore financial wealth refers to financial assets held by individuals outside of their residence country. To obtain offshore financial wealth, researchers exploit official statistics published by the Swiss central bank, the Bank for International Settlements, and systematic anomalies in the international investment positions of countries. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. As the information on offshore real estate is currently available for one year only, we do not include in the current version of the topography section. 
+
+### European Commission Taxation Papers - Financial Accounts (`ECOW`)
+The data source European Commission Taxation Papers (`ECOW`) corresponds to a research projected by Charles Vellutini, Georges Casamatta, Léa Bousquet, and Grzegorz Poniatowski. Household offshore financial wealth refers to financial assets held by individuals outside of their residence country. To obtain offshore financial wealth, researchers exploit systematic anomalies in the international investment positions of countries. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used.
+
+### Credit Suisse Global Wealth Report - Balance Sheet (`CS_topo`)
+The Credit Suisse Global Wealth Report (`CS_topo`) provides wealth estimates for various countries in the the period from 2000 to 2022 based on household balance sheets and surveys. We include a time series on aggreagte wealth information if the data quality is defined as fair or better, which results in a set of 51 countries. The data is primarily derived from national surveys and administrative records, with adjustments made to account for the upper tail of the wealth distribution using rich list data, such as Forbes’ The World’s Billionaires list.  The organization of assets and liabilities in the Credit Suisse Global Wealth Report is not directly comparable to the GC Wealth Project conceptual grid. Therefore, this raw data source is classified as cross-national academic research that do not use the SNA2008/ESA2010 framework, and we introduce a source-specific conceptual grid (see Table \ref{tab:tLWS_topo_matching}) and composition table (see Table \ref{tab:tLWS_topo}). In the composition table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used. For this specific source, "Net Wealth" (`netwea`) is obtained ex-post, that is by combining the available concepts of the Wealth Topography. More specifically, "Net Wealth" is computed as "Financial Assets & Fixed Capital of Personal Businesses" (`nnhass`) plus "Housing & Land" (`nfahou`) minus "Debt" (`fliabi`). We thank Prof. Anthony Shorrocks for providing the dataset for the GC Wealth Project. 
+
+### Statistics Canada Distributional Wealth Accounts - Balance Sheet (`StatCan_DWA_topo`)
+The data source Statistics Canada Distributional Wealth Accounts (`StatCan_DWA_topo`) corresponds to Statistics Canada's table Distributions of household economic accounts, wealth, by characteristic, Canada, quarterly @StatCan2025. It provides information on household's assets and liabilities, and offers breakdowns for different groups of households, including households that differ in their rank in the wealth distribution. For the Wealth Topography Section of the GC Wealth data warehouse, we select "All households". The data comes in quarterly format. The original frequency of data is quarterly but we retain the end-year observation. This raw data source is classified as cross-national official statistics that use variants of the SNA2008/ESA2010 framework, and we manually map each item from the raw data source into an item of the grid (see Table \ref{tab:tStatCan_DWA_topo_matching} for the manual mapping). Table \ref{tab:tStatCan_DWA_topo} provides an overview of the general and source-specific composition rules used to compute the concepts. In the table, the column "Frequency" reports the number of source-sector-concept triples for which the corresponding composition rule is used.
+
+
+```{r tBoI_FA, echo=F}
+BoI_FA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "BoI_FA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(BoI_FA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Bank of Italy - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+
+```{r tBoI_NA, echo=F}
+BoI_NA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "BoI_NA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(BoI_NA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Bank of Italy and ISTAT - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+
+```{r tECB_IDCSA, echo=F}
+ECB_IDCSA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "ECB_IDCSA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(ECB_IDCSA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: European Central Bank Non-EU - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+
+
+```{r tECB_QSA, echo=F}
+ECB_QSA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "ECB_QSA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(ECB_QSA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: European Central Bank EU - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+
+```{r tEst, echo=F, include=FALSE}
+Est <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "Est", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(Est, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Eurostat - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tECB_DWA, echo=F}
+ECB_DWA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "ECB_DWA_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(ECB_DWA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: European Central Bank EU - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+
+```{r tEst2, echo=F}
+Est <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "Est", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(Est, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Eurostat - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tFED_B101, echo=F}
+FED_B101 <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "FED_B101", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Federal Reserve Board B.101 - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tFED_B101_matching, echo=F}
+FED_B101_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_B101", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board B.101 - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+
+```{r tFED_B101h, echo=F}
+FED_B101h <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "FED_B101h", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101h, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Federal Reserve Board B.101.H - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape() 
+```
+
+
+```{r tFED_B101h_matching, echo=F}
+FED_B101h_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_B101h", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101h_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board B.101.H - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+
+
+```{r tFED_B101n, echo=F}
+FED_B101n <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "FED_B101n", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101n, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Federal Reserve Board B.101.N - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tFED_B101n_matching, echo=F}
+FED_B101n_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_B101n", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101n_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board B.101.N - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+
+
+```{r tFED_S3a_IMA, echo=F}
+FED_S3a_IMA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "FED_S3a_IMA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_S3a_IMA, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Federal Reserve Board S.3.a (IMA) - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tFED_S3a_IMA_matching, echo=F}
+FED_B101n_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "FED_S3a_IMA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(FED_B101n_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Federal Reserve Board S.3.a (IMA) - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+```{r tOECD_NA, echo=F}
+OECD_FA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "OECD_NA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(OECD_FA, format="latex", align = "l", booktabs = T, longtable=T,  caption = "Composition rules: OECD - Nonfinancial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "4cm") %>%
+  column_spec(4, width = "4cm")
+```
+
+```{r tOECD_FA, echo=F}
+OECD_FA <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "OECD_FA", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(OECD_FA, format="latex", align = "l", booktabs = T, longtable=T,  caption = "Composition rules: OECD - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "4cm") %>%
+  column_spec(4, width = "4cm")
+```
+
+
+```{r tLWS_topo, echo=F}
+LWS_topo <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "LWS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(LWS_topo, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Luxembourg Wealth Study Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tLWS_topo_matching, echo=F}
+LWS_topo_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "LWS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(LWS_topo_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Luxembourg Wealth Study Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+
+```{r tHFCS_topo, echo=F}
+HFCS_topo <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "HFCS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(HFCS_topo, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Household Finance and Consumption Survey - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tHFCS_topo_matching, echo=F}
+HFCS_top_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "HFCS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(HFCS_top_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Household Finance and Consumption Survey - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "8cm") 
+```
+
+
+```{r tWID_topo, echo=F}
+WID_topo <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "WID_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(WID_topo, format="latex", align = "l", booktabs = T, longtable=T,  caption = "Composition rules: World Inequality Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "4cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "5cm") %>%
+  landscape()
+```
+
+```{r tWID_topo_matching, echo=F}
+WID_top_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "WID_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(WID_top_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: World Inequality Database - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "4cm") %>% 
+  column_spec(3, width = "3cm") 
+```
+
+```{r tAOW, echo=F}
+AOW <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "AOW", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(AOW, format="latex", align = "l", booktabs = T, longtable=T,  caption = "Composition rules: Atlas of the Offshore World - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "4cm") %>%
+  column_spec(4, width = "4cm")
+```
+
+```{r tECOW, echo=F}
+ECOW <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "ECOW", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(ECOW, format="latex", align = "l", booktabs = T, longtable=T,  caption = "Composition rules: European Commission Taxation Papers - Financial Accounts") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "4cm") %>%
+  column_spec(4, width = "4cm")
+```
+
+```{r tCS_topo, echo=F}
+CS_topo <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "CS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(CS_topo, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Credit Suisse Global Wealth Report - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tCS_topo_matching, echo=F}
+CS_topo_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "CS_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(CS_topo_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Credit Suisse Global Wealth Report - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```
+
+```{r tStatCan_DWA_topo, echo=F}
+StatCan_DWA_topo <- read_excel("docs/bible_wt_source_composition_v2.xlsx", sheet = "StatCan_DWA_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(StatCan_DWA_topo, format="latex", align = "l", booktabs = T, longtable=T, caption = "Composition rules: Statistics Canada - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+   column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "8cm") %>%
+  landscape()
+```
+
+```{r tStatCan_DWA_topo_matching, echo=F}
+CS_topo_matching <- read_excel("docs/bible_wt_matching.xlsx", sheet = "StatCan_DWA_topo", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(CS_topo_matching, format="latex", align = "l", booktabs = T, longtable=T, caption = "Matching: Statistics Canada - Balance Sheet") %>%
+  kable_styling(latex_options = "striped")   %>%
+  column_spec(1, width = "10cm") 
+```

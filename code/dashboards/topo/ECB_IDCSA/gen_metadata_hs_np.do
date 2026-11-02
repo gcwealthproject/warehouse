@@ -7,8 +7,8 @@
 // Check the following lines always before running the code
 local general_source = "ECB_IDCSA" // The source does not change across the do-file
 qui local sector_list S14 S15
-qui local country_list canada colombia iceland israel japan mexico ///
-				newzealand northmacedonia norway switzerland turkey gb
+qui local country_list australia brazil canada chile colombia gb israel iceland japan korea mexico norway newzealand ///
+                russia turkey usa northmacedonia switzerland
 		
 		
 * Origin folder: it contains the excel files to import

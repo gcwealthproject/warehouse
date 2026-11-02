@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 ****Required packages********
-//ssc install egenmore sxpose findname labmask renvarlab ereplace xfill (type net from https://www.sealedenvelope.com/) labmask (http://www.stata-journal.com/software/sj8-2/ - gr0034.pkg)
+//ssc install sxpose findname renvarlab
 
 //general settings 
 macro drop _all 
@@ -18,10 +18,10 @@ run "code/mainstream/auxiliar/version_control.do"
 
 //list codes 
 **********************************************************
-global do_codes1 " "01a" "01b" "01c" " 
+global do_codes1 " "01c" "01d" " //"01a" "01b"
 global do_codes2 " "02a" "02b" "
-global do_codes3 " "03b" "03c" "03a" " 
-
+global do_codes3 " "03a" "03b" "03c" " 
+*global do_codes4 " "04a" " 
 **********************************************************
 
 //report and save start time 
@@ -40,7 +40,7 @@ forvalues n = 1/4 {
 }
 
 //loop over all files  
-forvalues n = 1/3 {
+forvalues n = 1/4 {
 	foreach docode in ${do_codes`n'} {
 		
 		*********************
@@ -60,7 +60,7 @@ forvalues n = 1/3 {
 				di as text "  * " "${doname_`docode2'}" _continue
 				di as text " ${do_endtime_`docode2'}"
 			}
-			if `x' == 3 di as result "{hline 70}"	
+			if `x' == 4 di as result "{hline 70}"	
 		}
 	}
 }

@@ -1,0 +1,977 @@
+# Digital Library Migration Report
+
+## Summary
+
+- Registry records changed: 734
+- Blank registry keywords backfilled: 89
+- Registry records with multiple data-source keywords before migration: 7
+- Registry records with multiple data-source keywords after migration: 0
+- Registry records not confidently classified: 0
+- Wealth Research entries with stale data-source keywords removed: 15
+- Duplicate citekeys seen during digital-library merge: 80
+- Bibliographic metadata conflicts: 5
+- Multi-category data-source exports after deduplication: 5
+
+## Registry Records Changed
+
+- `src-acciari-morelli-2020` / `Acciari2021` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-acciari2024` / `Acciarietal2024` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-acir1961` / `UnitedStatesAdvisoryCommissiononIntergovernmentalRelations1961_CoordinationStateFederalInheritanceEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-acir1968` / `UnitedStatesAdvisoryCommissiononIntergovernmentalRelations1968_StateFederalTaxesSignificantFeatures` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-advani2021` / `Advanietal2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-aiken2007` / `Aiken2007` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-albers2022` / `Albersetal2022` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-alvaredo2010` / `AlvaredoSaez2010` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-alvaredo2017share` / `Alvaredo2017` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-alvaredo2018` / `Alvaredoetal2018` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-alvaredo2024` / `Alvaredo2024` (Wealth Inequality): `` -> `Data Sources: Wealth Inequality`
+- `src-anand2022` / `AnandKumar2022` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-anderson2009` / `Anderson1999` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-apostel2025belgian` / `Apostel2025` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-assouad2021` / `Assouad2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-atkinson-2018` / `Atkinson2012` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-ato` / `AustralianTaxationOffice2023` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-austriataxlaw-1955` / `RepublicofAustria1955_InheritanceGiftTaxAct1955` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-austriataxlaw-1968` / `RepublicofAustria1968_InheritanceGiftTaxActAmendment` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-austriataxlaw-2001` / `RepublicofAustria2001_EuroTaxConversionActEuroStUG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-austriataxlaw-2008` / `AustriaTaxLaw_2008` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-az-est2006` / `ArizonaJointLegislativeBudgetCommittee2006_HistoricalTaxLawChangesEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-bakija2016` / `Bakija2016` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-baldwin1977` / `Baldwin1977` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ballotopedia` / `Ballotpedia_EstateInheritanceTaxes` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-barlow2009` / `Barlowetal2009` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-barry1956` / `Barry1956` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-bartholdito1992` / `BartholdIto1992` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-baselgia2024` / `BaselgiaMartinez2024` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-batty2019` / `Battyetal2019` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-batty2022` / `Battyetal2022` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-beckert2008` / `Beckert2008` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-bharti2018` / `Bharti2018` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-bird1991` / `Bird1991` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-blanchet2023` / `BlanchetMartinez-Toledano2023` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-boadway2018` / `ifoInstitute2018_IfoDICEReport2018Summer` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-brandolini2006` / `Brandolinietal2006` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-bricker2016` / `Brickeretal2016` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-bricker2018` / `Brickeretal2018` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-bricker2021` / `Brickeretal2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-britishtaxlaw-1975` / `BritishTaxLaw_1975` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1978` / `BritishTaxLaw_1978` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1980` / `BritishTaxLaw_1980` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1982` / `BritishTaxLaw_1982` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1983` / `BritishTaxLaw_1983` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1984` / `BritishTaxLaw_1984` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1985` / `BritishTaxLaw_1985` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1986` / `BritishTaxLaw_1986` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1987` / `BritishTaxLaw_1987` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1988` / `BritishTaxLaw_1988` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1989` / `BritishTaxLaw_1989` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1990` / `BritishTaxLaw_1990` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1991` / `BritishTaxLaw_1991` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1992` / `BritishTaxLaw_1992` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1993` / `BritishTaxLaw_1993` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1995` / `BritishTaxLaw_1995` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1996` / `BritishTaxLaw_1996` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1997` / `BritishTaxLaw_1997` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1998` / `BritishTaxLaw_1998` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-1999` / `BritishTaxLaw_1999` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2000` / `BritishTaxLaw_2000` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2001` / `BritishTaxLaw_2001` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2002` / `BritishTaxLaw_2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2003` / `BritishTaxLaw_2003` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2004` / `BritishTaxLaw_2004` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2005` / `BritishTaxLaw_2005` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2006` / `BritishTaxLaw_2006` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-britishtaxlaw-2010` / `BritishTaxLaw_2010` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-brown2002` / `BrownHepworth2002` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-br-lhart-dupertuis-moreau-2018` / `Brulhart2018` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-br-lhart-fuster-mart-nez-moseka-2026` / `Brulhart2026` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-bruneitaxlaw-1984` / `BruneiTaxLaw_1984` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-bulgariantaxlaw-1997` / `RepublicofBulgaria1997_LocalTaxesFeesAct` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ca2022` / `CA2022` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-cannari2018` / `CannariDAlessio2018` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-carranza2023` / `Carranzaetal2023` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-carvalhojunior2018` / `deCarvalhoJunior2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-cat1976` / `Ireland1976_CapitalAcquisitionsTaxAct1976` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-catherine2021` / `Catherineetal2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-cbc2018` / `Pittis2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-cbpp2004` / `CBPP2004` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-cch2009` / `CroweHorwathInternational2009_InternationalMasterTaxGuide2009` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-chase1935` / `TheChaseNationalBankoftheCityofNewYork1935_RevenueAct1935DigestNew` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-chatterjee2022` / `Chatterjeeetal2022` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-chiletaxlaw-1878` / `ChileTaxLaw_1878` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1915` / `ChileTaxLaw_1915` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1923` / `ChileTaxLaw_1923` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1925` / `ChileTaxLaw_1925` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1929` / `ChileTaxLaw_1929` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1932` / `ChileTaxLaw_1932` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1934` / `ChileTaxLaw_1934` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1965` / `ChileTaxLaw_1965` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1981` / `ChileTaxLaw_1981` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlawestate-1929` / `ChileTaxLawEstate_1929` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-cje-frguide` / `CameronJamesExpat2021_InheritanceTaxFranceUltimateGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-co-esttax2005` / `CO_EstTax2005` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-cole2015` / `Cole2015` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-cooper2006` / `Cooper2006` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-copenhagen2010` / `CopenhagenEconomics2011_AttachmentSurveyDomesticRulesTaxes` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-corlett2018` / `Corlett2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-cs-topo` / `CreditSuisse_CreditSuisseGlobalWealthReport` (Wealth Topography): `Data Sources: Wealth Inequality Trends` -> `Data Sources: Wealth Topography`
+- `src-csdt1979` / `CSDT1979` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-csdt1985` / `CommitteeonStateDeathTaxProblemsofEstatesandTrusts1985` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2009` / `2009_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2010` / `2010_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2011` / `2011_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2012` / `2012_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2013` / `2013_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2014` / `2014_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2015` / `2015_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2016` / `2016_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2017` / `2017_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2018` / `2018_ConnecticutEstateGiftTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2019` / `ConnecticutStateDepartmentofRevenueServices2019_2019ConnecticutEstateGiftTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2020` / `ConnecticutStateDepartmentofRevenueServices2020_2020ConnecticutEstateGiftTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ct-inst2021` / `ConnecticutStateDepartmentofRevenueServices2021_2021FormCT706NTInstructions` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-cubantaxlaw-1994` / `ChamberofCommerceoftheRepublicofCuba1994_LawNo73TributarySystem` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-curry2021` / `Curry2021` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-cyprustaxlaw-1942` / `CyprusTaxLaw_1942` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-cyprustaxlaw-1962` / `CyprusTaxLaw_1962` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-cyprustaxlaw-2000` / `CyprusTaxLaw_2000` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-davies2021` / `DaviesDiMatteo2021` (Taxes on Wealth): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-dc1987` / `DC1987` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dc2001` / `DC2001` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dc-comp2019` / `2019_DCForm76Worksheets2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dc-esttax` / `DCOfficeofTaxandRevenue2020_D76EstateTaxInstructionsEstates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-dc-inst1987` / `DC_Inst1987` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dc-inst2019` / `2019_DCForm76Instructions2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dc-inst2021` / `DCOfficeofTaxandRevenue2021_D76EstateTaxInstructionsEstates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-dc-leg1986` / `DC_Leg1986` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dc-leg1987` / `DC_Leg1987` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de2010` / `2010_DelawareForm900RE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de2011` / `2011_DelawareForm900RE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de2013` / `2013_DelawareForm900RE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de2014` / `2014_DelawareForm900RE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de2015` / `2015_DelawareForm900RE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de2016` / `2016_DelawareForm900RE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de2017` / `2017_DelawareForm900RE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de-leg1935` / `DE_Leg1935` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de-leg1937` / `DE_Leg1937` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de-leg1945` / `DE_Leg1945` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-de-leg1991` / `Delaware_DelawareCodeChapter15Estate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-de-leg1998` / `Delaware1998_DelawareCodeChapter353` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-de-leg2013` / `Delaware2013_DelawareCodeChapter162` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-de-sum2018` / `2018_DelawareEstateTaxSummary` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dell2007` / `Delletal2007` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-deloitte2017` / `Deloitte2017_TaxationInvestmentAustria2017` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-deloitte2018` / `Deloitte2017_TaxationInvestmentAustralia2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-dhs-ineq` / `dhs_various` (Wealth Inequality): `Data Sources: Unclassified` -> `Data Sources: Wealth Inequality`
+- `src-disslbacher2023` / `Disslbacheretal2023` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-drometer2018` / `Drometeretal2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-dtirs-2002` / `DTIRS_2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dtirs-2003` / `DTIRS_2003` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dtirs-2004` / `DTIRS_2004` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dtirs-2005` / `DTIRS_2005` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dtirs-2006` / `DTIRS_2006` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dtirs-2007` / `DTIRS_2007` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dtirs-2008` / `DTIRS_2008` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-dtirs-2009` / `DTIRS_2009` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-easton1983` / `Easton1983` (Taxes on Wealth): `Cross-National Comparisons,Data Sources: Estate Inheritance and Gift Taxes,Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-ec2014` / `ErnstYoung2014_CrosscountryReviewTaxesWealthTransfers` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ecb-dwa-ineq` / `EuropeanCentralBank2024_DistributionalWealthAccounts` (Wealth Inequality): `Data Sources: Unclassified` -> `Data Sources: Wealth Inequality`
+- `src-ecb-dwa-topo` / `EuropeanCentralBank2024_DistributionalWealthAccounts` (Wealth Topography): `Data Sources: Unclassified` -> `Data Sources: Wealth Topography`
+- `src-ecb-idcsa` / `EuropeanCentralBank2022_IDCSSectorAccountsInternationalData` (Wealth Topography): `Data Sources: Unclassified` -> `Data Sources: Wealth Topography`
+- `src-ecb-qsa` / `EuropeanCentralBank2022_QSAQuarterlySectorAccountsMUFA` (Wealth Topography): `Data Sources: Unclassified` -> `Data Sources: Wealth Topography`
+- `src-ecow` / `Vellutinietal2019` (Wealth Topography): `Cross-National Comparisons,Data Sources: Wealth Topography,Wealth Taxation` -> `Data Sources: Wealth Topography,Cross-National Comparisons,Wealth Taxation`
+- `src-egact1955-nz` / `EGAct1955_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1957-nz` / `EGAct1957_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1959-nz` / `EGAct1959_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1960-nz` / `EGAct1960_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1961-nz` / `EGAct1961_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1962-nz` / `EGAct1962_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1963-nz` / `EGAct1963_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1964-nz` / `EGAct1964_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1965-nz` / `EGAct1965_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1966-nz` / `EGAct1966_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1968-nz` / `EGAct1968_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1970-nz` / `EGAct1970_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1971-nz` / `EGAct1971_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1972-nz` / `EGAct1972_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1974-nz` / `EGAct1974_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1976-nz` / `EGAct1976_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1977-nz` / `EGAct1977_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1979-nz` / `EGAct1979_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1980-nz` / `EGAct1980_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1981-nz` / `EGAct1981_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1982-nz` / `EGAct1982_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1983-nz` / `EGAct1983_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1986-nz` / `EGAct1986_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1989-nz` / `EGAct1989_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1990-nz` / `EGAct1990_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1992-nz` / `EGAct1992_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-egact1993-nz` / `EGAct1993_NZ` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-erwing1963` / `Erwing1963` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-est` / `Eurostat2022_FinancialBalanceSheetsAnnualData` (Wealth Topography): `Data Sources: Unclassified` -> `Data Sources: Wealth Topography`
+- `src-estatedutyact1953-india` / `EstateDutyAct1953_India` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ey2006a` / `ErnstYoung2006_GlobalExecutive` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2007a` / `ErnstYoung2007_GlobalExecutive` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2008a` / `ErnstYoung2008_2008GlobalExecutiveIndividualTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2009a` / `ErnstYoung2009_2009GlobalExecutiveIndividualTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2010a` / `ErnstYoung2010_2010GlobalExecutiveIndividualTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2011a` / `ErnstYoung2011_2011GlobalExecutiveIndividualTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2011b` / `ErnstYoung2011_InternationalEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2012a` / `ErnstYoung2012_WorldwidePersonalTaxGuideIncome` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2012b` / `ErnstYoung2012_InternationalEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ey2013a` / `ErnstYoung2013_WorldwidePersonalTaxGuideIncome` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2013b` / `ErnstYoung2013_InternationalEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2014a` / `ErnstYoung2014_WorldwidePersonalTaxGuideIncome` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2014b` / `ErnstYoung2014_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2015a` / `ErnstYoung2015_WorldwidePersonalTaxGuideIncome` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2015b` / `ErnstYoung2015_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2016a` / `ErnstYoung2016_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2016b` / `ErnstYoung2016_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2017a` / `ErnstYoung2017_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2017b` / `ErnstYoung2017_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2018a` / `ErnstYoung2018_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2018b` / `ErnstYoung2018_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2019a` / `ErnstYoung2019_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2019b` / `ErnstYoung2019_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2020a` / `ErnstYoung2020_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ey2020b` / `ErnstYoung2020_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2021a` / `ErnstYoung2021_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2021b` / `ErnstYoung2021_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2022a` / `ErnstYoung2022_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2022b` / `ErnstYoung2022_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2023a` / `ErnstYoung2023_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2023b` / `ErnstYoung2023_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2024a` / `ErnstYoung2024_WorldwidePersonalTaxImmigrationGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2024b` / `ErnstYoung2024_WorldwideEstateInheritanceTaxGuide` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ey2025b` / `EY2025b` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ey2026a` / `EY2026a` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-fed-dwa-ineq` / `FED_DWA_ineq` (Wealth Inequality): `` -> `Data Sources: Wealth Inequality`
+- `src-drg2025` / `Findex_ineq` (Wealth Inequality): `` -> `Data Sources: Wealth Inequality`
+- `src-forminstruction-2011` / `OregonDepartmentofRevenue2011_FormIT1InstructionsInheritanceTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-forminstruction-2023` / `OregonDepartmentofRevenue2023_Form706InstructionsOregonEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-fp2011` / `French-Property.com2011_TaxChangesFrance2011` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-fpguide` / `French-Property.com_FrenchInheritanceTaxResidentFrance` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-frank` / `Frank2021` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-frick2010` / `Fricketal2010` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-ga2006` / `GA2006` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ga2015` / `GA2015` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-gabbuti2025` / `Gabbuti2025` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-gale2001` / `Galeetal2001` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-galiana2016` / `Galiana2016` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-gandhi2005` / `Gandhi2005` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-garbinti2021` / `Garbintietal2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-genschel2023` / `Genscheletal2023` (Taxes on Wealth): `Cross-National Comparisons,Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `src-germantaxlaw-1951` / `GermanTaxLaw1951` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-1959` / `Germany1959_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-1974` / `Germany1974_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-1977` / `Germany1977_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-1980` / `Germany1980_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-1996` / `Germany1996_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-2002` / `Germany2002_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-2009` / `Germany2009_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-germantaxlaw-2010` / `Germany2010_ErbschaftsteuerUndSchenkungsteuergesetzErbStG` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-gfs-data` / `Piersonetal2015` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-gifttaxact1958-india` / `GiftTaxAct1958_India` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-glander1968` / `Glander1968` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-gpg-cl` / `GlobalPropertyGuide2021_InheritanceTaxInheritanceLawChile` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-gr1987` / `GR1987` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-guerrero2021` / `Guerrero2021` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-guzzardi2026` / `Guzzardi2026` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-henrekson2015` / `HenreksonStenkula2015` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-hfcs-ineq` / `HouseholdFinanceandConsumptionNetwork2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Data Sources: Wealth Topography` -> `Data Sources: Wealth Inequality`
+- `src-hfcs-topo` / `HouseholdFinanceandConsumptionNetwork2021` (Wealth Topography): `Data Sources: Wealth Inequality Trends,Data Sources: Wealth Topography` -> `Data Sources: Wealth Topography`
+- `src-hi2013` / `StateofHawaiiDepartmentofTaxation2013_HawaiiEstateTaxReturn` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-hi2014` / `StateofHawaiiDepartmentofTaxation2014_HawaiiEstateTaxReturn` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-hi2015` / `StateofHawaiiDepartmentofTaxation2015_HawaiiEstateTaxReturn` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-hi2016` / `2016_HawaiiEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-hi2017` / `2017_HawaiiEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-hi2018` / `2018_HawaiiEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-hi-inst2018` / `2018_HawaiiEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-hi-inst2020` / `StateofHawaiiDepartmentofTaxation2020_InstructionsFormM6HawaiiEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-hi-tir1983` / `HI_TIR1983` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-hi-tir2010` / `StateofHawaiiDepartmentofTaxation2010_TaxInformationReleaseNo201006` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-hmrca` / `HMRevenueandCustoms2016_InheritanceTaxThresholds` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-hmrcb` / `HMRevenueandCustoms2022_RatesAllowancesInheritanceTaxThresholds` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-horwich1966` / `Horwich1966` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-huebner1904` / `Huebner1904` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ia2021` / `IowaDepartmentofRevenue_IntroductionIowaInheritanceTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-iacono2023` / `IaconoPalagi2023` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-iba` / `InternationalBarAssociation_InternationalEstatePlanningGuides` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd` / `IBFD` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2008bj` / `IBFD2008BJ` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2009de` / `IBFD2009DE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2009fr` / `IBFD2009FR` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2009hn` / `IBFD2009HN` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2009me` / `IBFD2009ME` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2010de` / `IBFD2010DE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2010fr` / `IBFD2010FR` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2010gw` / `IBFD2010GW` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2011bj` / `IBFD2011BJ` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2011de` / `IBFD2011DE` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2011fr` / `IBFD2011FR` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2013us` / `IBFD2013US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2014us` / `IBFD2014US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2015us` / `IBFD2015US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2016us` / `IBFD2016US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2017us` / `IBFD2017US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2018us` / `IBFD2018US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2019us` / `IBFD2019US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2020bj` / `IBFD2020BJ` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2020us` / `IBFD2020US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2021us` / `IBFD2021US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2022us` / `IBFD2022US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2023me` / `IBFD2023ME` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2023us` / `IBFD2023US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2024gw` / `IBFD2024GW` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2024sl` / `IBFD2024SL` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2024us` / `IBFD2024US` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025bi` / `IBFD2025BI` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025cf` / `IBFD2025CF` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025dj` / `IBFD2025DJ` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025dm` / `IBFD2025DM` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025er` / `IBFD2025ER` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025fm` / `IBFD2025FM` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025gm` / `IBFD2025GM` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025km` / `IBFD2025KM` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025kn` / `IBFD2025KN` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025me` / `IBFD2025ME` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025mm` / `IBFD2025MM` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025np` / `IBFD2025NP` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025pw` / `IBFD2025PW` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025sd` / `IBFD2025SD` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025tj` / `IBFD2025TJ` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025tm` / `IBFD2025TM` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025to` / `IBFD2025TO` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025vc` / `IBFD2025VC` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025vu` / `IBFD2025VU` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025ye` / `IBFD2025YE` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-icib` / `IrelandCitizensInformationBoard2021_CapitalAcquisitionsTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie1919` / `IE1919` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie1924` / `IE1924` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1926` / `IE1926` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1931` / `IE1931` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1939` / `IE1939` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1941` / `IE1941` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1951` / `IE1951` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1960` / `IE1960` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1961` / `IE1961` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1971` / `Ireland1971_FinanceAct1971SecondSchedule` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie1975` / `Ireland1975_FinanceAct1975Section47` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie1976` / `IE1976` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1984` / `Ireland1984_FinanceAct1984Section111` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie1985` / `IE1985` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie1990` / `Ireland1990_FinanceAct1990Section128` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie1991` / `Ireland1991_FinanceAct1991Section115` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie1994` / `Ireland1994_FinanceAct1994Section142` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie2003` / `IE2003` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie2009` / `IE2009` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie2012` / `IE2012` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie2013` / `IE2013` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-ie-rev-catrates` / `OfficeoftheRevenueCommissioners2022_CapitalAcquisitionsTaxCATThresholds` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie-rev-groups` / `OfficeoftheRevenueCommissioners2021_CapitalAcquisitionsTaxCATThresholds` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ie-rev-hr` / `OfficeoftheRevenueCommissioners2022_CapitalAcquisitionsTaxCATThresholdsa` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ifbi2005` / `IndianaFarmBureauInsurance2005_EstatePlanningSecondProgram` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-il2011` / `2011_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il2012` / `2012_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il2013` / `2013_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il2014` / `2014_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il2015` / `2015_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il2016` / `2016_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il2017` / `2017_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il2018` / `2018_IllinoisEstateTaxForm700` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-calc2011` / `2011_IllinoisEstateTaxCalculator` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-calc2012` / `2012_IllinoisEstateTaxCalculator` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-calc2013` / `IL_Calc2013` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-case2006` / `2006_Illinois4thDivCaseNo` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-civunsum2012` / `2012_IllinoisRevisedInstructionSheetRegarding` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-comp2019` / `2019_IllinoisEstateTaxComputation` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-esttax2006` / `CommissiononGovernmentForecastingandAccountability2006_IllinoisEstateGenerationSkippingTransfer` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-il-inhtax1926` / `IL_InhTax1926` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-report2001` / `2001_IllinoisFederalStateEstateTax` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2010` / `2010_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2011` / `2011_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2012` / `2012_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2013` / `2013_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2014` / `2014_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2015` / `2015_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2016` / `2016_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2017` / `2017_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-sum2018` / `2018_IllinoisEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-il-table2013` / `2013_IllinoisStateDeathTaxCredit` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-illinois-leg` / `Illinois_IllinoisEstateGenerationSkippingTransferTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-in-inhtax2014` / `Indiana2014_IndianaInheritanceTaxFrequentlyAsked` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-informationreport-1968` / `InformationReport_1968` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-irs1954` / `IRS1954` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-irs1964` / `InternalRevenueService1965` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs1969` / `IRS1969` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-irs1972` / `IRS1972` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-irs1976` / `IRS1976` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-irs1999` / `InternalRevenueService1999_Form706UnitedStatesEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs2008` / `InternalRevenueService2008_Form706UnitedStatesEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs2009` / `InternalRevenueService2009_Form706UnitedStatesEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-giftfaq` / `InternalRevenueService2022_FrequentlyAskedQuestionsGiftTaxes` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst1988` / `InternalRevenueService1988_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst1993` / `InternalRevenueService1993_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst1998` / `InternalRevenueService1998_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst1999` / `InternalRevenueService1999_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2001` / `InternalRevenueService2001_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2002` / `InternalRevenueService2002_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2003` / `InternalRevenueService2003_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2004` / `InternalRevenueService2004_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2005` / `InternalRevenueService2005_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2006` / `InternalRevenueService2006_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2007` / `InternalRevenueService2007_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2008` / `InternalRevenueService2008_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2009` / `InternalRevenueService2009_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2010` / `InternalRevenueService2010_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2016` / `InternalRevenueService2016_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2017` / `InternalRevenueService2017_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2018` / `InternalRevenueService2018_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2019` / `InternalRevenueService2019_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2020` / `InternalRevenueService2020_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-irs-inst2021` / `InternalRevenueService2021_InstructionsForm706UnitedStates` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-italianmefinfo` / `ItalianMEFInfo` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1902` / `KingdomofItaly1902_OfficialCollectionLawsDecreesKingdom` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1914` / `KingdomofItaly1914_OfficialCollectionLawsDecreesKingdom` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1918` / `KingdomofItaly1918_OfficialGazetteKingdomItaly` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1919` / `KingdomofItaly1919_OfficialGazetteKingdomItaly` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1923` / `KingdomofItaly1923_RoyalDecreeJuly15No` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1930` / `ItalianTaxLaw_1930` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1942` / `ItalianTaxLaw_1942` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1945` / `ItalianTaxLaw_1945` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1949` / `ItalianTaxLaw_1949` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1972` / `ItalianTaxLaw_1972` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1975` / `ItalianTaxLaw_1975` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-1986` / `ItalianTaxLaw_1986` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-2000` / `ItalianTaxLaw_2000` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-2001` / `ItalianTaxLaw_2001` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-italiantaxlaw-2006` / `ItalianTaxLaw_2006` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-jacobs2021` / `Jacobsetal2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-jacobson2007` / `Jacobsonetal2007` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Taxes on Wealth,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-jakobsen2020` / `Jakobsenetal2020` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-japantaxguide2022` / `JapanTaxGuide2022` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-jappelli2011` / `Jappellietal2011` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-joulfaian1998` / `Joulfaian1998` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-journalofta2018-india` / `JournalofTA2018_India` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-katic2016` / `KaticLeigh2016` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-kennickell2021` / `Kennickell2024` (Wealth Inequality): `Data Sources: Unclassified` -> `Data Sources: Wealth Inequality`
+- `src-kenyataxlaw-1963` / `KenyaTaxLaw_1963` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-kenyataxlaw-1967` / `KenyaTaxLaw_1967` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-kenyataxlaw-1972` / `KenyaTaxLaw_1972` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-kenyataxlaw-1980` / `KenyaTaxLaw_1980` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-kenyataxlaw-1982` / `KenyaTaxLaw_1982` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-kessler1991a` / `KesslerPestieau1991` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-kim2018` / `Kim2018` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-kitao2019` / `KitaoYamada2019` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-kley2012` / `Kley2012` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-kopczuk2004` / `KopczukSaez2004` (Wealth Inequality): `Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-ks-leg2009` / `Kansas2009_KansasStatutesSection7915126` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ks-leg2013` / `Kansas2014_KansasStatutesSection7915126` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-kuhn2020` / `Kuhnetal2020` (Wealth Inequality): `Determinants of Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality`
+- `src-la-legest` / `LA_LegEst` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1979` / `Legifrance1979` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1983` / `Legifrance1983` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1986` / `Legifrance1986` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1989` / `Legifrance1989` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1992` / `Legifrance1992` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1998` / `Legifrance1998` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1999` / `Legifrance1999` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance2001` / `Legifrance2001` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance2002` / `Legifrance2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance2004` / `Legifrance2004` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance2005` / `Legifrance2005` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance2006` / `Legifrance2006` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance2007` / `Legifrance2007` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance2008` / `Legifrance2008` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legislativehistory-india` / `LegislativeHistory_India` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain01` / `Legispain01` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain87` / `Legispain87` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain88` / `Legispain88` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain89` / `Legispain89` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain90` / `Legispain90` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain91` / `Legispain91` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain94` / `Legispain94` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain95` / `Legispain95` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain96` / `Legispain96` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain97` / `Legispain97` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain98` / `Legispain98` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-legispain99` / `Legispain99` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-leland1980` / `Leland1980` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-lemov1994` / `Lemov1994` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1995` / `Lex_BO1995` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1996` / `Lex_BO1996` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1997` / `Lex_BO1997` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1998` / `Lex_BO1998` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1999` / `Lex_BO1999` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo2000` / `Lex_BO2000` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo2001` / `Lex_BO2001` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-do1950` / `Lex_DO1950` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-do2004` / `Lex_DO2004` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lex-ve1999` / `Lex_VE1999` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lexcanada1985` / `LexCanada1985` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-lin2018` / `Linetal2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-lincoln1912` / `Lincoln1912` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-lithuania-taxlaw1995` / `Lithuania_TaxLaw1995` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lithuania-taxlaw1997` / `Lithuania_TaxLaw1997` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lithuania-taxlaw2002` / `Lithuania_TaxLaw2002` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-lk` / `GlobalPropertyGuide2021_InheritanceTaxInheritanceLawSri` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-lohman2009` / `Lohman2009` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-lowe2018` / `Lowe2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-lsms-ineq` / `lsms_various` (Wealth Inequality): `Data Sources: Unclassified` -> `Data Sources: Wealth Inequality`
+- `src-luckey2005` / `Luckey2003` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-lundberg2018` / `LundbergWaldenstrom2018` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-luscombe` / `Luscombe2022` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-luzkow2018` / `Luzkow2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-lws-ineq` / `LIS_LuxembourgWealthStudyDatabase` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Data Sources: Wealth Topography` -> `Data Sources: Wealth Inequality`
+- `src-lws-topo` / `LIS_LuxembourgWealthStudyDatabase` (Wealth Topography): `Data Sources: Wealth Inequality Trends,Data Sources: Wealth Topography` -> `Data Sources: Wealth Topography`
+- `src-ma2018` / `MA2018` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma2021` / `MassachusettsDepartmentofRevenue2021_FormM706MassachusettsEstateTax` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-ap2020` / `2020_MassachusettsAPEstateTax` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-guide` / `2000_MassachusettsGeneralEstateTaxGuide` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-inst` / `MassachusettsDepartmentofRevenue2023_DOREstateTaxFormsInstructions` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ma-inst1999` / `MA_Inst1999` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-inst2019` / `MA_Inst2019` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-leg1982` / `MA_Leg1982` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-tir1986` / `1986_MassachusettsEstateTaxGuide` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-tir1998` / `1998_MassachusettsEstateTaxGuide` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-tir2002` / `2002_MassachusettsEstateTaxGuide` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ma-tir2003` / `MA_TIR2003` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-manestra2023` / `Manestra2023` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-martineztoledano2022` / `Martinez-Toledano2022` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-maunder` / `Maunder2023` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-mcelroy1909` / `McElroy1909` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mcmanus2009` / `MorganMcManusSolicitors2009_WhatShouldTaxWhenSomeone` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-md2010` / `2010_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2011` / `2011_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2012` / `2012_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2013` / `2013_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2014` / `2014_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2015` / `2015_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2016` / `2016_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2017` / `2017_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2018` / `2018_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2019` / `2019_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md2020` / `2020_MarylandEstateTaxFormMET1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md-esttax` / `2020_MarylandEstateTaxOutline` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-md-esttax2` / `2020_MarylandEstateTaxOutlineCalc` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-me2012` / `2012_MaineEstateTaxForm706ME` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-me2019` / `2019_MaineEstateTaxForm706ME` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-me-csfi1982` / `ME_CSFI1982` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-me-esttax` / `2020_MaineEstateTaxOutline` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-me-leg2002` / `2020_MaineEstateTaxLaw2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-me-sum2011` / `2011_MaineEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-me-sum2013` / `2013_MaineEstateTaxFactSheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mexicotaxdoc` / `EscalanteEscalante2020` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-mi-est1998` / `MI_Est1998` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-michael2003` / `Michael2003` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-michael2004` / `Michael2004` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-michael2006` / `Michael2006` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-michael2009` / `Michael2009` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-michael2010` / `Michael2010` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-michael2011` / `Michael2011` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-michael2015` / `Michael2015` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-michael2018` / `Michael2018` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-millis1905` / `Millis1905` (Taxes on Wealth): `Cross-National Comparisons,Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `src-mn-esttax` / `2020_MinnesotaEstateTaxRequirements` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-esttax2` / `2020_MinnesotaEstateTaxRates` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2007` / `2007_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2008` / `2008_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2009` / `2009_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2012` / `2012_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2013` / `2013_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2014` / `2014_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2015` / `2015_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2016` / `2016_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2017` / `2017_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mn-inst2018` / `2018_MinnesotaEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-mo-est2006` / `MissouriDepartmentofRevenue_EstateTaxMissouriEstateTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-mo-leg` / `Missouri1981_MissouriStatutesSection145011` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-moriguchisaez2008` / `MoriguchiSaez2008` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-munnell2003` / `MunnellSunden2003` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-nc1999` / `1999_NorthCarolinaEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-nc2002` / `2002_NorthCarolinaEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-nc2005` / `2005_NorthCarolinaEstateTaxForma` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-nc2011` / `2011_NorthCarolinaEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-nj-comp` / `2020_NewJerseyEstateTaxWorksheet` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-nj-esttax` / `2020_NewJerseyEstateTaxOutline` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-nj-esttax17` / `2017_NewJerseyEstateTax` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-nj-kpm2019` / `Mueller2019` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-novokmet2018` / `Novokmetetal2018` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-nv-leg` / `Nevada_NevadaRevisedStatutesChapter375A` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ny1990` / `NY1990` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny2014` / `2014_NewYorkEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny2019` / `2019_NewYorkEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-esttax` / `2020_NewYorkEstateTaxOutline` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-esttax2` / `2020_NewYorkEstateTaxOutlinea` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-inst1990` / `NY_Inst1990` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-inst2014` / `2014_NewYorkEstateTaxInstructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-leg1930` / `NY_Leg1930` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-leg1932` / `NY_Leg1932` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-leg1959` / `NY_Leg1959` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-leg1978` / `NY_Leg1978` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-sdtf1970` / `NY_SDTF1970` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-sum1990` / `2019_NewYorkEstateTaxFact` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ny-tax1924` / `NY_Tax1924` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oecd-eig` / `OECD2021_InheritanceTaxationOECDCountries` (Taxes on Wealth): `Cross-National Comparisons,Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-oecd-rev` / `OECDStatistics_RevenueStatisticsOECDCountriesComparative` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-oh1993` / `2000_OhioEstateTaxForm1993` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh2001` / `OH2001` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh-2x1983` / `2012_OhioEstateTaxForm2X` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh-case1958` / `OH_Case1958` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh-esttax` / `2021_OhioEstateTaxOutline2001` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh-esttax2` / `OhioDepartmentofTaxation2008_EstateTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-oh-esttax2011` / `OH_EstTax2011` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh-inst2001` / `2001_OhioFormET2Instructions` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh-inst2002` / `2012_OhioFormET2Instructions2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-oh-leg1923` / `TheTaxCommissionofOhio1923_InheritanceTaxLawOhioEffective` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-okura2010` / `Okura2010` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-pa-inhtax` / `PennsylvaniaDepartmentofRevenue2010_PennsylvaniaInheritanceTaxReferenceSheet` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-pakistan-tax-law1950` / `Pakistan_Tax_Law1950` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-penelope1994` / `Penelope1994` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-perkins1935` / `Perkins1935` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-perutaxlaw-1916` / `Peru1916_ImpuestoSobreHerenciasDonacionesLegados` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-perutaxlaw-1923` / `PeruTaxLaw_1923` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-perutaxlaw-1931` / `Peru1931_CreandoImpuestoSobreSucesionQue` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-perutaxlaw-1933` / `Peru1933_EstableciendoComoRentaPropiaUniversidad` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-perutaxlaw-1947` / `Peru1946_ModificandoEscalaEstablecidaPorLey` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-perutaxlaw-1979` / `PeruTaxLaw_1979` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-pfdg2015` / `PublicFinancesDirectorateGeneral2015_OverviewFrenchTaxSystem` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-piketty2006` / `Pikettyetal2006` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-piketty2010b` / `Piketty2010` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-piketty2011long` / `Piketty2011` (Inheritance Trends): `` -> `Data Sources: Inheritance Trends`
+- `src-piketty2019` / `Pikettyetal2019` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-piketty2020` / `Piketty2020` (Taxes on Wealth): `Cross-National Comparisons,Data Sources: Estate Inheritance and Gift Taxes,Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Intergenerational Wealth,Wealth Taxation` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Intergenerational Wealth,Wealth Taxation`
+- `src-pikettyyang2022` / `PikettyYang2022` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-pmic1942` / `ThePennMutualLifeInsuranceCompany1943_TaxManualFederalRevenueAct` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-profeta2014` / `Profetaetal2014` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-pwc2005` / `PricewaterhouseCoopers2005_2005TaxFactsIreland` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-pwc-gr` / `PricewaterhouseCoopers2021_GreeceIndividualOtherTaxes` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-pwc-lk` / `PricewaterhouseCoopers2023_SriLankaIndividualOtherTaxes` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-pwcworldwidetaxsummaries` / `PricewaterhouseCoopers_InheritanceGiftTaxRates` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-qtax` / `UnitedStatesCensusBureau_QuarterlySummaryStateLocalTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-quindry1969` / `Quindry1969` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-quindry-1969` / `Quindry_1969` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-revact1934` / `Huffman1934` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-ri1980` / `RhodeIslandEstateTaxForma` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ri1992` / `RhodeIslandEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ri2002` / `2016_RhodeIslandEstateTaxForm` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ri2015` / `2016_RhodeIslandEstateTaxForma` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ri-est2009` / `2018_RhodeIslandCreditThreshold2009` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-ri-inst2002` / `2016_RhodeIslandFormRI100Basic` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-roine2009` / `RoineWaldenstrom2009` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-roine2015` / `RoineWaldenstrom2015` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-rsm2017` / `RSMGermany2017_InvestingGermany` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-rubenstein2002` / `Rubenstein2002` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-rubin1954` / `Rubin1954` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-russell2011` / `Aldersonetal2011` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-saez2016` / `SaezZucman2016` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-saez2019` / `SaezZucman2019` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-saez2020a` / `SaezZucman2020a` (Wealth Inequality): `Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `src-saez2020b` / `SaezZucman2020b` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-sager1957` / `Sager1957` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-salverda2019` / `Salverda2019` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-saosg2014` / `Spain2022_SpanishInheritanceGiftTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-schinke2012` / `Schinke2012` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-schoenblum1982` / `Schoenblum1982` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-schoenblum1997` / `Schoenblum1997` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-schoenblum2008` / `Schoenblum2008` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-schupp2004` / `SchuppSzydlik2004` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-schweizer2010` / `SchweizerKobras2010` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-scullion2020` / `Scullion2020` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-shaughnessy1996` / `Shaughnessy1996` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-shultz-1926` / `Shultz1926` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-smith2020` / `Smithetal2020` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `src-smith2023` / `Smithetal2023` (Wealth Inequality): `Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-soi1954` / `1957_EstateTaxReturnsReport1954` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-soi1956` / `1959_EstateGiftTaxReturnsReport` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-soi1969` / `1972_EstateTaxReturnsReport1969` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-soi1972` / `OfficeofAssistantCommissionerPlanningandResearch1975` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-soi1976` / `1979_EstateTaxReturnsReport1976` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-stco1920` / `SpencerTraskCo.1920_TaxationEstatesInheritancesFederalEstate` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-targa2024` / `TargaYang2024` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-taxcalculation-2006` / `Nebraska2006_NebraskaRevisedStatutesSection77210103` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-taxworld` / `Taxworld_TaxManualsCapitalAcquisitionsTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-tiddata` / `TIDData` (Taxes on Wealth): `` -> `Data Sources: Taxes on Wealth`
+- `src-tidgenschel2019` / `GenschelSeelkopf2019a` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-tm` / `Spaulding2022` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-tn1999` / `2015_TennesseeInheritanceTaxFormINH` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-tn-est1999` / `2015_TennesseeExemptionThresholds19992016` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-tn-esttax` / `2016_TennesseeInheritanceTaxOutline` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-toussaint2022` / `Toussaintetal2022` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-tpc` / `TaxPolicyCenter2022` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-trannoy2014` / `Trannoy2014` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-treasury1917` / `UnitedStatesInternalRevenue1917_LawRegulationsRelatingEstateTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-hwmc1933` / `SubcommitteeonDoubleTaxation1933` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-jcs` / `JointCommitteeonTaxation2003` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1916` / `UnitedStates1917_StatutesLargeUnitedStatesAmerica` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1918` / `NationalBankofCommerceinNewYork1919_FederalRevenueAct1918Complete` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1921` / `UnitedStates1921_RevenueAct1921CompleteText` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1924` / `UnitedStates1924_RevenueAct1924ApprovedPresident` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1926` / `OldColonyTrustCompany1926_RevenueAct1926` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1932` / `UnitedStates1932_RevenueAct1932` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1940` / `Prentice-HallInc.1940_RevenueAct1940ExplanationFederal` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1954` / `US_Leg1954` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1976` / `UnitedStates1976_TaxReformAct1976` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1981` / `UnitedStates1981_EconomicRecoveryTaxAct1981` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1984` / `UnitedStates1984_DeficitReductionAct1984` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1987` / `UnitedStates1987_OmnibusBudgetReconciliationAct1987` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-us-leg1993` / `UnitedStates1993_OmnibusBudgetReconciliationAct1993` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-uscs2001` / `UnitedStates1994_ImpositionRateTax` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-vanbavel2017` / `vanBavelFrankema2017` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-vermeulen2018` / `Vermeulen2018` (Wealth Inequality): `Cross-National Comparisons,Data Sources: Wealth Inequality Trends,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-vonfintel2020` / `vonFintelOrthofer2020` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-vt2002` / `2007_VermontEstateTaxFormE1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-vt2008` / `2016_VermontEstateTaxFormE1` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-vt2016` / `2020_VermontEstateTaxFormE191` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-vt-esttax` / `2021_VermontEstateTaxExemptions2000` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-wa2014` / `2014_WashingtonEstateTaxForm85` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-wa-esttax` / `2017_WashingtonEstateTaxOutline1981` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-wa-esttax2` / `2017_WashingtonEstateTaxTables2006` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-wa-inst2014` / `2019_WashingtonEstateTaxInstructions2014` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-waemu-ineq` / `phmecv_various` (Wealth Inequality): `Data Sources: Unclassified` -> `Data Sources: Wealth Inequality`
+- `src-walczak2017` / `Walczak2017` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-washingtonlawreview2013` / `WashingtonLawreview2013` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-west1908` / `West1908` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-west1909` / `West1909` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-west1910` / `West1910` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-west1911` / `West1911` (Taxes on Wealth): `Data Sources: Unclassified` -> `Data Sources: Taxes on Wealth`
+- `src-westlaw-ca` / `California_CaliforniaCodeRegulations18CA` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-whillans2013` / `PKFInternationalLtd2013_Germany` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-white1928` / `White1928` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-wid-ineq` / `WorldInequalityDatabase_Data` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Data Sources: Wealth Topography` -> `Data Sources: Wealth Inequality`
+- `src-wid-topo` / `WorldInequalityDatabase_Data` (Wealth Topography): `Data Sources: Wealth Inequality Trends,Data Sources: Wealth Topography` -> `Data Sources: Wealth Topography`
+- `src-wolff2017` / `Wolff2017` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-wolff2021` / `Wolff2021` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-yaleinheritancecodebook` / `Plaggeetal2011` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-yaleinheritancedata` / `Plaggeetal2010` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-yaleinheritancescheve2012` / `ScheveStasavage2012` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `src-ylj1938` / `1938_ValuationFutureInterestsEstateInheritance` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+- `src-zucman2019` / `Zucman2019` (Wealth Inequality): `Data Sources: Wealth Inequality Trends,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `src-boadway2010appendix` / `Boadwayetal2010` (Taxes on Wealth): `Data Sources: Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth`
+
+## Blank Keywords Backfilled
+
+- `src-acciari-morelli-2020` / `Acciari2021` -> `Data Sources: Inheritance Trends`
+- `src-alvaredo2017share` / `Alvaredo2017` -> `Data Sources: Inheritance Trends`
+- `src-alvaredo2024` / `Alvaredo2024` -> `Data Sources: Wealth Inequality`
+- `src-apostel2025belgian` / `Apostel2025` -> `Data Sources: Inheritance Trends`
+- `src-atkinson-2018` / `Atkinson2012` -> `Data Sources: Inheritance Trends`
+- `src-br-lhart-dupertuis-moreau-2018` / `Brulhart2018` -> `Data Sources: Inheritance Trends`
+- `src-br-lhart-fuster-mart-nez-moseka-2026` / `Brulhart2026` -> `Data Sources: Inheritance Trends`
+- `src-bruneitaxlaw-1984` / `BruneiTaxLaw_1984` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1878` / `ChileTaxLaw_1878` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1915` / `ChileTaxLaw_1915` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1923` / `ChileTaxLaw_1923` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1925` / `ChileTaxLaw_1925` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1929` / `ChileTaxLaw_1929` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1932` / `ChileTaxLaw_1932` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1934` / `ChileTaxLaw_1934` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1965` / `ChileTaxLaw_1965` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlaw-1981` / `ChileTaxLaw_1981` -> `Data Sources: Taxes on Wealth`
+- `src-chiletaxlawestate-1929` / `ChileTaxLawEstate_1929` -> `Data Sources: Taxes on Wealth`
+- `src-cyprustaxlaw-1942` / `CyprusTaxLaw_1942` -> `Data Sources: Taxes on Wealth`
+- `src-cyprustaxlaw-1962` / `CyprusTaxLaw_1962` -> `Data Sources: Taxes on Wealth`
+- `src-cyprustaxlaw-2000` / `CyprusTaxLaw_2000` -> `Data Sources: Taxes on Wealth`
+- `src-ey2025b` / `EY2025b` -> `Data Sources: Taxes on Wealth`
+- `src-ey2026a` / `EY2026a` -> `Data Sources: Taxes on Wealth`
+- `src-fed-dwa-ineq` / `FED_DWA_ineq` -> `Data Sources: Wealth Inequality`
+- `src-drg2025` / `Findex_ineq` -> `Data Sources: Wealth Inequality`
+- `src-gabbuti2025` / `Gabbuti2025` -> `Data Sources: Inheritance Trends`
+- `src-guzzardi2026` / `Guzzardi2026` -> `Data Sources: Inheritance Trends`
+- `src-ibfd` / `IBFD` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2008bj` / `IBFD2008BJ` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2009me` / `IBFD2009ME` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2010fr` / `IBFD2010FR` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2010gw` / `IBFD2010GW` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2011bj` / `IBFD2011BJ` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2020bj` / `IBFD2020BJ` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2023me` / `IBFD2023ME` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2024gw` / `IBFD2024GW` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2024sl` / `IBFD2024SL` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025bi` / `IBFD2025BI` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025cf` / `IBFD2025CF` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025dj` / `IBFD2025DJ` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025dm` / `IBFD2025DM` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025er` / `IBFD2025ER` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025fm` / `IBFD2025FM` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025gm` / `IBFD2025GM` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025km` / `IBFD2025KM` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025kn` / `IBFD2025KN` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025me` / `IBFD2025ME` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025mm` / `IBFD2025MM` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025np` / `IBFD2025NP` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025pw` / `IBFD2025PW` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025sd` / `IBFD2025SD` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025tj` / `IBFD2025TJ` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025tm` / `IBFD2025TM` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025to` / `IBFD2025TO` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025vc` / `IBFD2025VC` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025vu` / `IBFD2025VU` -> `Data Sources: Taxes on Wealth`
+- `src-ibfd2025ye` / `IBFD2025YE` -> `Data Sources: Taxes on Wealth`
+- `src-ie1924` / `IE1924` -> `Data Sources: Taxes on Wealth`
+- `src-ie1926` / `IE1926` -> `Data Sources: Taxes on Wealth`
+- `src-ie1931` / `IE1931` -> `Data Sources: Taxes on Wealth`
+- `src-ie1939` / `IE1939` -> `Data Sources: Taxes on Wealth`
+- `src-ie1941` / `IE1941` -> `Data Sources: Taxes on Wealth`
+- `src-ie1951` / `IE1951` -> `Data Sources: Taxes on Wealth`
+- `src-ie1960` / `IE1960` -> `Data Sources: Taxes on Wealth`
+- `src-ie1961` / `IE1961` -> `Data Sources: Taxes on Wealth`
+- `src-ie1976` / `IE1976` -> `Data Sources: Taxes on Wealth`
+- `src-ie1985` / `IE1985` -> `Data Sources: Taxes on Wealth`
+- `src-ie2003` / `IE2003` -> `Data Sources: Taxes on Wealth`
+- `src-ie2009` / `IE2009` -> `Data Sources: Taxes on Wealth`
+- `src-ie2012` / `IE2012` -> `Data Sources: Taxes on Wealth`
+- `src-ie2013` / `IE2013` -> `Data Sources: Taxes on Wealth`
+- `src-legifrance1979` / `Legifrance1979` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1995` / `Lex_BO1995` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1996` / `Lex_BO1996` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1997` / `Lex_BO1997` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1998` / `Lex_BO1998` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo1999` / `Lex_BO1999` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo2000` / `Lex_BO2000` -> `Data Sources: Taxes on Wealth`
+- `src-lex-bo2001` / `Lex_BO2001` -> `Data Sources: Taxes on Wealth`
+- `src-lex-do1950` / `Lex_DO1950` -> `Data Sources: Taxes on Wealth`
+- `src-lex-do2004` / `Lex_DO2004` -> `Data Sources: Taxes on Wealth`
+- `src-lex-ve1999` / `Lex_VE1999` -> `Data Sources: Taxes on Wealth`
+- `src-lithuania-taxlaw1995` / `Lithuania_TaxLaw1995` -> `Data Sources: Taxes on Wealth`
+- `src-lithuania-taxlaw1997` / `Lithuania_TaxLaw1997` -> `Data Sources: Taxes on Wealth`
+- `src-lithuania-taxlaw2002` / `Lithuania_TaxLaw2002` -> `Data Sources: Taxes on Wealth`
+- `src-pakistan-tax-law1950` / `Pakistan_Tax_Law1950` -> `Data Sources: Taxes on Wealth`
+- `src-perutaxlaw-1979` / `PeruTaxLaw_1979` -> `Data Sources: Taxes on Wealth`
+- `src-piketty2011long` / `Piketty2011` -> `Data Sources: Inheritance Trends`
+- `src-tiddata` / `TIDData` -> `Data Sources: Taxes on Wealth`
+
+## Multiple Data-Source Keywords Before Migration
+
+- `src-easton1983` / `Easton1983`: Data Sources: Estate Inheritance and Gift Taxes, Data Sources: Wealth Inequality Trends
+- `src-hfcs-ineq` / `HouseholdFinanceandConsumptionNetwork2021`: Data Sources: Wealth Inequality Trends, Data Sources: Wealth Topography
+- `src-hfcs-topo` / `HouseholdFinanceandConsumptionNetwork2021`: Data Sources: Wealth Inequality Trends, Data Sources: Wealth Topography
+- `src-lws-ineq` / `LIS_LuxembourgWealthStudyDatabase`: Data Sources: Wealth Inequality Trends, Data Sources: Wealth Topography
+- `src-lws-topo` / `LIS_LuxembourgWealthStudyDatabase`: Data Sources: Wealth Inequality Trends, Data Sources: Wealth Topography
+- `src-wid-ineq` / `WorldInequalityDatabase_Data`: Data Sources: Wealth Inequality Trends, Data Sources: Wealth Topography
+- `src-wid-topo` / `WorldInequalityDatabase_Data`: Data Sources: Wealth Inequality Trends, Data Sources: Wealth Topography
+
+## Multiple Data-Source Keywords After Migration
+
+- None
+
+## Could Not Confidently Classify
+
+- None
+
+## Wealth Research Stale Data-Source Keywords Removed
+
+- `Corlett2018` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `Drometeretal2018` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `Easton1983` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Genscheletal2023` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `Jacobsonetal2007` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Jappellietal2011` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `KesslerPestieau1991` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `Kley2012` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `Millis1905` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `OECD2021_InheritanceTaxationOECDCountries` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Cross-National Comparisons,Estate Inheritance and Gift Taxes,Trends in Aggregate Wealth and Wealth Inequality`
+- `Piketty2020` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Intergenerational Wealth,Wealth Taxation`
+- `Profetaetal2014` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `ScheveStasavage2012` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `SchuppSzydlik2004` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes`
+- `Seelkopfetal2021` removed Data Sources: Estate Inheritance and Gift Taxes; kept `Estate Inheritance and Gift Taxes,Intergenerational Wealth`
+
+## Duplicate Citekeys
+
+- `Acciarietal2024`: wealth:Acciarietal2024, src-acciari2024
+- `Advanietal2021`: wealth:Advanietal2021, src-advani2021
+- `Albersetal2022`: wealth:Albersetal2022, src-albers2022
+- `AlvaredoSaez2010`: wealth:AlvaredoSaez2010, src-alvaredo2010
+- `Alvaredoetal2018`: wealth:Alvaredoetal2018, src-alvaredo2018
+- `AnandKumar2022`: wealth:AnandKumar2022, src-anand2022
+- `Assouad2021`: wealth:Assouad2021, src-assouad2021
+- `BaselgiaMartinez2024`: wealth:BaselgiaMartinez2024, src-baselgia2024
+- `Battyetal2019`: wealth:Battyetal2019, src-batty2019
+- `Battyetal2022`: wealth:Battyetal2022, src-batty2022
+- `Bharti2018`: wealth:Bharti2018, src-bharti2018
+- `BlanchetMartinez-Toledano2023`: wealth:BlanchetMartinez-Toledano2023, src-blanchet2023
+- `Brandolinietal2006`: wealth:Brandolinietal2006, src-brandolini2006
+- `Brickeretal2016`: wealth:Brickeretal2016, src-bricker2016
+- `Brickeretal2018`: wealth:Brickeretal2018, src-bricker2018
+- `Brickeretal2021`: wealth:Brickeretal2021, src-bricker2021
+- `CannariDAlessio2018`: wealth:CannariDAlessio2018, src-cannari2018
+- `Carranzaetal2023`: wealth:Carranzaetal2023, src-carranza2023
+- `Catherineetal2021`: wealth:Catherineetal2021, src-catherine2021
+- `Chatterjeeetal2022`: wealth:Chatterjeeetal2022, src-chatterjee2022
+- `Corlett2018`: wealth:Corlett2018, src-corlett2018
+- `CreditSuisse_CreditSuisseGlobalWealthReport`: src-cs-ineq, src-cs-topo
+- `DaviesDiMatteo2021`: wealth:DaviesDiMatteo2021, src-davies2021
+- `Delletal2007`: wealth:Delletal2007, src-dell2007
+- `Disslbacheretal2023`: wealth:Disslbacheretal2023, src-disslbacher2023
+- `Drometeretal2018`: wealth:Drometeretal2018, src-drometer2018
+- `Easton1983`: wealth:Easton1983, src-easton1983
+- `EuropeanCentralBank2024_DistributionalWealthAccounts`: src-ecb-dwa-ineq, src-ecb-dwa-topo
+- `Vellutinietal2019`: wealth:Vellutinietal2019, src-ecow
+- `BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease`: src-fed-b101, src-fed-b101h, src-fed-b101n, src-fed-s3a-ima
+- `Fricketal2010`: wealth:Fricketal2010, src-frick2010
+- `Galiana2016`: wealth:Galiana2016, src-galiana2016
+- `Garbintietal2021`: wealth:Garbintietal2021, src-garbinti2021
+- `Genscheletal2023`: wealth:Genscheletal2023, src-genschel2023
+- `HouseholdFinanceandConsumptionNetwork2021`: src-hfcs-ineq, src-hfcs-topo
+- `IaconoPalagi2023`: wealth:IaconoPalagi2023, src-iacono2023
+- `Jacobsetal2021`: wealth:Jacobsetal2021, src-jacobs2021
+- `Jacobsonetal2007`: wealth:Jacobsonetal2007, src-jacobson2007
+- `Jakobsenetal2020`: wealth:Jakobsenetal2020, src-jakobsen2020
+- `Jappellietal2011`: wealth:Jappellietal2011, src-jappelli2011
+- `KaticLeigh2016`: wealth:KaticLeigh2016, src-katic2016
+- `Kennickell2024`: wealth:Kennickell2024, src-kennickell2021
+- `KesslerPestieau1991`: wealth:KesslerPestieau1991, src-kessler1991a
+- `Kim2018`: wealth:Kim2018, src-kim2018
+- `KitaoYamada2019`: wealth:KitaoYamada2019, src-kitao2019
+- `Kley2012`: wealth:Kley2012, src-kley2012
+- `KopczukSaez2004`: wealth:KopczukSaez2004, src-kopczuk2004
+- `Kuhnetal2020`: wealth:Kuhnetal2020, src-kuhn2020
+- `LundbergWaldenstrom2018`: wealth:LundbergWaldenstrom2018, src-lundberg2018
+- `LIS_LuxembourgWealthStudyDatabase`: src-lws-ineq, src-lws-topo
+- `Martinez-Toledano2022`: wealth:Martinez-Toledano2022, src-martineztoledano2022
+- `Millis1905`: wealth:Millis1905, src-millis1905
+- `Novokmetetal2018`: wealth:Novokmetetal2018, src-novokmet2018
+- `OECD2021_InheritanceTaxationOECDCountries`: wealth:OECD2021_InheritanceTaxationOECDCountries, src-oecd-eig
+- `Pikettyetal2006`: wealth:Pikettyetal2006, src-piketty2006
+- `Piketty2011`: wealth:Piketty2011, src-piketty2011long
+- `Pikettyetal2019`: wealth:Pikettyetal2019, src-piketty2019
+- `Piketty2020`: wealth:Piketty2020, src-piketty2020
+- `PikettyYang2022`: wealth:PikettyYang2022, src-pikettyyang2022
+- `Profetaetal2014`: wealth:Profetaetal2014, src-profeta2014
+- `RoineWaldenstrom2009`: wealth:RoineWaldenstrom2009, src-roine2009
+- `RoineWaldenstrom2015`: wealth:RoineWaldenstrom2015, src-roine2015
+- `SaezZucman2016`: wealth:SaezZucman2016, src-saez2016
+- `SaezZucman2019`: wealth:SaezZucman2019, src-saez2019
+- `SaezZucman2020a`: wealth:SaezZucman2020a, src-saez2020a
+- `SaezZucman2020b`: wealth:SaezZucman2020b, src-saez2020b
+- `Salverda2019`: wealth:Salverda2019, src-salverda2019
+- `SchuppSzydlik2004`: wealth:SchuppSzydlik2004, src-schupp2004
+- `Smithetal2020`: wealth:Smithetal2020, src-smith2020
+- `Smithetal2023`: wealth:Smithetal2023, src-smith2023
+- `TargaYang2024`: wealth:TargaYang2024, src-targa2024
+- `Toussaintetal2022`: wealth:Toussaintetal2022, src-toussaint2022
+- `vanBavelFrankema2017`: wealth:vanBavelFrankema2017, src-vanbavel2017
+- `Vermeulen2018`: wealth:Vermeulen2018, src-vermeulen2018
+- `vonFintelOrthofer2020`: wealth:vonFintelOrthofer2020, src-vonfintel2020
+- `WorldInequalityDatabase_Data`: src-wid-ineq, src-wid-topo
+- `Wolff2017`: wealth:Wolff2017, src-wolff2017
+- `Wolff2021`: wealth:Wolff2021, src-wolff2021
+- `ScheveStasavage2012`: wealth:ScheveStasavage2012, src-yaleinheritancescheve2012
+- `Zucman2019`: wealth:Zucman2019, src-zucman2019
+
+## Bibliographic Metadata Conflicts
+
+- `Kennickell2024` field `title`; kept `Kennickell (2021)`; other `Chasing the Tail: A Generalized Pareto Distribution Approach to Estimating Wealth Inequality`; incoming `src-kennickell2021`
+- `Kennickell2024` field `author`; kept `Unknown`; other `Kennickell, Arthur`; incoming `src-kennickell2021`
+- `Kennickell2024` field `year`; kept `1900`; other `2024`; incoming `src-kennickell2021`
+- `Piketty2011` field `title`; kept `On the long-run evolution of inheritance: France 1820--2050`; other `On the Long-Run Evolution of Inheritance: {{France}} 1820--2050`; incoming `src-piketty2011long`
+- `Piketty2011` field `journal`; kept `The quarterly journal of economics`; other `Quarterly Journal of Economics`; incoming `src-piketty2011long`
+
+## Multi-Category Data-Source Exports
+
+- `CreditSuisse_CreditSuisseGlobalWealthReport` -> Data Sources: Wealth Inequality, Data Sources: Wealth Topography
+- `EuropeanCentralBank2024_DistributionalWealthAccounts` -> Data Sources: Wealth Inequality, Data Sources: Wealth Topography
+- `HouseholdFinanceandConsumptionNetwork2021` -> Data Sources: Wealth Inequality, Data Sources: Wealth Topography
+- `LIS_LuxembourgWealthStudyDatabase` -> Data Sources: Wealth Inequality, Data Sources: Wealth Topography
+- `WorldInequalityDatabase_Data` -> Data Sources: Wealth Inequality, Data Sources: Wealth Topography

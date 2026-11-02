@@ -16,7 +16,7 @@ drop if n == 1 | n == 2 | n == 3 | n == 4 | n == 5
 drop v11 v21 v31 v37 v40 // duplicate
 	
 // assing varname_source	
-foreach var of varlist v2-v142{
+foreach var of varlist v2-v141{
 	
 	replace `var' = subinstr(`var', ".", "", .) if _n == 1
 

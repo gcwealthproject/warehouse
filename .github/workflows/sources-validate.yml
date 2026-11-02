@@ -26,6 +26,4 @@ jobs:
             --change-log code/tools/metadata/sources/change_log.yaml \
             --check-generated \
             --dictionary handmade_tables/dictionary.xlsx \
-            --bib "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib" \
-            --wealth-bib-input "documentation/BibTeX files/GCWealthProject_WealthResearchLibrary.bib" \
-            --both-bib "documentation/BibTeX files/BothLibraries.bib"
+            --digital-bib "documentation/BibTeX files/digital_library.bib"

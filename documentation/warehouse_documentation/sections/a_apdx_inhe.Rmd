@@ -1,0 +1,185 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r inhe_appendix_setup, include=FALSE, warning=FALSE, message=FALSE}
+# Load packages and source the shared render configuration used by all sections.
+library(dplyr)
+library(kableExtra)
+library(knitr)
+library(readr)
+library(readxl)
+library(tidyr)
+
+source(file.path("render_support", "render_config.R"))
+options(knitr.kable.NA = "-")
+
+warehouse_data_path <- paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv")
+warehouse_meta_path <- paste0("../../output/databases/warehouse/warehouse_meta_v", warehouse_version, ".csv")
+dictionary_path <- "../../handmade_tables/dictionary.xlsx"
+
+inhe_data <- read_csv(warehouse_data_path, show_col_types = FALSE) %>%
+  filter(substr(varcode, 1, 1) == "i")
+inhe_meta <- read_csv(warehouse_meta_path, show_col_types = FALSE) %>%
+  filter(substr(varcode, 1, 1) == "i")
+
+escape_latex <- function(x) {
+  # kable escape=FALSE is needed for \cite{}, so text columns are escaped here.
+  x <- as.character(x)
+  x[is.na(x)] <- "-"
+  x <- gsub("\\\\", "\\\\textbackslash{}", x)
+  x <- gsub("([#$%&_{}])", "\\\\\\1", x, perl = TRUE)
+  x <- gsub("~", "\\\\textasciitilde{}", x, fixed = TRUE)
+  x <- gsub("\\^", "\\\\textasciicircum{}", x)
+  x
+}
+```
+
+# Appendix to the Inheritance Trends Section {#sec:inhe_appendix}
+
+## Introduction
+
+This appendix reports the source list and source-level coverage currently available for the Inheritance Trends dashboard data. The tables are generated from the dashboard metadata and the shared dictionary, so they can update as new sources are added to the warehouse.
+
+## Sources Included in the Inheritance Trends Section {#sec:inhe_appendix_sources}
+
+Table \ref{tab:inhe_sources} lists the sources currently present in the Inheritance Trends dashboard metadata. Source labels and citation keys are taken from the dashboard metadata where available and filled from the dictionary by matching on `Source` where needed.
+
+```{r inhe_sources, echo=FALSE, warning=FALSE, message=FALSE}
+# Start with sources observed in the dashboard metadata, then fill missing
+# labels/citations from the dictionary. This keeps Schinke2012 visible even
+# though it is classified under Taxes on Wealth in the dictionary.
+dashboard_sources <- inhe_meta %>%
+  distinct(source, source_type, legend, citekey)
+
+dictionary_sources <- read_excel(dictionary_path, sheet = "Sources") %>%
+  select(
+    source = Source,
+    dictionary_source_type = AggSource,
+    dictionary_legend = Legend,
+    dictionary_citekey = Citekey
+  ) %>%
+  filter(!is.na(source), source != "") %>%
+  distinct(source, .keep_all = TRUE)
+
+source_table <- dashboard_sources %>%
+  left_join(dictionary_sources, by = "source") %>%
+  mutate(
+    source_type = dplyr::coalesce(source_type, dictionary_source_type),
+    legend = dplyr::coalesce(legend, dictionary_legend, source),
+    citekey = dplyr::coalesce(citekey, dictionary_citekey),
+    has_citekey = !is.na(citekey) & citekey != "" & citekey != "NA",
+    # "Legend" is the long, human-readable name; "Source" is the short key.
+    # Same convention as the dictionary and as the Sources and Coverage table.
+    Legend = if_else(
+      has_citekey,
+      paste0(escape_latex(legend), " \\cite{", citekey, "}"),
+      escape_latex(legend)
+    ),
+    Source = escape_latex(source),
+    `Source Type` = escape_latex(source_type)
+  ) %>%
+  arrange(source) %>%
+  select(Legend, Source, `Source Type`)
+
+# The table has one row per source, so it does not need to break across pages.
+# Dropping longtable lets scale_down guarantee the table fits the text width.
+kbl(
+  source_table,
+  format = "latex",
+  booktabs = TRUE,
+  escape = FALSE,
+  align = c("l", "l", "l"),
+  col.names = c("Legend", "Source", "Source Type"),
+  caption = "Sources in the Inheritance Trends section"
+) %>%
+  column_spec(1, width = "5.5cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "3.5cm") %>%
+  kable_styling(font_size = 8,
+                latex_options = c("striped", "hold_position", "scale_down"))
+```
+
+## Source Coverage {#sec:inhe_appendix_coverage}
+
+Table \ref{tab:inhe_source_coverage} summarizes the country, time, observation, and `varcode` coverage of each source currently present in the Inheritance Trends dashboard data.
+
+```{r inhe_source_coverage, echo=FALSE, warning=FALSE, message=FALSE}
+# Coverage is computed from the dashboard data itself, not manually entered.
+coverage_table <- inhe_data %>%
+  group_by(source) %>%
+  summarise(
+    Countries = n_distinct(GEO),
+    `First year` = min(year, na.rm = TRUE),
+    `Last year` = max(year, na.rm = TRUE),
+    Observations = n(),
+    Varcodes = n_distinct(varcode),
+    .groups = "drop"
+  ) %>%
+  left_join(
+    source_table %>% transmute(source = gsub("\\\\_", "_", Source), Legend),
+    by = "source"
+  ) %>%
+  mutate(Legend = dplyr::coalesce(Legend, escape_latex(source))) %>%
+  arrange(source) %>%
+  select(Legend, Countries, `First year`, `Last year`, Observations, Varcodes)
+
+kbl(
+  coverage_table,
+  format = "latex",
+  booktabs = TRUE,
+  escape = FALSE,
+  align = c("l", "c", "c", "c", "c", "c"),
+  col.names = c("Legend", "Countries", "First", "Last", "Obs.", "Varcodes"),
+  caption = "Source coverage in the Inheritance Trends section"
+) %>%
+  column_spec(1, width = "4.5cm") %>%
+  column_spec(2, width = "1.6cm") %>%
+  column_spec(3, width = "1.4cm") %>%
+  column_spec(4, width = "1.4cm") %>%
+  column_spec(5, width = "1.6cm") %>%
+  column_spec(6, width = "1.6cm") %>%
+  kable_styling(font_size = 8,
+                latex_options = c("striped", "hold_position", "scale_down"))
+```
+
+## `varcode` Inventory {#sec:inhe_appendix_varcodes}
+
+Table \ref{tab:inhe_varcode_inventory} reports the observed `varcode` combinations and the corresponding source coverage.
+
+```{r inhe_varcode_inventory, echo=FALSE, warning=FALSE, message=FALSE}
+# This inventory is useful while the section is still being expanded because it
+# shows exactly which varcode combinations are currently represented.
+varcode_table <- inhe_data %>%
+  group_by(varcode) %>%
+  summarise(
+    Sources = n_distinct(source),
+    Countries = n_distinct(GEO),
+    `First year` = min(year, na.rm = TRUE),
+    `Last year` = max(year, na.rm = TRUE),
+    Observations = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(varcode) %>%
+  mutate(varcode = escape_latex(varcode))
+
+kbl(
+  varcode_table,
+  format = "latex",
+  booktabs = TRUE,
+  escape = FALSE,
+  align = c("l", "c", "c", "c", "c", "c"),
+  col.names = c("Varcode", "Sources", "Countries", "First", "Last", "Obs."),
+  caption = "Varcode inventory in the Inheritance Trends section"
+) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(2, width = "1.6cm") %>%
+  column_spec(3, width = "1.6cm") %>%
+  column_spec(4, width = "1.4cm") %>%
+  column_spec(5, width = "1.4cm") %>%
+  column_spec(6, width = "1.6cm") %>%
+  kable_styling(font_size = 8,
+                latex_options = c("striped", "hold_position", "scale_down"))
+```

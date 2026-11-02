@@ -19,7 +19,8 @@ global destination "${topo_dir_raw}/ECB_QSA/intermediate"
 
 local counter = 1 
 
-use  "${origin}/hh_qsa_24", replace
+* use  "${origin}/hh_qsa_24", replace
+use  "${origin}/hh_qsa_25", replace
 
 *unit_mult==6 -> multiplu obs value with 1000000
 
@@ -34,7 +35,7 @@ keep ref_area  instr_asset2 time_period  obs_value  ref_sector
 
 sort ref_area ref_sector time_period instr_asset2
 
-* Collapse to resolve non-unique values (this is only relevant for maturit)
+* Collapse to resolve non-unique values (this is only relevant for maturity of the Liability assets. The collapse command basically drops out short term maturities if information is double)
 collapse (max) obs_value, by(ref_area ref_sector time_period instr_asset2)
 
 

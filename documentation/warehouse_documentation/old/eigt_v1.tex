@@ -1,0 +1,451 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Estate, Inheritances, and Gift Taxes (EIG)}\label{sec:eig}
+
+\subsection{Introduction to the Estate, Inheritances, and Gift Taxes
+Section}\label{introduction-to-the-estate-inheritances-and-gift-taxes-section}
+
+The Estate, Inheritance, and Gift Tax (EIG) section of the GC Wealth
+Project provides a comprehensive data collection on wealth transfer
+taxes across countries and over time. The EIG section compiles tax
+policy information as well as tax revenue data. The section contains
+information about these taxes for up to over 160 countries, in some
+instances dating back as far as the 18th century. The EIG section
+codifies and harmonizes information on features common among these
+taxes, such as top tax rates among closest relatives, personal tax
+exemptions, or full tax schedules. The section also provides revenue
+statistics for EIG taxes from cumulative sources from 1960 onward.
+Information is obtained from academic, government, and corporate
+research, government legislation and legislative information, as well as
+cross-national research and official statistics. This chapter introduces
+the reader to the data structure of the EIG section, as well as the
+general interpretation and construction of each concept.
+
+\subsection{\texorpdfstring{The \texttt{varcode} in the Estate,
+Inheritance, and Gift Taxes
+Section}{The varcode in the Estate, Inheritance, and Gift Taxes Section}}\label{the-varcode-in-the-estate-inheritance-and-gift-taxes-section}
+
+As described in the general warehouse structure section, the
+\texttt{varcode} uniquely identifies each value in the EIG section using
+five elements. The first element of the \texttt{varcode} is a 1-digit
+code that identifies the \texttt{section} of the GC Wealth Project,
+which for the case of the Estate, Inheritance, and Gift Taxes takes the
+value \texttt{x}. Hence, the \texttt{varcode} takes the following form:
+
+\begin{equation}
+\notag \underbrace{\textcolor{blue}{x}}_{\text{Section}} - \underbrace{hs}_{\text{Sector}} - \underbrace{CCC}_{\text{Variable Type}} - \underbrace{DDDDDD}_{\text{Concept}} - \underbrace{ZZ}_{\text{Section Specific}} 
+\end{equation}
+
+\subsubsection{\texorpdfstring{\texttt{Sector}:
+Households}{Sector: Households}}\label{sector-households}
+
+The next two letters of the \texttt{varcode} indicate the
+\texttt{Sector}, which for this section will always be \texttt{hs} for
+households, since these taxes are levied on individuals and estates of
+private citizens.
+
+\subsubsection{\texorpdfstring{\texttt{Variable\ Type}}{Variable Type}}\label{variable-type}
+
+The next three letters of the \texttt{varcode} represent the
+\texttt{Variable\ Type}, which will vary in this section. Specifically,
+five types of variables are used within the EIG section. These are
+described in Table \ref{tab:eigt_vt}.
+
+\begin{longtable}[t]{>{\raggedright\arraybackslash}p{1cm}>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{11cm}}
+\caption{\label{tab:eigt_vt}EIG: Variable Type}\\
+\toprule
+Code & Type & Description\\
+\midrule
+\cellcolor{gray!10}{agg} & \cellcolor{gray!10}{Aggregate} & \cellcolor{gray!10}{Aggregate values are sum totals and cover, for instance, tax revenue information in currency units.}\\
+cat & Categorical & These are binary variables that include, for instance, whether or not certain taxes are levied, when they were first levied, and so on.\\
+\cellcolor{gray!10}{rat} & \cellcolor{gray!10}{Rates} & \cellcolor{gray!10}{The percentage values are various kinds of tax rates.}\\
+rto & Ratios & In this section, ratios are similar to rates, but in the context of revenue proportions. These include, for instance, EIG tax revenue as a proportion of total revenue at all levels of government. The values should be interpreted as percentages, and do not need to be multiplied by 100.\\
+\cellcolor{gray!10}{thr} & \cellcolor{gray!10}{Thresholds} & \cellcolor{gray!10}{Typically minimum or maximum amounts, such as tax exemption thresholds.}\\
+\bottomrule
+\end{longtable}
+
+\subsubsection{\texorpdfstring{\texttt{Concept}:
+Variables}{Concept: Variables}}\label{concept-variables}
+
+The next six letters, indicating \texttt{Concept} encode the specific
+variables for this section, and details for each can be found in Table
+\ref{tab:EIG_defs}.
+
+\begin{landscape}
+\begin{longtable}[t]{>{\raggedleft\arraybackslash}p{0.8cm}>{\raggedright\arraybackslash}p{4cm}>{\raggedright\arraybackslash}p{17cm}}
+\caption{\label{tab:EIG_defs}Estate, Inheritance, and Gift Tax Variable Definitions}\\
+\toprule
+Code & Label & Description\\
+\midrule
+\cellcolor{gray!10}{status} & \cellcolor{gray!10}{Tax Indicator} & \cellcolor{gray!10}{Whether or not the country levies the specified tax for the given year. It is encoded as a 0/1 indicator variable.}\\
+\addlinespace
+firsty & First Year for Tax & The first year the specified tax is introduced in the country. It may predate the year of legal birth of the country, such as in the case of unified kingdoms or of former colonies.\\
+\addlinespace
+\cellcolor{gray!10}{typtax} & \cellcolor{gray!10}{Type of Tax} & \cellcolor{gray!10}{The structure of the adjusted tax schedule, if applicable. The variable is encoded as follows: 1 lump-sum (fixed); 2 flat (proportional with a single rate applied to all tax base); 3 progressive (proportional with tax rates increasing with the tax base); 4 progressive by brackets (proportional with tax rates increasing with the tax base, with different portions of the tax base - brackets - taxed at different rates); -998 (\_na) not applicable because the tax is not levied or there is full exemption. The type of tax is based on the number of positive tax rates included in the adjusted tax schedule.}\\
+\addlinespace
+exempt & Exemption Threshold & The exemption threshold in local currency units applicable to the sector, assuming no additional exemptions, credits or relief apply. It is reported as zero in case of no exemption, as -997 (\_and\_over) in case of full exemption (no tax is due), as -998 (\_na) if it is not applicable because the tax is not levied.\\
+\addlinespace
+\cellcolor{gray!10}{toplbo} & \cellcolor{gray!10}{Top Marginal Rate Applicable From} & \cellcolor{gray!10}{The minimum amount in local currency units including and above which the top rate for the specified tax applies to the sector. It is encoded as zero in case the tax is not levied or there is full exemption.}\\
+\addlinespace
+toprat & Top Marginal Rate & The highest statutory rate for the specified tax. It is encoded as zero in case the tax is not levied or there is full exemption.\\
+\addlinespace
+\cellcolor{gray!10}{adjlbo} & \cellcolor{gray!10}{Lower Bound for Exemption-adjusted Tax Bracket} & \cellcolor{gray!10}{The value of tax base over which the tax rate applies in local currency units, adjusted to include the exemption amount in the tax schedule as a zero rate bracket, if needed.}\\
+\addlinespace
+adjubo & Upper Bound for Exemption-adjusted Tax Bracket & The highest tax base value for which the tax rate applies in local currency units, adjusted to include the exemption amount in the tax schedule as a zero rate bracket, if needed. It takes value -997 (\_and\_over) for the highest bracket if the interval is open.\\
+\addlinespace
+\cellcolor{gray!10}{adjmrt} & \cellcolor{gray!10}{Marginal Rate for Exemption-adjusted Tax Bracket} & \cellcolor{gray!10}{The rate of taxation on tax base values between the bracket lower bound and the bracket upper bound, adjusted to include the exemption amount in the tax schedule as a zero rate bracket, if needed.  It is reported as zero in case the tax is not levied and for the exemption bracket.}\\
+\addlinespace
+revenu & Total Revenue from Tax & Total revenue from the specified tax at all government levels in local currency units.\\
+\addlinespace
+\cellcolor{gray!10}{prorev} & \cellcolor{gray!10}{Total Revenue from Tax as \% of Total Tax Revenue} & \cellcolor{gray!10}{Total revenue from the specified tax at all government levels as a percentage of total tax revenue.}\\
+\addlinespace
+revgdp & Total Revenue from Tax as \% of Gross Domestic Product & Total revenue from the specified tax at all government levels as a percentage of GDP.\\
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+\subsubsection{\texorpdfstring{\texttt{Section\ Specific}: Bracket
+Numbers}{Section Specific: Bracket Numbers}}\label{subsubsec:brack}
+
+Finally, the last two letters in the \texttt{varcode} denote the
+section-specific variables, which for the EIG section refer to the tax
+bracket number when needed. Full tax schedule information will vary by
+tax bracket. For instance, in the event of a flat rate of 10\% on
+individual shares of an inheritance valued at 100,000 currency units,
+the first bracket (\texttt{01}) will cover inheritances worth between 0
+and 100,000 currency units and a corresponding tax rate of 0\%, while
+the second bracket (\texttt{02}) will cover all inheritances valued over
+100,000 with a corresponding tax rate of 10\% (see section
+\ref{subsec:sched}). Information not contained within a tax schedule
+does not vary by bracket and is contained in the row with bracket number
+\texttt{00}. An example of tax bracket numbers--- and the tax schedule
+more generally---is laid out in Table \ref{tab:eig_ex1}.
+
+\subsection{Data Structure and
+Interpretation}\label{data-structure-and-interpretation}
+
+Downloaded data is provided in long format. All information in the data
+is sorted by a country's two-letter ISO code (\texttt{GEO}), or its full
+name (\texttt{GEO\_long}) and \texttt{year}. Information unrelated to
+the tax schedule is listed with \texttt{bracket} ``00'' in the
+\texttt{varcode}, while the schedule variables, which vary within a
+country-year, have positive bracket values. The final number of
+observations per country-year varies depending on the number of tax
+brackets in that country-year (and hence the number of
+\texttt{varcodes}).
+
+An example illustrated in Table \ref{tab:eig_ex1l} is the UK's tax
+schedule in 2019. Users can access the tax revenue of \texttt{GEO}
+``UK'' by selecting the \texttt{value} of the \texttt{varcode}
+corresponding to that \texttt{concept} (\emph{x-hs-agg-totrev-00}).
+Similarly, to display the \texttt{value} of the upper bound of the first
+tax schedule bracket for the UK, the user can select the
+\texttt{varcode} corresponding to that \texttt{concept}
+(\emph{x-hs-thr-ad1ubo-01}). All \texttt{varcode} conventions follow the
+logic detailed in section 5.1.
+
+\begin{table}
+\centering
+\caption{\label{tab:eig_ex1l}Simplified Illustration of EIG Data in Long Format}
+\centering
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{0.53cm}>{\raggedright\arraybackslash}p{2.95cm}>{\raggedright\arraybackslash}p{1.55cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{8cm}}
+\toprule
+GEO & varcode & value & value\_str & longname\\
+\midrule
+\cellcolor{gray!10}{UK} & \cellcolor{gray!10}{x-hs-agg-totrev-00} & \cellcolor{gray!10}{5165000000} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{Aggregate  Total Revenue, of the Households sector (Non-Bracket Specific)}\\
+UK & x-hs-thr-ad1ubo-01 & 325000 &  & Threshold  Upper Bound for Exemption Adjusted Tax Bracket, of the Households sector (Bracket n 01)\\
+\cellcolor{gray!10}{UK} & \cellcolor{gray!10}{x-hs-agg-ad1tlb-01} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{Aggregate  Tax Paid on Lower Bound for Exemption Adjusted Tax Bracket, of the Households sector (Bracket n 01)}\\
+UK & x-hs-rat-ad1smr-01 & 0 &  & Rate  Tax Rate for Exemption Adjusted Tax Bracket, of the Households sector (Bracket n 01)\\
+\cellcolor{gray!10}{UK} & \cellcolor{gray!10}{x-hs-thr-ad1lbo-02} & \cellcolor{gray!10}{325000} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{Threshold  Lower Bound for Exemption Adjusted Tax Bracket, of the Households sector (Bracket n 02)}\\
+\addlinespace
+UK & x-hs-thr-ad1ubo-02 &  & \_and\_over & Threshold  Upper Bound for Exemption Adjusted Tax Bracket, of the Households sector (Bracket n 02)\\
+\cellcolor{gray!10}{UK} & \cellcolor{gray!10}{x-hs-rat-ad1smr-02} & \cellcolor{gray!10}{40} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{Rate  Tax Rate for Exemption Adjusted Tax Bracket, of the Households sector (Bracket n 02)}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{\label{tab:eig_ex1}Simplified Illustration of a Tax Schedule}
+\centering
+\begin{tabular}[t]{llllllll}
+\toprule
+GEO & year & Currency & Value Over… & But Not Over… & Tax Rate & Total Revenue & bracket\\
+\midrule
+\cellcolor{gray!10}{UK} & \cellcolor{gray!10}{2019} & \cellcolor{gray!10}{GBP} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{5,165,000,000} & \cellcolor{gray!10}{0}\\
+\addlinespace
+UK & 2019 & GBP & 0 & 325000 & 0 &  & 1\\
+\addlinespace
+\cellcolor{gray!10}{UK} & \cellcolor{gray!10}{2019} & \cellcolor{gray!10}{GBP} & \cellcolor{gray!10}{325000} & \cellcolor{gray!10}{\_and\_over} & \cellcolor{gray!10}{40} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{2}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+If transformed into wide format, any observation is uniquely identified
+by country, year, and tax bracket to accommodate full tax schedules.
+That is, variables containing tax schedule information vary within each
+country-year. Hence, information will look considerably different from
+the example detailed in Table \ref{tab:eig_ex1l} above.
+
+To illustrate a wide structure, consider the UK tax schedule in 2019.
+There is a flat tax of 40 percent on estates over GBP 325,000. The
+revenue for the UK under the estate tax in 2019 was GBP 5.165 billion. A
+simplified subset of the variables (non-identifying variable names
+changed for ease of explanation) is shown in Table \ref{tab:eig_ex1}. As
+this example illustrates, selecting \texttt{GEO} ``UK'' and
+\texttt{year} ``2019'' will not be sufficient to uniquely identify one
+observation per country. For instance, any user interested in total
+revenue information would need to additionally select \texttt{bracket}
+``0''. Importantly, variables that are not related to the tax schedule
+will not be filled for country-year observations other than in the zero
+bracket.
+
+\subsubsection{Non-Schedule Tax
+Parameters}\label{non-schedule-tax-parameters}
+
+\paragraph{Binary Indicators for Tax
+Status}\label{binary-indicators-for-tax-status}
+
+A set of binary variables is used to indicate whether a country or
+region has any wealth transfer taxes (\emph{eigsta}), as well as the
+specific types of taxes that are levied (\emph{esttax}, \emph{inhtax},
+\emph{giftax}), when applicable. Taxes that are not deemed estate- or
+inheritance-specific taxes may be indicated as either ``\(Y\)'' (yes) or
+``\(N\)'' (no) for the binary variables, but have their schedules, rates
+or exemption information filled. There may therefore be inconsistencies
+between these variables; for instance, Colombia does not tax
+inheritances or estates specifically, but includes them as capital
+gains---data for Colombia indicates that an inheritance tax and a gift
+tax are present; however, the revenue information shows no government
+revenues for these taxes. Countries for which no data is available other
+than the tax revenue from the OECD are marked as having an estate,
+inheritance, or gift tax if the revenue information is non-zero and not
+decreasing as a pattern, which would indicate a possible repeal. When
+possible, the data further include a variable indicating the first year
+for which any wealth transfer tax has been levied in a country or region
+(\emph{eigfir}) {[}@GenschelSeelkopf2019{]}.
+
+\paragraph{Tax Reductions and Relationship-Based
+Parameters}\label{subsubs:reb}
+
+Estate and inheritance tax exemptions can vary in complexity and detail,
+and countries differ in how they offer reductions to the final tax bill
+(exemptions, deductions, rebates, credits, \emph{etc.}). The data in
+this section encode these as ``exemptions'', for instance, by
+calculating how much of an estate or inheritance would be exempt under a
+credit.
+
+Inheritance taxes frequently vary in generosity of exemptions or rates
+by the closeness of relationship between decedents and recipients, which
+are divided into ``classes.'' If this is the case, \emph{itaxre} will be
+``Y.'' The data pick up the exemptions (\emph{chiexe}) and rates for
+direct descendants without any additional mitigating factors (for
+instance, higher exemptions or lower rates for minors). Because classes
+of inheritors are not generally applicable for estate taxes, information
+in country-years with estate taxes tends to apply to everybody, and the
+exemptions and rates apply to the aggregate of all property bequeathed
+by a decedent. The exception to this is if a country with estate taxes
+has an estate tax, but individual share-based exemptions vary beyond
+those for spouses and minor children. In this case, the indicator
+\emph{ieexem} will contain the value ``\(Y\)," and the corresponding
+exemptions indicate the exemption applicable to the proportion of the
+estate that corresponds to direct descendant's shares, even though the
+tax is paid on the overall estate.
+
+In cases where \emph{eigsta} indicates the existence of an EIG tax, a
+missing value for \emph{chiexe} means that inheritances (or the
+respective portions of estates) are fully exempt for direct descendants
+if \emph{toprat} is equal to zero. When tax rates cannot be determined
+without determining additional information about the recipient or
+decedent, assumptions are made in order to select the lowest applicable
+rates for direct descendants. In Spain, for instance, the tax rates vary
+by relationship and increase with the pre-existing wealth owned by the
+recipient. The data is entered under the assumption that the recipient
+possesses no pre-existing wealth. For such cases, however, more
+information will be made available in the metadata.
+
+\subsubsection{Tax Schedules}\label{subsec:sched}
+
+\paragraph{General Structure and
+Interpretation}\label{general-structure-and-interpretation}
+
+Progressive tax schedules are split into brackets by the value of the
+estate or inheritance, each with identical variable values for
+non-schedule variables. Bracket number, the dashboard-specific variable
+encoded in the last two letters of the \texttt{varcode}, specifies the
+order of the brackets that constitute a full tax schedule.
+
+The structure of the tax schedule data is the same as the statutory
+schedules provided by many governments for estate taxes and other
+progressive taxes. The basic structure of all tax schedules in the data
+consists of tax brackets arranged in ascending order, which indicate the
+range of amounts to which a tax rate applies, as well as the tax
+liability on amounts below that bracket. Each bracket corresponds to a
+single row, and all brackets that form a schedule have the same
+logistical variable values; all non-schedule tax variables are constant
+for a schedule, and therefore identical for all brackets (or rows).
+
+The schedules are typically cumulative in structure, such that the rate
+in a bracket that corresponds to an aggregate inherited (or estate)
+value only applies to the proportion of the inheritance that is greater
+than the highest amount in the previous bracket. That is, if the
+inherited amount misses a lower tax bracket by one currency unit, the
+higher tax rate only applies to one currency unit.
+
+\paragraph{Schedule Transformation for Adjusted
+Schedules}\label{schedule-transformation-for-adjusted-schedules}
+
+We adjust the schedules to make them more comparable across countries,
+as detailed below.
+
+Estate, inheritance, and gift taxes typically only apply above a certain
+threshold. We modify all schedules that do not already include a bracket
+with a zero tax rate that corresponds to the exempted amount (that is, a
+zero tax rate on amounts ranging from zero to the exemption threshold),
+to include such a bracket. This can be complicated because tax schedules
+are not standardized with respect to exemptions. Some exemptions might
+be included in a tax schedule and do not require any additional
+calculation. Others are calculated as deductions or credits, which means
+that a tax is calculated on the entirety of the estate, and the tax that
+would be owed on the exemption amount is subsequently subtracted from
+the total tax liability. For instance, consider the U.S. federal estate
+tax: The statutory schedule contains a progressive schedule, but because
+the exemption deduction is so high (nearly 13 million USD as of 2023),
+every bracket but the last is effectively within the deduction range.
+Therefore (assuming no other deductions or credits apply), all amounts
+below (and many above) the last bracket would yield a final tax bill of
+zero. The result is a flat tax rate that applies to relatively large
+estates of several million dollars.
+
+In order to transform tax schedules to adjusted and effective, we assume
+that taxes will be paid on a monetary transfer to one adult child upon
+the death of a decedent, assuming no additional circumstantial
+deductions, reliefs, or credits apply unless otherwise specified. In the
+case of a country like Spain, it is additionally assumed that the
+recipient owns no prior wealth. Historical information is adjusted to
+reflect the most recent local currency.
+
+\paragraph{Regional Information}\label{regional-information}
+
+As of the public release v.2, the data also include regional-level tax
+information for all U.S. states. Varcodes and variables for the regional
+level adhere to the database structure outlined above. We note some
+important conceptual differences:
+
+First, the tax status variables (\emph{eigsta}, \emph{esttax},
+\emph{inhtax}, \emph{giftax}) refer to the existence of a tax at the
+state-level, irrespective of federal taxes that also apply within state
+boundaries. Thus, if a given state indicates \emph{esttax} = ``N'',
+estates in that state can still be subject to the federal estate tax, if
+it applies.
+
+Second, adjusted tax schedule variables (e.g., \emph{chiexe},
+\emph{ad1lb}, \emph{ad1ub}, etc.) combine full tax schedule information
+of federal- and state-level taxes. That is, EIG taxes levied by the
+state can provide adjustments of the statutory schedule depending on
+interactions with the federal tax. Thus, our state-level adjusted
+schedules take the joint structure of taxes at both levels into account
+in order to arrive at tax exemptions, brackets, and marginal rates that
+are readily comparable across states within the U.S.
+
+Third, top marginal tax rate variables (e.g., \emph{toprat}) also
+indicate the combined information of the federal estate tax and state
+estate, inheritance, and gift taxes. Combining the federal estate tax
+and gift and inheritance taxes at the state level yields harmonized top
+marginal tax rates across states, however, we cannot provide separate
+top rates by type of tax as combining taxes at different levels jointly
+yields the adjusted top rates. All top rates and adjusted schedules thus
+refer to adult, direct descendants without siblings.
+
+Fourth, state and federal tax interactions can lead to marginal tax
+structures with spikes within the tax bracket structure. Put
+differently, the highest tax rate in an adjusted schedule might be in a
+lower bracket and inheritances above that bracket will be subject to
+lower rates. In such cases, the top marginal tax rate refers to the last
+bracket in the (progressive) tax schedule rather than to the highest tax
+rate.
+
+\end{document}

@@ -1,0 +1,133 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+```{r, include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+
+# Load warehouse 
+source("/Users/lucagiangregorio/Dropbox/gcwealth/documentation/warehouse_documentation/documentation_warehouse_version.R")
+whouse <- paste0("/Users/lucagiangregorio/Dropbox/gcwealth/output/databases/full_warehouse/warehouse_v", ver, ".csv")
+whouse %<>% read_delim() 
+head(whouse)
+
+#select observations to show 
+compact <- 
+  mutate(whouse, percentile = as.character(percentile))
+whsubs1 <- filter(compact, source == "Wolff2021" & percentile == "p90p100" & year >= 2007)
+whsubs1 <- unique(whsubs1)
+whsubs2 <- filter(compact, source == "ECB_QSA" & GEO == "FR" & 
+              varcode == "p-hs-agn-falipe-ga" & year >= 2017)
+whsubs3 <- filter(compact, varcode == "x-hs-cat-eigsta-00", GEO == "IT" & year >= 2016) 
+whsubs4 <- filter(compact, source == "LWS_ineq", percentile == "p0p50", GEO %in% c("AU", "ZA") & year >= 2014)
+whsubs5 <- filter(compact, source == "WID_topo", GEO == "CN", year >= 2011, varcode == "p-hn-agg-faeqfd-ga")
+whsubs <- rbind(whsubs1, whsubs2, whsubs3, whsubs4, whsubs5)
+                
+#shorten some data points for viz 
+whsubs %<>% mutate(
+  longname = paste0(substr(longname, 1, 9) , "..."), 
+  varcode = paste0(substr(varcode, 1, 8), "..."),
+  source = paste0(substr(source, 1, 6) , "..."), 
+  GEO_long = paste0(substr(GEO_long, 1, 8), "...")
+  )
+
+```
+
+
+\newpage
+
+# General Warehouse Structure {#sec:struc}
+
+This section provides a comprehensive overview of the general structure of the data warehouse of the GC Wealth Project.
+
+
+```{r, the_whouse, echo=FALSE}
+kbl(head(whsubs, n=0), format="latex", booktabs = T, digits=1, align = "c", caption = "\\label{fig:guts}Warehouse Columns", caption.short="Note. This is a sample of actual observations from the warehouse to showcase its structure.") %>% 
+  kable_styling(latex_options = "striped", stripe_index = c(1:5, 11:15, 21:25))
+```
+
+
+The data warehouse is organized in long format with a total of nine columns. 
+
+First of all, important information codifying the nature of the variable listed in the warehouse is stored in the column named _varcode_, and this is detailed in its own subsection below. Two additional columns store values related to each _varcode_. On the one hand, the column _value_ stores numerical values like amounts in nominal currency, indices, shares, or rates. On the other hand.
+
+There are five additional columns providing geographical and temporal information, population of reference, and sources (_GEO, GEO_long, year, percentile, source_). The _GEO_ column refers to 2-character ISO codes for countries, while the _GEO_long_ column refers to their full name. The _year_ column is an integer variable, while the _percentile_ column defines the population to which each observation corresponds. This is a string variable that takes values such as “p0p100” when observations refer to the whole population, as mostly happens with the Wealth Topography dashboard. Other percentiles, as appear in the Wealth Inequality Trends section, can be defined using values between 0 and 100. For instance, the top 0.1% share of the population would be referred to as “p99.9p100”. The source column contains information about  the identifier of the specific source of the data. 
+
+Finally, the variable _longname_ is a string variable providing a  description in plain language of each observation. . This is defined automatically by an algorithm that draws all labels from our codebook/dictionary file (named dictionary.xlsx), available in our GitHub repository.
+
+Importantly, the data warehouse is also available in a more detailed version, which contains a long list of descriptive metadata information. The complete warehouse is  _warehouse_meta_. Metadata  include information such as comments on the methodology used to compile the data, and any limitations or caveats associated with the data, as well as detailed information about the definition of our variables, units of analysis, and full spelling of the sources of data, including links to full curated bibliographic citation details. The metadata version is essential for researchers and analysts who require a deeper understanding of the underlying data and its quality. It is available for download alongside the warehouse and can also be accessed through our website and repository.
+
+
+<!--    Table 1.1 is a representative sample of the information you can find in the warehouse. The first five observations correspond to the top 10% wealth share in the United States, as estimated by Wolff (2021). The following five observations are estimates wealth aggregates for a given wealth-concept, as estimated by the European Central Bank for 2017-2021, and so on. -->
+
+
+
+
+## The varcode {#sec:vc}
+
+ The _varcode_ column allows users to identify the variable and concept at hand. It is also designed to indicate information about the specific warehouse section and sector, as well as section-specific information. Each _varcode_ variable has a pre-determined structure, and consists of five main components: Section, Sector, Variable Type, Concept, and Section-Specific info.
+
+
+$$\underbrace{A}_{Section} - \underbrace{BB}_{Sector} - \underbrace{CCC}_{Variable Type} - \underbrace{DDDDD}_{Concept} - \underbrace{ZZ}_{Section-Specific} $$
+```{r , meta, include=F, echo=F}
+meta <- "../../handmade_tables/dictionary.xlsx"
+d1 <- read_excel(meta, range="A1:B4",  sheet = "d1_dashboard")
+d2 <- read_excel(meta, range="A1:C5", sheet = "d2_sector") 
+d3 <- read_excel(meta, range="A1:C13", sheet = "d3_vartype")  
+d4 <- read_excel(meta, range="A1:B126", sheet = "d4_concept")
+d5 <- read_excel(meta, range="A1:B49", sheet = "d5_dboard_specific")
+```
+ 
+The first 1-digit component, Section, defines the broad section in which the variable belongs, such as the Wealth Inequality Trends or the Wealth Topography section.
+
+The 2-digit Sector component provides additional granularity, such as the specific institutional sector being measured, e.g., the Household sector including the Non-Profit Institutions Serving Households.
+
+The 3-digit Variable Type component denotes the type of variable being measured, e.g., the Gini coefficient, Top or Bottom shares, a tax threshold or aggregate wealth. 
+
+
+The 6-digit Concept component provides more detailed information about the variable being measured, such as the specific metric being used, while the 2-digit Section-Specific component can be used to further characterize the variable within a particular section of the warehouse (e.g., in the context of the Estate, Inheritance, and Gift Taxes section, each variable will be associated to a particular tax bracket if necessary).
+
+ 
+```{r show_meta, echo=FALSE}
+kbl(d1, format="latex", align = "l", booktabs = T, caption = "Section codes")
+```
+
+
+
+## Supplementary Variables 
+
+To facilitate broader use and comparability of the general warehouse data, a set of additional supplementary variables covering various is provided to complement the data warehouse. These additional variables are available on our GitHub repository and stored in a downloadable file named “supplementary_var”. This file contains all the supplementary information, and it is structured in a wide format i.e., all additional variables displayed in columns, with each row uniquely identified by geographical classification and year (i.e. _GEO_ and _year_). Therefore, these supplementary variables can easily be merged with the warehouse data using _GEO_ and _year_ as identifiers. 
+Currently, the supplementary variables are included from a list of external data sources, such as the World Inequality Database, World Bank, Comparative Political Data Set and Parliaments and Government Database. 
+
+The supplementary variables downloaded from the World Inequality Database – downloaded on November 4th, 2022  – allows users to carry out various transformations of the data. In particular, data can be used to implement  inflation adjustments, currency conversion rates, or to include population estimates (such as per capita or per adult), and macroeconomic values (such variables as % of GDP or % of National Income), and are intended to enhance users’ capacity for insightful comparisons and analysis. 
+
+To improve comparability with other institutional data, we provide the official country denomination adopted by the World Bank, along with their income groups classification updated as of July 1, 2024 and available since 1987 - low, lower-middle, upper-middle, high income. We also include the regional classification: East Asia & Pacific, Europe & Central Asia, Latin America & Caribbean, Middle East & North Africa, North America, South Asia, Sub-Saharan Africa. For additional details about the income group classification, please visit the “Knowledge Base” page of the World Bank. 
+
+Lastly, to foster interdisciplinary use of our data and stimulate research across the entire spectrum of social sciences, we introduce a new variable that captures the political orientation of the government in charge each year. This variable categorizes governments based on their political orientation (hegemony of right-wing, dominance of right-wing, balance between left and right parties, dominance of left, hegemony of left), by combining two primary sources concerning the political spectrum and election results [Armingeon et al., 2023, Comparative Political Data Set, 1960-2021; Holger et al., 2023, Parliaments and Government Database (ParlGov)], both widely used in the European Journal of Political Research. 
+
+The definition of the political orientation adopted in these two main sources is based on the government composition. Following Armingeon et al., (2023, Comparative Political Data Set, 1960-2021), the cabinet composition takes different values depending on the ratio of the party seats in parliament over the total parliamentary seats of all governing parties. For example, there will be a “dominance of social-democratic and other left parties” if the seat share of all social-democratic and left governing parties exceeds 66.67% of the total parliamentary seats of all governing parties. Conversely, there is a “hegemony of right-wing (and centre) parties” when no left-wing parties participate in the cabinet. The definitions of left and right in Armingeon et al., (2023) and Holger et al., (2023, ParlGov Database) follow the political science literature and are detailed in their specific documentation.
+Due to distinctive nature of the United States political spectrum and history, its political cycle is typically identified using “Democrat” and “Republican”.  
+
+Combining both sources we are able to cover 38 countries over almost the whole XX century, with the exception of the eastern-Europe countries entering the sample after the 1989. 
+
+
+We have made the code used to extract these variables available on our GitHub repository, stored in a downloadable file called "supplementary_var.xlsx". Users can easily access and review the code, enabling them to understand the data processing steps and reproduce the results displayed on our website if desired. This file contains all the relevant data in a structured format, allowing users to explore the variables at their own pace and integrate them into their own analyses.
+
+Table \ref{tab:tsupp} in Appendix \ref{sec:asupp} below provides a summary of the supplementary variables employed in the project. For more comprehensive information on the construction of these variables, please consult their original documentation ([@Blanchet2017], [@BlanchetChancel2016]).
+
+

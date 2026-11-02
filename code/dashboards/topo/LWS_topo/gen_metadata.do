@@ -7,7 +7,7 @@ run "code/mainstream/auxiliar/all_paths.do"
 // Check the following lines always before running the code
 local general_source = "LWS_topo" // The source does not change across the do-file
 qui local sector_list S14
-qui local country_list AT AU CA CL DE EE ES FI GR IT JP LU NO SE SI SK UK US ZA		
+qui local country_list AT AU CA CL DE EE ES FI GR IT JP LU NO SE SI SK UK US ZA	FR DK IN KR // MX	
 	
 		
 * Origin folder: it contains the excel files to import
@@ -105,16 +105,25 @@ foreach cod in `codes' {
 	drop na_code
 	rename source_code na_code
 
-	levelsof na_code, local(cod_`ctry') clean 
-	levelsof varname_source, local(varnamesource_`ctry') clean 
-	levelsof nacode_label, local(nacodelabel_`ctry') clean 
+	levelsof na_code, local(cod_`ctry') clean
+	levelsof varname_source, local(varnamesource_`ctry') clean
+	levelsof nacode_label, local(nacodelabel_`ctry') clean
 
 	di as result upper("`ctry'") _continue
-	di as text " has these na_codes available `cod_`ctry''"  
+	di as text " has these na_codes available `cod_`ctry''"
 
 	foreach cod in `codes' { // Loop over concepts
-	
-		qui local iter = 1 
+
+		// Skip fadepo for countries where the relevant deposit variable includes cash:
+		// KR, NO: hafc includes cash; US: hafct (and hence hafc) includes cash; MX: hafcs includes cash
+		if "`cod'" == "fadepo" {
+			if "`ctry'" == "KR" | "`ctry'" == "NO" | "`ctry'" == "US" | "`ctry'" == "MX" {
+				di as text "  Skipping `cod' for `ctry': deposit variable includes cash"
+				continue
+			}
+		}
+
+		qui local iter = 1
 	
 		foreach com in `comp' { // Loop over composition for a given concept
 			*go only if not empty  

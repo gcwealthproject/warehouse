@@ -1,0 +1,118 @@
+---
+title: ""
+author: ""
+date: ""
+output:
+  pdf_document:
+    citation_package: biblatex
+    toc: no
+    toc_depth: 3
+    number_sections: yes
+    highlight: tango
+    df_print: kable
+    latex_engine: xelatex
+  html_document:
+    toc: no
+    toc_depth: '3'
+    df_print: paged
+header-includes:
+- \usepackage{titling}
+- \usepackage[margin=2.5cm]{geometry}
+- \usepackage{setspace}
+- \renewcommand{\chaptername}{Section}
+- \maxdeadcycles=1000
+subtitle: null
+urlcolor: blue
+documentclass: report
+bibliography: BothLibraries.bib
+link-citations: yes
+suppress-bibliography: no
+---
+\pagenumbering{gobble}
+\begin{centering}
+\vspace{3cm}
+```{r uni_logo, echo=F, out.width="60%"}
+knitr::include_graphics("docs/GCWealthLogo-V2.png")
+```
+\vspace{1.5cm}
+\mbox{}
+\vfill
+
+\huge
+
+{\bf The GC Wealth Project}
+
+\vspace{0.2 cm}
+
+\LARGE
+
+{\bf Data Warehouse v.1.2 - Documentation}
+
+\vspace{0.2 cm}
+
+\Large
+
+July 2024
+
+\vspace{1cm} % Adjust the space as needed
+
+\normalsize
+Salvatore Morelli\\
+Twisha Asher\\ 
+Frincasco Di Biase\\
+Franziska Disslbacher\\
+Ignacio Flores\\
+Adam Rego Johnson\\
+Giacomo Rella\\
+Manuel Schechtl\\
+Francesca Subioli\\
+Matteo Targa
+\mbox{}
+\vfill
+
+\normalsize
+\noindent{%
+    \parbox{\textwidth}{%
+        \textbf{Authorship Note.} This documentation file is the result of a collaborative effort supervised by Salvatore Morelli, the director of the GC Wealth Project, who conceived and designed the overall research project. Different subgroups of people were responsible for specific sections within the documentation and the appendices. Ignacio Flores was responsible for the overall data warehouse architecture and description, including the section and appendix pertaining to Supplementary Variables. Franziska Disslbacher handled the Wealth Inequality Trends section, including the appendix tables documenting the treatment and classification of each data source. Giacomo Rella led the Wealth Topography section, including the appendix tables outlining the composition rules and methodological choices for each source in the database. Twisha Asher and Manuel Schechtl jointly oversaw the Estate, Inheritance, and Gift Taxes section, including the classification of concepts used in the database and the corresponding appendix section. Adam Rego Johnson took charge of the data source classification and citation reference organization.
+    }%
+}
+
+
+
+\end{centering}
+
+```{r child = 'author.Rmd'}
+```
+
+```{=latex}
+% Trigger ToC creation in LaTeX
+\tableofcontents
+```
+
+```{r, echo=F}
+  #Required packages 
+  #tinytex::tlmgr_install("biber")
+  #tinytex::tlmgr_install("biblatex")
+
+  #define files in order 
+  child_docs <- c(
+    'proj.Rmd', 
+    'gral.Rmd', 
+    'topo.Rmd', 
+    'ineq.Rmd', 
+    'eigt.Rmd',
+    'a_apdx_supp.Rmd',
+    'a_apdx_topo.Rmd',
+    'a_apdx_ineq.Rmd',
+    'a_apdx_eigt.Rmd'
+ )
+
+#   
+```
+
+
+```{r, child = child_docs}
+```
+
+
+

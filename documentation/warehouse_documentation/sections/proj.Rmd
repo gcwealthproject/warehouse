@@ -1,0 +1,76 @@
+\doublespacing
+
+# The GC Wealth Project 
+
+The GC Wealth Project, a central project of the Graduate Center’s [Stone Center on Socio-Economic Inequality](https://stonecenter.gc.cuny.edu/), is a multi-year effort aimed at expanding and consolidating access to the most up-to-date research and information on wealth, wealth inequalities, and wealth transfers and related tax policies across countries and over time.
+
+The GC Wealth Project website — first launched in June 2023 —  is organized around two main components: a data warehouse of gathered and novel data that can be visualized in a variety of ways through the [interactive dashboard](https://wealthproject.gc.cuny.edu/index.html), and a [Digital Library of Research on Wealth Inequality](https://wealthproject.gc.cuny.edu/digital-library-of-research). Both are designed to provide researchers, policymakers, journalists, and others interested in wealth and wealth taxation with open, unlimited access to an array of high-quality information and resources.
+
+All of the data, including the tailored visualizations that users can create using the interactive dashboard, can be exported.
+
+## The Data Warehouse
+
+The data warehouse includes four databases, which correspond to the four sections of the dashboard:  
+
+1. [Wealth Topography](https://wealthproject.gc.cuny.edu/wealth-topography)
+2. [Wealth Inequality](https://wealthproject.gc.cuny.edu/wealth-inequality-trends)
+3. [Taxes on Wealth](https://wealthproject.gc.cuny.edu/EIG) 
+4. [Inheritance Trends](https://wealthproject.gc.cuny.edu/inheritance-trends)
+
+To create and populate the sections of our data warehouse, we drew on a large array of data sources. The sections were filled by assembling secondary sources, extracting policy data, and/or querying and working directly with primary microdatasets.
+
+The sources are all listed in our [Data Sources Library](https://wealthproject.gc.cuny.edu/data/data-sources-library/).
+
+The data warehouse is also complemented with full metadata descriptive information. The metadata provide detailed information on sources of data, longer descriptions of variables and the concepts used, procedures of aggregation and estimation, bibliography links, and complementary information. 
+
+All data files, metadata, supplementary variables, and documentation are available in our [GitHub repository](https://github.com/gcwealthproject/gcwealthproject/tree/main).
+ 
+## The Four Main Sections of the Warehouse
+
+1) The [Wealth Topography](https://wealthproject.gc.cuny.edu/wealth-topography) section includes cross-country data that capture, at the aggregate level, the evolution of household portfolios of assets and debt. Assets are metaphorically represented as “mountains and hills”, while debts are visualized as “seas” of debt. The data come from national accounts, household surveys, and a range of research projects and reports.
+
+> These data offer a unique view of aggregate household balance sheets. Country-specific portfolios are shaped by, and reflect, national characteristics, including demographic trends, inflation and interest rate dynamics, features of financial and credit markets, the relative importance of stock exchanges versus banking systems, the strength of asset management industries, and the preferential tax treatment of assets, as well as the preferences of households and the generosity of pensions systems.
+
+2) The  [Wealth Inequality](https://wealthproject.gc.cuny.edu/wealth-inequality-trends) section presents a large comprehensive compilation of cross-national time-series data on wealth inequality. This section contains wealth inequality indicators (such as top shares and Gini coefficients) for many countries, as estimated in the existing literature and as derived from existing micro data sources. These data are accompanied by Methodological Tables that provide systematic assessments of the underlying concepts, methods, and sources for the estimation of wealth inequality trends.
+
+> This section provides access to, and detailed information about, wealth inequality across countries and over time. To date, there is no comprehensive database that offers “off the shelf” indicators on wealth inequality levels and trends for a variety of different sources. Estimates of wealth distributions are much less settled than those of income distributions, and there is substantial controversy about how wealth inequality has evolved in recent years. A core value-added of this section is that users have access to detailed information about the values provided and methodological information that will help them to navigate the inevitable complexity. Users can also exploit our classification of data types, source types, and unit of analysis to guide the choice of the most suitable indicator for their purpose.
+
+3) The [Taxes on Wealth](https://wealthproject.gc.cuny.edu/EIG) section contains a comprehensive database on the evolution of estate, inheritance, and gift (EIG) taxation, both across countries and (forthcoming) across the U.S. states. This section focuses on the taxation of wealth transfers, that is, transfers from one household or individual to another, either when the donor is living (inter vivos gifts) or at the time of the donor’s death (bequests). When assessing taxes, we distinguish among three types of taxes: those levied on estates (on the total amount bequeathed), on inheritances (on amounts received by individual recipients), and on gifts (given by living donors). The Taxes on Wealth section contains information on statutory tax schedules, marginal tax rates, top marginal rates, exemption thresholds, and tax revenues. Information on effective taxation is also derived and presented.
+
+> Understanding how governments tax these transfers is essential because bequests, inheritances, and inter vivos gifts are crucial economic resources for households and because their scale has increased substantially in recent decades relative to total national income. Very little work has been done to analyze how patterns of wealth transfer taxation affect the extent of these transfers across countries and across households within countries. This systematic compilation of tax data will provide researchers a crucial tool for scholarship and policy analysis focused on the behavioral effects of wealth taxes.
+
+4) The [Inheritance Trends](https://wealthproject.gc.cuny.edu/inheritance-trends) section, forthcoming later in 2023, will present cross-country estimates of annual flows of wealth left at death as well as gifts from living donors. The included estimates will be taken from existing works in the literature or derived using a variety of approaches drawing on national accounts data and survey data, as well as estate, inheritance, and gifts tax records.
+
+## The Digital Library of Research on Wealth Inequality 
+
+The [Digital Library of Research on Wealth Inequality](https://wealthproject.gc.cuny.edu/digital-library-of-research) is a large, comprehensive, searchable database that includes abstracts and (when possible) full texts of important, innovative, and high-quality articles, chapters, and books focused on wealth inequality. The library is updated regularly and categorizes the included literature into eight subsections. Complete reference information is available in the BibTeX format, as are abstracts and (when possible) full texts.
+
+\newpage
+
+## How to Cite Our Data Source
+
+If you are using the GC Wealth Project data in a report, monograph, paper, book, book chapter, journal article, dissertation, etc., include the citation in your bibliography as follows:
+
+Morelli, Salvatore, Twisha Asher, Frincasco Di Biase, Franziska Disslbacher, Ignacio Flores, Luca Giangregorio, Adam Rego Johnson, Max Longmuir, Giacomo Rella, Manuel Schechtl, Francesca Subioli, and Matteo Targa,  GC Wealth Project Data v.1.2, [year], accessed via http://wealthproject.gc.cuny.edu, on [date].
+
+\newpage 
+
+## The Stone Center on Socio-Economic Inequality
+
+The GC Wealth Project is a component of the [James M. and Cathleen D. Stone Center on Socio-Economic Inequality](https://stonecenter.gc.cuny.edu/), a research center housed at the Graduate Center of the City University of New York (CUNY).
+
+The Stone Center conducts and promotes quantitative research using inequality as a lens on society, the economy, and politics. The faculty, postdoctoral scholars, and students working within the Stone Center share a commitment to scholarship that is data-driven, interdisciplinary, oriented toward policy and institutional change, and that addresses questions about inequality throughout the world.
+
+The Stone Center’s core functions include:
+
+* Researching the causes, nature, and consequences of socio-economic inequality, with a specific mandate to expand research and research capacity related to wealth inequality;
+
+* Training and teaching emerging inequality scholars at The Graduate Center/CUNY across a number of academic disciplines;
+
+* Participating in discussions and debates on inequality through public programs and collaboration with journalists;
+
+* Engaging in special programs and projects, such as the [Inequality by the Numbers](https://stonecenter.gc.cuny.edu/inequality-by-the-numbers/) workshop, the [Lee Rainwater Lecture Series](https://stonecenter.gc.cuny.edu/news-and-commentary/lee-rainwater-memorial-lecture-series/), the [Stone Center Working Paper Series](https://stonecenter.gc.cuny.edu/research-data/stone-center-working-paper-series/), and an ever-expanding compilation of [research spotlights](https://stonecenter.gc.cuny.edu/category/news/research-spotlights/) (briefs), [scholar interviews](https://stonecenter.gc.cuny.edu/category/news/scholar-interviews/), and [blog postings](https://stonecenter.gc.cuny.edu/category/news/blog/);
+
+* Housing the [U.S. Office of LIS](https://stonecenter.gc.cuny.edu/about/us-office-of-lis/), the renowned cross-national data center based in Luxembourg.
+
+The Stone Center was created in 2016 with a generous gift from the James M. and Cathleen D. Stone Foundation.

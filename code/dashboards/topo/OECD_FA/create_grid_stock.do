@@ -6,20 +6,19 @@ global destination "${topo_dir_raw}/OECD_FA/auxiliary files"
 
 
 *import delimited "${origin}/QASA_7HH_10102022094726458.csv", varnames(1) delimiter(comma) clear // June 2023
-import delimited "${origin}/QASA_7HH_29082023202120134.csv", varnames(1) delimiter(comma) clear // August 2023
-drop if time == "2023"		
+*import delimited "${origin}/QASA_7HH_29082023202120134.csv", varnames(1) delimiter(comma) clear // August 2023
+*drop if time == "2023"		
 //data infrastructure since 2023. There is a code that transforms the data into our structure. 
-append using "${origin}/OECD_2023_update"
-keep time
+*append using "${origin}/OECD_2023_update"
+import delimited "${origin}/OECD_2026.csv", varnames(1) delimiter(comma) clear // March 2026
+keep time_period
 
-drop if strpos(time, "Q")
+*drop if strpos(time, "Q")
 duplicates drop
-sort time
-destring time, gen(year)
+sort time_period
+rename time_period year
 label var year ""
 
-
-drop time
 
 * Non-financial assets
 

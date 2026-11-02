@@ -1,0 +1,23 @@
+Intermediate datasets are saved in "...\gcwealth\raw_data\eigt\intermediary_files"
+
+Naming rules for intermediary datasets:
+
+******
+PREFIX
+******
+   "eigt_taxsched" refers to tax information
+   "eigt_oecdrev" refers to revenue data from OECD 
+   "eigt_histrev" refers to historical revenue data
+
+******
+SUFFIX
+******
+   "_data" refers to the main data; the tax data are country-year-bracket specific,
+				while revenue data are country-year-specific
+   "_sources" refers to the Source_ variables (country-year specific)
+   "_currency" refers to the currency (country-year specific)
+   "_data_correct" refers to the main data with currency update (to WID currency)
+   "_all_transformed" refers to the tax schedule data + sources with currency update (to WID currency) translated into the new long shape
+
+
+Note: oecdrev data also have in the name the date of download

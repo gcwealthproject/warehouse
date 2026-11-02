@@ -20,8 +20,8 @@ global intermediate "${topo_dir_raw}/OECD_FA/intermediate"
 *import delimited "${origin}/QASA_7HH_10102022094726458.csv", varnames(1) delimiter(comma) clear // June 2023
 *import delimited "${origin}/QASA_7HH_29082023202120134.csv", varnames(1) delimiter(comma) clear // August 2023
 *import delimited "${origin}/QASA_7HH.csv", varnames(1) delimiter(comma) clear // August 2023
-
-import delimited "${origin}/OECD_2025.csv", varnames(1) delimiter(comma) clear 
+*import delimited "${origin}/OECD_2025.csv", varnames(1) delimiter(comma) clear 
+import delimited "${origin}/OECD_2026.csv", varnames(1) delimiter(comma) clear 
 
 rename financialinstrumentsandnonfinanc v4
 

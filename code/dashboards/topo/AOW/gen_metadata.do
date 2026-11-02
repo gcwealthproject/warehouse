@@ -19,7 +19,8 @@ save  `widcur'
 * Import dates
 *import excel "${origin}/AOW_FW.xls", replace
 
-qui import excel "${origin}\AOW_FW", clear firstrow
+*qui import excel "${origin}\AOW_FW", clear firstrow
+qui import excel "${origin}\Offshore financial wealth database march 2026", clear firstrow
 ****
 
 *keep total offshore abroad only

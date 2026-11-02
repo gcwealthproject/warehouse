@@ -1,0 +1,347 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r , include=FALSE}
+#Load libraries
+library(tidyverse)
+library(glue)
+library(stringr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(readr)
+library(expss)
+```
+
+```{r inhe_paths, include=FALSE, warning=FALSE, message=FALSE}
+source(file.path("render_support", "render_config.R"))
+options(knitr.kable.NA = "-")
+
+meta_b <- "../../handmade_tables/dictionary.xlsx"
+inhe_ready_path <- "../../raw_data/inhe/inhe_ready.csv"
+
+# inhe_ready.csv ships with a header row; the fallback keeps the chunk working
+# if a header-less version of the file is produced upstream.
+inhe_ready <- read_csv(inhe_ready_path, show_col_types = FALSE)
+if (!all(c("area", "year", "value", "percentile", "varcode", "source") %in% names(inhe_ready))) {
+  inhe_ready <- read_csv(inhe_ready_path,
+                         col_names = c("area", "year", "value", "percentile", "varcode", "source"),
+                         show_col_types = FALSE)
+}
+
+inhe_parts <- inhe_ready %>%
+  separate(varcode,
+           into = c("varcode1", "varcode2", "varcode3", "varcode4", "varcode5"),
+           sep = "-", extra = "merge", fill = "right", remove = FALSE)
+```
+
+
+# Inheritance Trends {#sec:inhe}
+## Introduction to the Inheritance Trends Section
+The Inheritance Trends section presents a comprehensive compilation of cross-national time-series data on the annual flow of wealth transfers, that is, the wealth passed from one household or individual to another either at the time of the donor's death (bequests) or while the donor is alive (inter vivos gifts). This section contains estimates of the size of these flows, expressed both in national currency and relative to national income, as estimated in the existing literature. It also documents the average effective rate at which these transfers are taxed.
+
+The Inheritance Trends section is not about the distribution of wealth across the population: every estimate refers to the reference population as a whole. What it measures instead is the *magnitude* of the annual transmission of wealth between generations and its evolution over time. This distinction matters because inheritance flows are a macroeconomic quantity: they can be compared to national income, they can be traced back over long historical horizons, and they can be related to the tax revenue they generate.
+
+The core value-added of this section is to assemble, for the very first time in a single venue, estimates that are otherwise scattered across national historical studies, each built on different records and conventions.
+
+
+## The Structure of the Inheritance Trends Section
+In the Inheritance Trends database, each estimate (`value`) is uniquely identified by the combination of the reference country indexed by a two-digit identifier (`GEO`), the reference year (`year`), the data source (`source`),  and the `varcode`.
+
+Table \ref{tab:intro_inhe} provides a small extract from the Inheritance Trends database. This table displays data for Italy in 1995 and 1996. The series reported in the `value` column correspond to an inheritance indicator (`varcode`), with the `percentile` column always set to *p0p100* because all estimates in this section refer to the reference population as a whole. The `varcode` column carries the substantive information: the type of measure (an aggregate in national currency, or a ratio to national income), the concept it refers to (bequests only, or bequests and gifts together), and the type of flow estimate (fiscal or economic). The subsequent sections elaborate on the `varcode` and on the `percentile` variable.
+
+```{r show_inhe, echo=FALSE, show_col_types = FALSE, warning=FALSE, message=FALSE}
+whouse <- read_delim(paste0("../../output/databases/warehouse/warehouse_v", warehouse_version, ".csv"))
+
+# Aggregates are rescaled to billions and ratios/rates to percentages so that
+# the extract is readable; formatC() keeps the values out of scientific notation.
+sketch_IT <- whouse %>%
+  select(source, GEO, GEO_long, year, varcode, percentile, value) %>%
+  filter(str_starts(varcode, "i-hs-")) %>%
+  filter(GEO == "IT") %>%
+  filter(year %in% c(1995, 1996)) %>%
+  mutate(vartype = vapply(strsplit(varcode, "-", fixed = TRUE), `[`, character(1), 3)) %>%
+  arrange(source, varcode, year) %>%
+  mutate(value = if_else(
+    vartype == "agg",
+    formatC(as.numeric(value) / 1e9, format = "f", digits = 2, big.mark = ","),
+    formatC(as.numeric(value) * 100, format = "f", digits = 2)
+  )) %>%
+  select(-vartype)
+
+kbl(sketch_IT,
+    format = "latex", booktabs = T,
+    align = "c",
+    caption = paste(
+      "\\label{tab:intro_inhe} Introducing the GC Inheritance Trends Database - Snippet.",
+      "Aggregates (\\texttt{agg}) are reported in billions of national currency,",
+      "in nominal terms; ratios (\\texttt{rto}) and rates (\\texttt{rat}) are reported",
+      "in percent."
+    )) %>%
+  kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+## The `varcode` in the Inheritance Trends Section{#subsec:inhe_varcode}
+In the Inheritance Trends section, two of the five elements of `varcode` are fixed across the entire database. The constant elements are the first, that identifies the Section of the GC Wealth Project and takes the value `i`, and the second, that indexes the household sector and takes the value `hs`. The `Variable Type`, the `Concept`, and the `Section-Specific` parts of the `varcode` vary within a source and across sources and are explained in detail in what follows. Hence, `varcode` takes the following form:
+
+\begin{equation}
+\notag \underbrace{\textcolor{blue}{i}}_{\text{Section}} - \underbrace{\textcolor{blue}{hs}}_{\text{Sector}} - \underbrace{CCC}_{\text{Variable Type}} -     \underbrace{DDDDDD }_{\text{Concept}} - \underbrace{ZZ}_{\text{Section-Specific}}
+\end{equation}
+
+<!--### `Section`: Inheritance Trends -->
+<!--*`Section`* The first element of the varcode identifies the *section*, which always equals *i*, i.e. our code for the Inheritance Trends database. -->
+<!--### `Sector`: Household Sector -->
+<!--*`Sector`* The second element of the varcode identifies the *sector*, which is set to *hs*, i.e., our code for the household sector. -->
+
+
+\clearpage
+### `Variable Type`
+
+
+The third element of the `varcode` identifies the broad type of measure. Table \ref{tab:vartype_inhe} provides the permitted strings of the `Variable Type` within the `varcode` in the Inheritance Trends database, together with a label and a description. The section employs three types of measure. Aggregates (`agg`) report the total annual flow of wealth transfers of the household sector; monetary values are always shown in national currency, in nominal terms, with no adjustment for inflation. Where the national currency changed over the period covered by a series, the whole series is expressed in the currency currently in force: for euro-area countries, for instance, values referring to years before the changeover are reported in euros rather than in the legacy national currency, so that a series is expressed in a single unit over its entire length. Ratios (`rto`) express the same annual flow relative to national income, which is the standard way of assessing the macroeconomic importance of inheritance and the only form in which the series can be compared across countries and across centuries. Rates (`rat`) report the average effective tax rate applied to the flow.
+
+```{r vartype_inhe, echo=FALSE}
+vartypes_used <- sort(unique(inhe_parts$varcode3))
+
+d3 <- read_excel(meta_b,
+                 sheet = "d3_vartype") %>%
+  filter(code %in% vartypes_used) %>%
+  select(Code = code, Label = label, Description = description)
+
+kbl(d3, format="latex",
+    align = c('l', 'l', 'l'),
+    caption = "Inheritance Trends: Variable Type", booktabs = T)  %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "11cm") %>%
+# HOLD_position pins the table where the chunk sits, i.e. after the paragraph
+# above, instead of letting LaTeX float it to the top of the page.
+kable_styling(latex_options = c("striped", "HOLD_position"))
+```
+
+
+\clearpage
+### `Concept`
+The fourth element of the `varcode` identifies the `Concept`. In the Inheritance Trends database, a concept is the object being measured: either the type of wealth transfer the flow estimate refers to, or the effective tax rate levied on that transfer. Table \ref{tab:concept_inhe} reports the concepts and the corresponding identifiers used in the `varcode` of the Inheritance Trends database, together with a detailed description and the list of available `Variable Type` associated with each concept.
+
+Two transfer concepts are distinguished. Inheritances (`etnwea`) cover wealth left at death only. Inheritances & Gifts (`etnweg`) cover wealth left at death together with inter vivos gifts and donations, and is the broader and more widely available of the two. Keeping them separate is essential: in countries where gifts are a common way of advancing a bequest, the two concepts can differ substantially, and a comparison across countries that mixed them would be misleading. Wherever a source allows it, we publish both, so that users can gauge the size of the gift component directly. The third concept, the average effective tax rate (`averat`), is defined as the ratio between official wealth-transfer tax revenue and the estimated total tax base, that is, total estate, inheritance, and gift (EIG) tax revenue divided by the total flow of inheritances and gifts in a given year. It therefore measures the share of the annual flow of wealth transfers that is actually collected in taxes, and it is not a statutory rate: it reflects jointly the tax schedule in force, the exemptions and reliefs granted, and the extent to which transfers are declared at all.
+
+
+```{r concept_inhe, echo=FALSE, warning=FALSE, message=FALSE}
+# 1. Var_type disponibili per ogni concetto
+table_df <- inhe_parts %>%
+  distinct(code = varcode4, varcode3) %>%
+  arrange(code, varcode3) %>%
+  group_by(code) %>%
+  summarise(Var_type = paste(unique(varcode3), collapse = ", "), .groups = "drop")
+
+# 2. Dizionario
+dictionary <- read_excel(meta_b,
+                         sheet = "d4_concept") %>%
+  select(code, label, description) %>%
+  filter(!is.na(code) & code != "")
+
+# 3. Merge
+table_df <- table_df %>%
+  inner_join(dictionary, by = "code") %>%
+  select(code, label, description, Var_type)
+
+# 4. Ordina con priorita
+table_df <- table_df %>%
+  mutate(sort_order = case_when(
+    code == "etnweg" ~ 1,
+    code == "etnwea" ~ 2,
+    code == "averat" ~ 3,
+    TRUE ~ 4
+  )) %>%
+  arrange(sort_order, code) %>%
+  select(-sort_order)
+
+# 5. Tabella
+kbl(table_df,
+    format = "latex",
+    booktabs = T,
+    align = c('l', 'l', 'l', 'l'),
+    col.names = c("Code", "Label", "Description", "Var Type"),
+    caption = "Inheritance Trends: Concept Dictionary") %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "9cm") %>%
+  column_spec(4, width = "2cm") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
+```
+
+
+
+\clearpage
+### `Section-Specific`
+In the Inheritance Trends database, the section-specific part of the `varcode` refers to the type of estimate from which the flow of wealth transfers is derived. The database distinguishes two types: the fiscal flow (`ff`) and the economic flow (`ef`). The list of permitted strings and a short description is provided in Table \ref{tab:dboard_inhe}.
+
+This distinction is the central methodological divide of the section, and it is the reason why two estimates for the same country and year may legitimately differ. What separates the two is the *primary source* on which the estimate rests, not the amount of work the authors put into it: both are the outcome of a research exercise, and neither is a raw figure lifted from a statistical table.
+
+The **fiscal flow** is built on fiscal data: the estates, inheritances, and gifts reported to the tax authority, as recorded in estate tax returns, inheritance tax statistics, and successions registers. These records are the starting point rather than the final estimate. Taken as they stand, they capture only the transfers that are declared, and their coverage moves with the tax legislation in force, which changes over time and across countries: estates below the filing threshold, assets that are exempt or benefit from special reliefs, and transfers that go unreported are absent from the raw returns. Authors therefore adjust the fiscal material before arriving at a flow estimate — grossing up for non-filing estates, imputing the value of tax-exempt assets and of asset classes outside the scope of the tax, correcting for valuation rules that depart from market values, and reconstructing series across legislative breaks. The specific adjustments differ from source to source.
+
+The **economic flow** is instead built on an ensemble of macroeconomic and demographic data, chiefly national accounts, typically by combining aggregate household wealth with mortality rates and with the ratio between the average wealth of the deceased and the average wealth of the living. It aims at the full economic magnitude of the transfer, independently of what is declared for tax purposes, at the cost of relying on estimation assumptions that vary from source to source.
+
+Neither measure dominates the other, and we publish both wherever they are available. The fiscal flow stays closer to observed transfers and is the natural benchmark when the object of interest is the tax base; the economic flow is the appropriate measure when the object of interest is the intergenerational transmission of wealth as a whole.
+
+The gap between the two is itself informative. As recalled by @Piketty2011, who introduced the concept of an economic flow estimate of bequests, the difference between the economic flow and the fiscal flow is generally positive, and it can be read as an overall measure of tax evasion and avoidance: it captures the transfers that escape the fiscal records altogether, together with the undervaluation of those that are declared. What is striking, however, is how small that gap usually turns out to be. The two approaches rest on entirely independent bodies of data and on entirely different estimation methods, yet in practice they deliver surprisingly close estimates. This convergence is one of the reasons to have some confidence in both series, and it is also why the two can be read alongside one another rather than as competing measures.
+
+For the same reason, users should not compare a fiscal flow for one country with an economic flow for another without an assessment of the different nature of the two methods and of the data they rely on.
+
+```{r dboard_inhe, echo=FALSE}
+specific_used <- sort(unique(inhe_parts$varcode5))
+
+d5 <- read_excel(meta_b,
+                 sheet = "d5_dboard_specific") %>%
+  filter(code %in% specific_used) %>%
+  select(Code = code, Label = label, Description = description)
+
+
+kbl(d5, format="latex",
+    align = c('l', 'l', 'l'),
+    caption = "Inheritance Trends: Section-Specific", booktabs = T)  %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "11cm") %>%
+kable_styling(latex_options = "striped")
+```
+
+
+
+\clearpage
+## The `percentile` variable in the Inheritance Trends Section
+
+In addition to the `varcode`, values are indexed by the `percentile` variable, which identifies the segment of the population an estimate refers to. The Inheritance Trends section is not a distributional section: every series published here refers to the reference population as a whole, and the `percentile` variable therefore takes the single value *p0p100* throughout, as reported in Table \ref{tab:percentiles_inhe}. The variable is retained so that each estimate is fully identified by the same set of keys, and so that the population an estimate refers to is stated explicitly rather than left implicit. Extending the section with estimates of wealth transfers received by different segments of the distribution is an important direction for future releases of the GC Wealth Project.
+
+```{r percentiles_inhe, echo=FALSE}
+percentiles_used <- sort(unique(inhe_ready$percentile))
+
+perc <- read_excel(meta_b,
+                 sheet = "percentiles") %>%
+  select(Code = percentile, Label = label_percentile,
+         Description = description_percentile) %>%
+  filter(Code %in% percentiles_used)
+
+
+kbl(perc %>% drop_na(),
+    format="latex",
+    booktabs = T,  longtable=T,
+    caption = "Inheritance Trends: Percentiles",
+    align = c('l', 'l', 'l')) %>%
+  column_spec(1, width = "2.5cm") %>%
+  column_spec(2, width = "5cm") %>%
+  column_spec(3, width = "8cm") %>%
+  kable_styling(latex_options = "striped")
+
+```
+
+## Construction of the Inheritance Trends Section
+
+The procedure used to construct the Inheritance Trends database proceeds in three steps. First, we identify the relevant sources and obtain the raw data. Second, we transform and harmonize the raw data to fit our standards in terms of format and structure. Third, we run a set of tests and append the source-specific estimates to the database.
+
+
+### Step 1: Identification and Classification of Sources
+The starting point is the identification of relevant estimates of the annual flow of wealth transfers. In principle, the range of source *types* that could supply such estimates is wide, and would include official statistics produced by national or cross-national institutions, government and corporate research, and survey data, alongside academic research.
+
+In practice, however, the sources of the Inheritance Trends section are exclusively academic research. There is no official statistic, national or cross-national, that publishes the annual flow of inheritances and gifts as such: the underlying fiscal records and national accounts exist, but the step from those records to a flow estimate is a research exercise, and it is performed in academic work. Each source is therefore a study, or a set of companion studies, that reconstructs the flow for one country over a long historical period, or, in the case of the cross-national source, for many countries over a shorter recent period.
+
+Table \ref{tab:sources_inhe} lists the sources currently included in the Inheritance Trends database, together with their country coverage, the period they span, and the `varcode` components they provide. The strong asymmetry visible in the table is a substantive feature of the field rather than an artifact of our selection: long historical series exist only for the small number of countries whose estate and inheritance tax records have been systematically exploited, whereas broad country coverage is available only for recent decades.
+
+```{r sources_inhe, echo=FALSE, warning=FALSE, message=FALSE}
+# 1. Copertura per fonte, calcolata direttamente dai dati
+coverage_df <- inhe_parts %>%
+  group_by(source) %>%
+  summarise(
+    Countries = n_distinct(area),
+    Period = paste0(min(year, na.rm = TRUE), "-", max(year, na.rm = TRUE)),
+    Concepts = paste(sort(unique(varcode4)), collapse = ", "),
+    Flow = paste(sort(unique(varcode5)), collapse = ", "),
+    Obs = n(),
+    .groups = "drop"
+  )
+
+# 2. Dizionario Sources. Non filtriamo per Section: alcune fonti usate qui sono
+#    registrate nel dizionario sotto un'altra sezione (per esempio Schinke2012,
+#    classificato sotto Taxes on Wealth) e filtrando si perderebbe la Legend.
+#    In caso di duplicati si tiene la riga Inheritance Trends.
+dictionary_src <- read_excel(meta_b, sheet = "Sources") %>%
+  select(source = Source, Section, Legend) %>%
+  filter(!is.na(source) & source != "") %>%
+  mutate(section_priority = if_else(!is.na(Section) & Section == "Inheritance Trends", 1L, 2L)) %>%
+  arrange(source, section_priority) %>%
+  distinct(source, .keep_all = TRUE) %>%
+  select(source, Legend)
+
+# 3. Merge (left_join: una fonte presente nei dati resta elencata anche se
+#    non ancora inserita nel foglio Sources del dizionario)
+table_df <- coverage_df %>%
+  left_join(dictionary_src, by = "source") %>%
+  select(Legend, source, Countries, Period, Concepts, Flow, Obs) %>%
+  arrange(desc(Countries), source)
+
+# 4. Tabella
+kbl(table_df,
+    format = "latex",
+    booktabs = TRUE,
+    align = c('l', 'l', 'c', 'c', 'l', 'l', 'c'),
+    col.names = c("Legend", "Source", "Countries", "Period", "Concepts", "Flow", "Obs."),
+    caption = "Inheritance Trends: Sources and Coverage") %>%
+  column_spec(1, width = "3.5cm") %>%
+  column_spec(2, width = "2.5cm") %>%
+  column_spec(5, width = "3cm") %>%
+  column_spec(6, width = "1.5cm") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
+```
+
+```{r inhe_guzzardi_stats, include=FALSE, warning=FALSE, message=FALSE}
+# Figures quoted in the paragraph below, computed from the data so that they
+# stay correct as sources are added or revised.
+gm_source <- "Guzzardi2026"
+
+n_geo_total <- n_distinct(inhe_parts$area)
+geo_gm <- inhe_parts %>% filter(source == gm_source) %>% pull(area) %>% unique()
+geo_other <- inhe_parts %>% filter(source != gm_source) %>% pull(area) %>% unique()
+
+n_geo_gm <- length(geo_gm)
+n_geo_other <- length(geo_other)
+n_geo_gm_only <- length(setdiff(geo_gm, geo_other))
+share_obs_gm <- round(100 * sum(inhe_parts$source == gm_source) / nrow(inhe_parts))
+gm_period <- inhe_parts %>%
+  filter(source == gm_source) %>%
+  summarise(p = paste0(min(year, na.rm = TRUE), "-", max(year, na.rm = TRUE))) %>%
+  pull(p)
+```
+
+Once the relevant source is identified and correctly classified, we acquire the raw data. For the Inheritance Trends section we do not produce our own estimates from micro data: the published estimates are used as they are made available by the authors, whether in the article itself, in its appendix, or in the replication material accompanying it. Where the authors publish several variants of the same series, we retain a single one, as described in Step 2.
+
+Note that the country coverage of this section rests overwhelmingly on a single source. Of the `r n_geo_total` countries covered, `r n_geo_gm` come from the new research by Guzzardi and Morelli [@Guzzardi2026], which alone accounts for roughly `r share_obs_gm`\% of all observations in the section and spans the period `r gm_period`. All the remaining sources together cover `r n_geo_other` countries, so that `r n_geo_gm_only` of the `r n_geo_total` countries in the section are available thanks to the work by Guzzardi and Morelli [@Guzzardi2026]. Before it, cross-national evidence on the magnitude of inheritance flows was essentially limited to a handful of Western European countries and the United States.
+
+All other sources therefore can be read as adding depth. For the few countries they cover, they reach far back in time — in some cases to the early nineteenth century, well beyond the recent decades covered by the cross-national estimates — and they supply the fiscal flow variant of the transfer series. The two groups of sources are thus complementary: one establishes how large wealth transfers are across a broad set of countries today, the others establish how that magnitude has evolved over the very long run in the countries whose fiscal records allow it.
+
+Note also that alongside the country-level estimates, @Guzzardi2026 also report regional aggregations, which pool countries into broader geographical groupings. In this version of the dataset we retain only the country estimates they provide in the paper. The regional aggregates are not published in this dataset, and users interested in them should refer to the original paper.
+
+### Step 2: Transformation and Harmonization of Raw Data
+
+The published raw data may come in various shapes or formats, including .pdf documents, and .xlsx or .csv files. Therefore, we need to process this information and harmonize the source-specific series to conform to our formatting standards. This involves assigning each data point (`value`) with relevant information, including its data source (`source`), reference year (`year`), country code (`GEO`, `GEO_long`), type of measure (`varcode`), and the reference population (`percentile`, always *p0p100* in this section). This procedure ensures a consistent data structure across all sources.
+
+Two harmonization choices deserve to be made explicit. First, a source may publish the flow of wealth transfers either as an aggregate in national currency or as a ratio to national income, and often only one of the two. We do not convert one into the other, because doing so would require adopting a national income denominator that may differ from the one used by the authors; we publish what the source publishes. This is why the availability of `agg` and `rto` varies across sources in Table \ref{tab:sources_inhe}. Second, monetary aggregates are always reported in national currency and in nominal terms, with no adjustment for inflation. Where a series spans a change of currency — a redenomination, or the adoption of the euro — the values referring to the earlier period are converted, so that the series is expressed in the currency currently in force over its entire length and contains no unit break. A long `agg` series is therefore internally consistent, but it remains a nominal series: it is not comparable across countries without conversion, and its growth over a long historical period reflects price dynamics as much as the growth of the transferred wealth itself. For long-run and cross-country comparisons, the ratio to national income (`rto`) is therefore the appropriate measure; alternatively, the supplementary variables can be used to adjust the aggregates for price and exchange rate dynamics.
+
+It is also important to note that when a source provides multiple estimates for the same series, reflecting alternative assumptions about mortality differentials, the treatment of gifts, or the valuation of assets, we select only one of these values, typically the benchmark estimate as defined in the underlying research. 
+
+Finally, where a country is covered by more than one source, we do not merge or splice the resulting series into a single time series. Different sources rest on different records and different estimation choices, and a spliced series would conceal a methodological break rather than resolve it. The series are published side by side under their respective `source` identifiers, so that the choice between them remains explicit and is left to the user.
+
+
+### Step 3: Testing and Appending
+After making sure the acquired estimates follow our formatting standards, we run a set of consistency checks and tests before we append them to the Inheritance Trends database. Besides the general formatting and duplication checks, these include substantive tests: that the ratio to national income lies in a plausible range and that its aggregate counterpart, where both are available, is consistent with it; that the flow of inheritances and gifts (`etnweg`) is not smaller than the flow of inheritances alone (`etnwea`) for the same country, year, source, and flow type; and that the average effective tax rate (`averat`) lies between zero and one and is consistent with the tax revenue and the flow of transfers from which it is derived.
+
+
+
+## Additional Information on the Inheritance Trends Section
+For additional information about the Inheritance Trends section, we refer the reader to the Appendix of this Documentation, where we provide a list of all sources included in the Inheritance Trends database, country-specific information on the coverage of the database, and additional information on the precise treatment of selected sources (Section \ref{sec:inhe_appendix}).

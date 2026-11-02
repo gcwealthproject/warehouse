@@ -1,5 +1,24 @@
 clear all
 local source OECD_wealth
+
+
+
+
+** Working Directories Local
+********************************************************************************
+*global path	"`:env USERPROFILE'/OneDrive - Universita degli Studi Roma Tre\Research\GC - Update"
+*cd "$path"
+
+global ineq_dir_raw raw_data/ineq
+
+	local sourcef "${ineq_dir_raw}/`source'"
+	local rawdata "`sourcef'/raw data/OECD_new"
+	local results "`sourcef'/final_table/`source'"
+********************************************************************************
+
+
+
+/*
 run "code/mainstream/auxiliar/all_paths.do"
 run $memorize_labels
 
@@ -7,55 +26,132 @@ run $memorize_labels
 local sourcef "${ineq_dir_raw}/`source'"
 local rawdata "`sourcef'/raw data/OECD.xlsx"
 local results "`sourcef'/final_table/`source'"
+*/
+
 
 ///import
-qui import excel "`rawdata'", ///
-	firstrow clear
+import delimited "`rawdata'"
+
 	
-//clean
-drop Population POPULATION TIME Flags FlagCodes
-rename Time year
-
-//drop missing
-rename Value value
-drop if missing(value)
-
-//generate code variables
-gen dashboard = "t"
-gen sector = "hs"
-gen vartype = ""
-	qui replace vartype = "avg" if VAR == "T1C5" | VAR == "MNWI"
-	qui replace vartype = "dsh" if VAR == "ST1" | VAR == "ST10" ///
-	| VAR == "ST5" | VAR == "SB40"
-gen concept = "netwea"
-gen specific = "ho"
-	qui replace specific = "ia" if VAR == "MNWI"
-
-drop if specific=="ia"	
-//percentile
-qui gen percentile = ""
-	qui replace percentile = "p0p100" if vartype == "avg"
-	qui replace percentile = "p0p40" if VAR == "SB40"
-	qui replace percentile = "p90p100" if VAR == "ST10"
-	qui replace percentile = "p99p100" if VAR == "ST1"
-	qui replace percentile = "p5p100" if VAR == "ST5"
+drop 	structure structure_id structure_name action freq ///
+		frequencyofobservation timeperiod observationvalue unit_mult unitmultiplier
 	
-egen varcode = concat(dashboard sector vartype concept specific), ///
-	punct ("-")  
+	
+keep if 	v10=="Net wealth" |	///
+			v10=="Share of bottom 40% of wealth" |	///	
+			v10=="Share of top 1% of wealth" |	///		
+			v10=="Share of top 10% of wealth" |	///		
+			v10=="Share of top 5% of wealth" 
 
-drop dashboard sector vartype concept specific
+rename time_period year	
 
+
+
+// Gen Varcode
+********************************************************************************
+	
+	** Dashboard and Sector
+	gen dashboard = "t"
+	gen sector = "hs"
+	
+	** Variable Specific
+	gen vartype = "" 
+	replace vartype = "avg" if statistical_operation=="MEAN"
+	replace vartype = "thr" if statistical_operation=="MEDIAN"
+	replace vartype = "dsh" if	v10=="Share of bottom 40% of wealth" |	///	
+								v10=="Share of top 1% of wealth" |	///		
+								v10=="Share of top 10% of wealth" |	///		
+								v10=="Share of top 5% of wealth" 
+	
+	** Concept
+	gen concept = "netwea"
+	
+	
+	** Unit
+	gen unit = ""
+	replace unit="ho" if unitofmeasure=="Percentage of household wealth"
+	replace unit="ho" if unitofmeasure=="National currency per household"
+	replace unit="ia" if unitofmeasure=="National currency per person"
+	
+	
+	gen varcode=dashboard+"-"+sector+"-"+vartype+"-"+concept+"-"+unit
+	
+	*************
+	drop if varcode=="t-hs-avg-netwea-ia"
+	tab varcode
+	*************
+	
+	
+	
+// Gen percentile
+********************************************************************************
+	
+	gen percentile=""
+	replace percentile = "p0p100" 	if vartype == "avg"		// Average
+	replace percentile = "p50p90" 	if vartype == "thr"		// Median
+	replace percentile = "p0p40"	if measure == "SH_BOT40"
+	replace percentile = "p90p100"	if measure == "SH_TOP10"
+	replace percentile = "p95p100" 	if measure == "SH_TOP5"
+	replace percentile = "p99p100" 	if measure == "SH_TOP1"
+	
+	
+	// Extrapulate Bottom 90%
+	*replace percentile = "p0p90" 	if MEASURE == "SH_TOP1"
+	
+	
+	
+	drop dashboard sector vartype concept unit 
+	drop 	measure v10 unit_measure unitofmeasure 	///
+			statistical_operation statisticaloperation 	///
+			threshold v16 price_base pricebase
+	
+	
+	
+	
+// Gen Value
+********************************************************************************
+
+	** Some Fixes Need.
+	tab varcode decimals
+
+	// Check Unique Currecny
+	preserve
+		keep if varcode!="t-hs-dsh-netwea-ho"	 
+		
+		** Count Years
+		bys ref_a varcode (year):   gen h_year=_N
+		** Count Currecny
+		bys ref_a varcode curr (year):   gen h_curr=_N
+	
+		gen XXX=(h_curr==h_year)
+		tab XXX
+		** if XXX=1 --> ok!
+	restore
+			
+	
+	rename obs_value value
+	drop if value==.
+	drop decimals v22 obs* currency v26
+	
+	
+	
+	
+	
+	
 //gen warehouse variables	
 gen source = "`source'"
 
 //clean area names
 ssc install kountry
-kountry COUNTRY, from(iso3c) to(iso2c)
-drop COUNTRY Country VAR Variable
+kountry ref_area, from(iso3c) to(iso2c)
+drop ref_a refe 
 rename _ISO2C_ area
 	qui replace area = "UK" if area == "GB"
 
-//order
-order area year value percentile varcode
+
+	
 //export
-qui export delimited "`results'", replace 
+order area year value percentile varcode source
+qui export delimited "`results'", replace 	
+
+	

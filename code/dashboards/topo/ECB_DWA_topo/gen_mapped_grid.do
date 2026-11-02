@@ -16,7 +16,7 @@ global intermediate "${topo_dir_raw}/ECB_DWA_topo/intermediate to erase"
 * Destination folder
 global destination "${topo_dir_raw}/ECB_DWA_topo/intermediate" 
 
-qui use "${origin}/hh_dwa_24", clear
+qui use "${origin}/hh_dwa", clear
 
 
 qui rename key source_code
@@ -32,6 +32,7 @@ drop if area=="I9"
 replace na_code="NWA" if na_code=="N_ANWA"
 replace na_code="ANUB" if na_code=="A_ANUB"
 replace na_code="ANUN" if na_code=="A_ANUN" 
+replace na_code="XAF42LM" if na_code=="L_AF4B"
 
 /* check
 local nacode2 A_F2M A_F3 L_F4B L_F4X A_F511 A_F51M A_F52 A_F62 L_F_NNA A_F_NNA A_NUB A_NUN NWA
@@ -55,7 +56,7 @@ qui levelsof area,  local(ctr)
 gen nacode_label = ""
 replace nacode_label = "Deposits" if na_code == "A_AF2M"
 replace nacode_label = "Debt securities" if na_code == "A_AF3"
-replace nacode_label = "Loans for house purchasing" if na_code == "L_AF4B"
+replace nacode_label = "Loans for house purchasing" if na_code == "XAF42LM"
 replace nacode_label = "Loans other than for house purchasing" if na_code == "L_AF4X"
 replace nacode_label = "Listed shares" if na_code == "A_AF511"
 replace nacode_label = "Unlisted shares and other equity" if na_code == "A_AF51M"

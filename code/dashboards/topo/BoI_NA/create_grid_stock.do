@@ -6,7 +6,7 @@ global origin "${topo_dir_raw}/BoI_NA/raw data"
 
 
 * Import dates
-import excel "${origin}/data.xlsx", sheet("data") cellrange(D1:U1)  clear
+import excel "${origin}/data.xlsx", sheet("data") cellrange(D1:W1)  clear
 
 foreach var of varlist E-S {
 	destring `var', generate(`var'_)

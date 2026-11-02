@@ -8,7 +8,6 @@
 //general settings 
 clear all 
 
-*cd "`:env USERPROFILE'/Dropbox/gcwealth"
 run "code/mainstream/auxiliar/all_paths.do"
 
 //report and save start time 
@@ -25,7 +24,7 @@ pwd
 
 // Note that Not all SOURCE.csv have a Methodolocail table Ready
 *	Tables are stored in: 
-*		\documentation\methodological_tables\Source_Sheets
+*		/documentation/methodological_tables/Source_Sheets
 * 	Code: code/methodological_tables/mt_table_ofall_mt_tables.do produces the 
 * 		met tables file!
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,10 +34,11 @@ pwd
 ********************************************************************************
 
 	** Run .do file to Check Inclusion in Wharehouse
-	// This file is produced with: gcwealth\code\methodological_tables\MT_status_ineq
+	// This file is produced with: gcwealth/code/methodological_tables/MT_status_ineq
 	// Note: if running the code with MAC, the dir command might generate problems
 	// 		 if serached resources have accents or special carachters
 	//       Tip: serach for MartinzToledano2022
+	do "./code/methodological_tables/MT_status_ineq.do"
 	use "./documentation/workflow/ineq/status_ineq_NEW.dta", clear
 	
 	** Spot what is Missing and Why
@@ -71,6 +71,8 @@ pwd
 		append using `x`f''
 	} 
 	
+	qui replace percentile = subinstr(percentile, "_", ".", .)
+	
 	qui export delimited area year value percentile varcode source ///
 		using "raw_data/ineq/ineq_ready.csv", replace 
 	
@@ -100,6 +102,8 @@ pwd
 
 // Step 4 - Checks on Data
 ********************************************************************************	
-*do ".\code\other\warehouse_testing\checking_functions.do"
+*do "./code/other/warehouse_testing/checking_functions.do"
 
-
+// Step 5 - Create Uniue file with Meth. Tables
+**********************************************************
+do "./code/methodological_tables/mt_table_ofall_mt_tables.do"

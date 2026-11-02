@@ -1,0 +1,64 @@
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.5 Portable) (preloaded format=xelatex 2026.9.1)  1 SEP 2026 15:52
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**C:/Users/guzza/Dropbox/gcwealth/documentation/warehouse_documentation/outputs
+/inhe.tex
+
+(C:/Users/guzza/Dropbox/gcwealth/documentation/warehouse_documentation/outputs/
+inhe.tex
+LaTeX2e <2026-06-01>
+L3 programming layer <2026-08-10>
+
+(C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\install\tex/latex/base\article.c
+ls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+
+(C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\install\tex/latex/base\size10.cl
+o
+File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count273
+\c@section=\count274
+\c@subsection=\count275
+\c@subsubsection=\count276
+\c@paragraph=\count277
+\c@subparagraph=\count278
+\c@figure=\count279
+\c@table=\count280
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen150
+)
+(C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\install\tex/latex/xcolor\xcolor.
+sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+
+(C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\install\tex/latex/graphics-cfg\c
+olor.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: xetex.def on input line 274.
+
+(C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\install\tex/latex/graphics-def\x
+etex.def
+File: xetex.def 2025/11/01 v5.0p Graphics/color driver for xetex
+)
+(C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\install\tex/latex/graphics\mathc
+olor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+)
+
+! Sorry, but C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\install\miktex\bin\x64\xelatex.exe did not succeed.
+
+! The log file hopefully contains the information to get MiKTeX going again:
+
+!   C:\Users\guzza\Desktop\PROGRA~1\MikTex\texmfs\data\miktex\log\xelatex.log
+! xelatex: major issue: So far, you have not checked for MiKTeX updates.

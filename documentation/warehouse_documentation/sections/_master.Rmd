@@ -1,0 +1,148 @@
+---
+title: ""
+author: ""
+date: ""
+output:
+  pdf_document:
+    citation_package: biblatex
+    toc: no
+    toc_depth: 3
+    number_sections: yes
+    highlight: tango
+    df_print: kable
+    latex_engine: xelatex
+  html_document:
+    toc: no
+    toc_depth: '3'
+    df_print: paged
+header-includes:
+- \usepackage{titling}
+- \usepackage[margin=2.5cm]{geometry}
+- \usepackage{setspace}
+- \usepackage{placeins}
+- \usepackage{booktabs}
+- \usepackage{longtable}
+- \usepackage{array}
+- \usepackage{multirow}
+- \usepackage{wrapfig}
+- \usepackage{float}
+- \usepackage{xcolor}
+- \usepackage{colortbl}
+- \usepackage{pdflscape}
+- \usepackage{threeparttable}
+- \usepackage{threeparttablex}
+- \usepackage{makecell}
+- \usepackage[normalem]{ulem}
+- \renewcommand{\chaptername}{Section}
+- \addbibresource{../../BibTeX files/digital_library.bib}
+subtitle: null
+urlcolor: blue
+documentclass: report
+link-citations: yes
+suppress-bibliography: no
+---
+
+```{r setup, include=FALSE}
+# Shared render_config.R defines doc_root, section paths, and the warehouse
+# version used by child files. The current_input() branch keeps this working
+# when the document is rendered from either RStudio or Rscript.
+input_file <- knitr::current_input()
+config_candidates <- c(file.path("render_support", "render_config.R"), "render_config.R")
+if (!is.null(input_file)) {
+  input_candidates <- c(input_file, file.path("sections", input_file))
+  input_candidates <- input_candidates[file.exists(input_candidates)]
+  if (length(input_candidates)) {
+    input_dir <- dirname(normalizePath(input_candidates[[1]], mustWork = TRUE))
+    config_candidates <- c(
+      file.path(input_dir, "render_support", "render_config.R"),
+      file.path(dirname(input_dir), "render_support", "render_config.R"),
+      file.path(input_dir, "render_config.R"),
+      file.path(dirname(input_dir), "render_config.R"),
+      config_candidates
+    )
+  }
+}
+config_file <- config_candidates[file.exists(config_candidates)][[1]]
+source(config_file)
+knitr::opts_knit$set(root.dir = doc_root)
+```
+
+\pagenumbering{gobble}
+\begin{center}
+\vspace{3cm}
+```{r cover_logo, echo=FALSE, out.width="60%"}
+knitr::include_graphics(
+  render_path(file.path(doc_root, "docs", "GCWealthLogo-V2.png")),
+  rel_path = FALSE
+)
+```
+\vspace{1.5cm}
+\mbox{}
+\vfill
+
+\huge
+
+{\bf The Wealth Project}
+
+\vspace{0.2 cm}
+
+\LARGE
+
+{\bf Data Warehouse v.2.0 - Documentation}
+
+\vspace{0.2 cm}
+
+\Large
+
+June 2026
+
+\vspace{1cm} % Adjust the space as needed
+
+\normalsize
+Salvatore Morelli\\
+Ignacio Flores\\
+Luca Giangregorio\\
+Demetrio Guzzardi\\
+Jan Mazza\\
+Francesca Subioli\\
+Matteo Targa \\
+Irene Toma\\
+Severin Rapp 
+\mbox{}
+\vfill
+
+\normalsize
+\noindent{%
+    \parbox{\textwidth}{%
+        \textbf{Authorship Note.} This documentation file is the result of a collaborative effort supervised by
+Salvatore Morelli, the director of the Wealth Project, who conceived and designed the overall research project. Different subgroups were responsible for specific sections within the documentation and the appendices. Ignacio Flores was responsible for the overall data warehouse architecture, including the sections about Supplementary Variables, the data source classification, and citation reference organization. Matteo Targa oversaw the Wealth Inequality section, including the appendix tables documenting the treatment and classification of each data source. Iren Toma supported the Matteo's work and was responsible for the addition of the new ownership rate subsection, expanding the coverage using cross-national survey data among low and middle income countries. Jan Mazza and Severin Rapp led the Wealth Topography section, including the appendix tables outlining the composition rules and methodological choices for each source in the database. Francesca Subioli and Luca Giangregorio jointly oversaw the Taxes on Wealth section, including the classification of concepts used in the database and the corresponding appendix section. Demetrio Guzzardi led the new section of Inheritance Trends, structuring data, classifying and describing the new concepts within the data warehouse.
+    }%
+}
+
+\end{center}
+
+```{r child = file.path(sections_dir, 'author.Rmd')}
+```
+
+```{=latex}
+% Trigger ToC creation in LaTeX
+\tableofcontents
+```
+
+```{r, echo=F}
+  #Required packages 
+  #tinytex::tlmgr_install("biber")
+  #tinytex::tlmgr_install("biblatex")
+
+  #define files in order
+  child_docs <- master_child_paths()
+
+#   
+```
+
+
+```{r, child = child_docs}
+```
+
+
+

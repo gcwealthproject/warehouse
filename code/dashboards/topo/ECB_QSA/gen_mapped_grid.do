@@ -2,166 +2,134 @@
 ** Set paths here
 run "code/mainstream/auxiliar/all_paths.do"
 tempfile all
-
-	
 * Origin folder: it contains the excel files to import
 global origin "${topo_dir_raw}/ECB_QSA/raw data/csv files" 
-
 * Auxiliary folder
 global aux "${topo_dir_raw}/ECB_QSA/auxiliary files" 
-
 * Intermediate to erase
 global intermediate "${topo_dir_raw}/ECB_QSA/intermediate to erase" 
-
 * Destination folder
 global destination "${topo_dir_raw}/ECB_QSA/intermediate" 
+global raw "${topo_dir_raw}/ECB_QSA/raw data" 
+
+* 1) Read the NEW single big file ONCE
+use "${raw}/hh_qsa_25.dta",  clear
+* Keep the columns we need; rename to short names if necessary
+* (adjust names to your actual header spelling)
+
+*keep ref_area ref_sector accounting_entry instr_asset maturity title key time_period 
+keep ref_area ref_sector accounting_entry instr_asset maturity title key time_period obs_value
 
 
-foreach s in S1M S14 S15{
+* Build normalized fields used downstream
+gen str6 sector_for_grid = ref_sector
 
-	foreach c in austria belgium bulgaria croatia cyprus czechrep denmark ///
-	estonia finland france germany greece hungary ireland italy latvia ///
-	lithuania luxembourg malta netherlands poland portugal ///
-	romania slovakia slovenia spain sweden gb {
+* A/L prefix (correct)
+gen str2 _AL = cond(trim(accounting_entry)=="A","A_","L_")
 
-		qui import delimited "${origin}/`c'_qsa.csv", varnames(1) ///
-			delimiter(comma) clear 
+* AF code
+gen str8 _AF = subinstr(instr_asset,"F","AF",.)
 
-		qui rename datasource* datasource
-		qui keep if datasource == ""
-		qui drop datasource
-		qui gen index = ""
-		qui replace index = "source_code" if [_n] == 1
-		qui replace index = "varname_source" if [_n] == 2
-		qui order index, first 
+* maturity suffix: short->1, long->2, else ""
+gen str1 _mat = ""
+replace _mat = "1" if maturity=="S"
+replace _mat = "2" if maturity=="L"
 
-		qui sxpose, clear firstnames 
+* final code now matches grid: A_AF… or L_AF… (+1/2 when present)
+gen str20 na_code = _AL + _AF + _mat
 
-		qui keep if strpos(source_code, "`s'")
-	 
-		qui gen na_code = source_code
-		qui order na_code, before(source_code)
+* Source and label columns to match your old merge
+gen strL source_code    = key
+gen strL varname_source = title
 
-		qui replace na_code = subinstr(na_code, "QSA.Q.N.", "", .) // Delete Dataset name
+* drop year 
+gen str20 _tp = lower(time_period)
+replace _tp = subinstr(_tp, "-", "", .)
+gen tq = quarterly(_tp, "YQ")
+format tq %tq
 
-		if "`c'" == "austria" {
-			qui replace na_code = subinstr(na_code, "AT.", "", .) // Delete area
-		}
-		else if "`c'" == "belgium" {
-			qui replace na_code = subinstr(na_code, "BE.", "", .) // Delete area
-		}
-		else if "`c'" == "bulgaria" {
-			qui replace na_code = subinstr(na_code, "BG.", "", .) // Delete area
-		}
-		else if "`c'" == "croatia" {
-			qui replace na_code = subinstr(na_code, "HR.", "", .) // Delete area
-		}
-		else if "`c'" == "cyprus" {
-			qui replace na_code = subinstr(na_code, "CY.", "", .) // Delete area
-		}
-		else if "`c'" == "czechrep" {
-			qui replace na_code = subinstr(na_code, "CZ.", "", .) // Delete area
-		}	   
-		else if "`c'" == "denmark" {
-			qui replace na_code = subinstr(na_code, "DK.", "", .) // Delete area
-		}		   
-		else if "`c'" == "estonia" {
-			qui replace na_code = subinstr(na_code, "EE.", "", .) // Delete area
-		}	   
-		else if "`c'" == "finland" {
-			qui replace na_code = subinstr(na_code, "FI.", "", .) // Delete area
-		}		   
-		else if "`c'" == "france" {
-			qui replace na_code = subinstr(na_code, "FR.", "", .) // Delete area
-		}		   
-		else if "`c'" == "germany" {
-			qui replace na_code = subinstr(na_code, "DE.", "", .) // Delete area
-		}		   
-		else if "`c'" == "greece" {
-			qui replace na_code = subinstr(na_code, "GR.", "", .) // Delete area
-		}	   
-		else if "`c'" == "hungary" {
-			qui replace na_code = subinstr(na_code, "HU.", "", .) // Delete area
-		}		   
-		else if "`c'" == "ireland" {
-			qui replace na_code = subinstr(na_code, "IE.", "", .) // Delete area
-		}		   
-		else if "`c'" == "italy" {
-			qui replace na_code = subinstr(na_code, "IT.", "", .) // Delete area
-		}	   
-		else if "`c'" == "latvia" {
-			qui replace na_code = subinstr(na_code, "LV.", "", .) // Delete area
-		}	
-		else if "`c'" == "lithuania" {
-			qui replace na_code = subinstr(na_code, "LT.", "", .) // Delete area
-		}		   
-		else if "`c'" == "luxembourg" {
-			qui replace na_code = subinstr(na_code, "LU.", "", .) // Delete area
-		}		   
-		else if "`c'" == "malta" {
-			qui replace na_code = subinstr(na_code, "MT.", "", .) // Delete area
-		}
-		else if "`c'" == "netherlands" {
-			qui replace na_code = subinstr(na_code, "NL.", "", .) // Delete area
-		}	   
-		else if "`c'" == "poland" {
-			qui replace na_code = subinstr(na_code, "PL.", "", .) // Delete area
-		}		   
-		else if "`c'" == "portugal" {
-			qui replace na_code = subinstr(na_code, "PT.", "", .) // Delete area
-		}			   
-		else if "`c'" == "romania" {
-			qui replace na_code = subinstr(na_code, "RO.", "", .) // Delete area
-		}		   
-		else if "`c'" == "slovakia" {
-			qui replace na_code = subinstr(na_code, "SK.", "", .) // Delete area
-		}
-		else if "`c'" == "slovenia" {
-			qui replace na_code = subinstr(na_code, "SI.", "", .) // Delete area
-		}	   
-		else if "`c'" == "spain" {
-			qui replace na_code = subinstr(na_code, "ES.", "", .) // Delete area
-		}	   
-		else if "`c'" == "sweden" {
-			qui replace na_code = subinstr(na_code, "SE.", "", .) // Delete area
-		}	
-		else if "`c'" == "gb" {
-			qui replace na_code = subinstr(na_code, "GB.", "", .) // Delete area
-		}
-
-		// Delete Counterpart ara (W0: World), 
-		// Frequency, Adjustment indicator (N: Neaither seasonally adjusted nor calendar adjusted), 
-		// Reference sector (S1M: Households and NPISH/S14:Households/S15:NPISH), 
-		// Counterpart sector (S1: Total economy)
-		
-		qui replace na_code = subinstr(na_code, "W0.`s'.S1.N.", "", .) 
-		qui replace na_code = subinstr(na_code, "._Z.XDC._T.S.V.N._T", "", .) // Delete Counterpart ara (W0: World)
-		qui replace na_code = subinstr(na_code, "._Z", "", .) // Delete the rest
-		qui replace na_code = subinstr(na_code, ".T", "", .) // Delete "original maturities"
-		qui replace na_code = subinstr(na_code, "A.LE.", "A_A", .) // Replace financial assets
-		qui replace na_code = subinstr(na_code, "L.LE.", "L_A", .) // Replace liabilities
-		qui replace na_code = subinstr(na_code, ".S", "1", .) // Delete "short maturities"
-		qui replace na_code = subinstr(na_code, ".L", "2", .) // Delete "long maturities"
-
-		qui save "${intermediate}/intermediate_mapping.dta", replace
-
-		qui import excel "${aux}/grid_empty.xlsx", sheet("grid_empty") firstrow clear 
-
-		qui drop source_code varname_source
-
-		qui merge m:1 na_code using "${intermediate}/intermediate_mapping.dta"
-		
-		qui drop _merge
-		qui drop if na_code == "" & nacode_label == "" &  source_code == "" &  varname_source == ""
-		qui drop if  source_code == "" &  varname_source == "" 
-
-		qui drop source_code
-		qui drop if nacode_label == "" // drop extra country-source-sector related items
-
-		qui export excel "${destination}/grid", sheet("`c'_`s'", replace) firstrow(variables) 
- 
+tempfile big
+save `big', replace
 
 
-}
+* 2) Country code map (same idea as before)
+local countries austria belgium bulgaria croatia cyprus czechrep denmark ///
+    estonia finland france germany greece hungary ireland italy latvia ///
+    lithuania luxembourg malta netherlands poland portugal ///
+    romania slovakia slovenia spain sweden gb
 
+* helper: map long country name -> 2-letter ref_area code
+capture program drop _area_of
+program define _area_of
+    syntax , Country(name)
+
+    if      "`country'"=="austria"      local area "AT"
+    else if "`country'"=="belgium"      local area "BE"
+    else if "`country'"=="bulgaria"     local area "BG"
+    else if "`country'"=="croatia"      local area "HR"
+    else if "`country'"=="cyprus"       local area "CY"
+    else if "`country'"=="czechrep"     local area "CZ"
+    else if "`country'"=="denmark"      local area "DK"
+    else if "`country'"=="estonia"      local area "EE"
+    else if "`country'"=="finland"      local area "FI"
+    else if "`country'"=="france"       local area "FR"
+    else if "`country'"=="germany"      local area "DE"
+    else if "`country'"=="greece"       local area "GR"
+    else if "`country'"=="hungary"      local area "HU"
+    else if "`country'"=="ireland"      local area "IE"
+    else if "`country'"=="italy"        local area "IT"
+    else if "`country'"=="latvia"       local area "LV"
+    else if "`country'"=="lithuania"    local area "LT"
+    else if "`country'"=="luxembourg"   local area "LU"
+    else if "`country'"=="malta"        local area "MT"
+    else if "`country'"=="netherlands"  local area "NL"
+    else if "`country'"=="poland"       local area "PL"
+    else if "`country'"=="portugal"     local area "PT"
+    else if "`country'"=="romania"      local area "RO"
+    else if "`country'"=="slovakia"     local area "SK"
+    else if "`country'"=="slovenia"     local area "SI"
+    else if "`country'"=="spain"        local area "ES"
+    else if "`country'"=="sweden"       local area "SE"
+    else if "`country'"=="gb"           local area "GB"
+    else                                local area ""
+
+    c_local area "`area'"
+end
+
+
+* 3) Build the grid workbook, one sheet per sector×country
+foreach s in S1M S14 S15 {
+    foreach c of local countries {
+        quietly {
+            use `big', clear
+            _area_of, country(`c')
+            keep if ref_area == "`area'"
+
+            if "`s'"=="S14"     keep if ref_sector == "S14"
+            else if "`s'"=="S15" keep if ref_sector == "S15"
+            else if "`s'"=="S1M" keep if ref_sector == "S1M"
+
+            * pick the most recent observation per na_code (within this slice)
+            keep na_code source_code varname_source tq obs_value
+			bysort na_code (tq): gen byte _keep = (_n==_N) & (obs_value < .)
+			keep if _keep
+			drop tq obs_value _keep
+			duplicates drop na_code, force
+
+      tempfile map
+      save `map', replace
+        }
+
+        import excel "${aux}/grid_empty.xlsx", sheet("grid_empty") firstrow clear
+        drop source_code varname_source
+        merge m:1 na_code using `map'
+        drop _merge
+        drop if na_code=="" & nacode_label=="" & source_code=="" & varname_source==""
+        drop if source_code=="" & varname_source==""
+        drop source_code
+        drop if nacode_label==""
+
+        export excel "${destination}/grid", sheet("`c'_`s'", replace) firstrow(variables)
+    }
+	display as result "Workbook written to: " as text "`workbook'"
 }

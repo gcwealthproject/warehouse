@@ -43,6 +43,153 @@ class UrlNormalizationTests(unittest.TestCase):
         )
 
 
+class BibTaxonomyTests(unittest.TestCase):
+    def test_migrates_section_to_canonical_keyword_and_backfills_blank(self):
+        result = common.migrate_keywords_for_data_source_section("Inheritance Trends", "")
+
+        self.assertTrue(result["backfilled"])
+        self.assertTrue(result["changed"])
+        self.assertEqual(result["after_keywords"], "Data Sources: Inheritance Trends")
+        self.assertEqual(result["after_data_source_keywords"], ["Data Sources: Inheritance Trends"])
+
+    def test_migration_replaces_stale_data_source_keyword_and_preserves_research_topic(self):
+        result = common.migrate_keywords_for_data_source_section(
+            "Taxes on Wealth",
+            "Data Sources: Estate Inheritance and Gift Taxes,Estate Inheritance and Gift Taxes",
+        )
+
+        self.assertEqual(
+            result["after_keywords"],
+            "Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes",
+        )
+
+    def test_bib_rendering_never_emits_section_field(self):
+        rendered_record = common.render_bib_entry(
+            "Example2026",
+            {
+                "bib": {
+                    "entry_type": "misc",
+                    "title": "Example",
+                    "author": "Example",
+                    "year": "2026",
+                    "keywords": "Data Sources: Wealth Topography",
+                    "extra_fields": {"section": "Wealth Topography", "url_file": "example.csv"},
+                }
+            },
+        )
+        rendered_parsed = common.render_parsed_bib_entry(
+            "Parsed2026",
+            {
+                "entry_type": "misc",
+                "fields": {
+                    "title": "Parsed",
+                    "section": "Wealth Topography",
+                    "keywords": "Data Sources: Wealth Topography",
+                },
+            },
+        )
+
+        self.assertNotIn("section =", rendered_record)
+        self.assertNotIn("section =", rendered_parsed)
+        self.assertIn("url_file =", rendered_record)
+
+    def test_digital_library_merge_unions_keywords_prefers_registry_urls_and_reports_conflicts(self):
+        records = [
+            {
+                "id": "src-shared",
+                "is_data_source": True,
+                "section": "Taxes on Wealth",
+                "source": "Shared2026",
+                "citekey": "Shared2026",
+                "bib": {
+                    "entry_type": "misc",
+                    "title": "Registry Title",
+                    "author": "Registry Author",
+                    "year": "2026",
+                    "url": "https://data.example/source",
+                    "keywords": "Data Sources: Taxes on Wealth,Wealth Taxation",
+                    "extra_fields": {
+                        "data_file": "https://data.example/file.csv",
+                        "section": "Hidden",
+                    },
+                },
+            },
+            {
+                "id": "src-research",
+                "is_data_source": False,
+                "section": "",
+                "source": "Shared2026Research",
+                "citekey": "Shared2026",
+                "bib": {
+                    "entry_type": "article",
+                    "title": "Wealth Title",
+                    "author": "Wealth Author",
+                    "year": "2026",
+                    "url": "https://wealth.example/paper",
+                    "keywords": "Intergenerational Wealth",
+                    "extra_fields": {
+                        "section": "Legacy",
+                        "replication_package": "https://wealth.example/replication",
+                    },
+                },
+            },
+        ]
+
+        entries, report = common.build_digital_library_entries(records)
+        fields = entries["Shared2026"]["fields"]
+
+        self.assertEqual(fields["title"], "Registry Title")
+        self.assertEqual(fields["url"], "https://data.example/source")
+        self.assertEqual(
+            fields["keywords"],
+            "Data Sources: Taxes on Wealth,Wealth Taxation,Intergenerational Wealth",
+        )
+        self.assertEqual(fields["data_file"], "https://data.example/file.csv")
+        self.assertEqual(fields["replication_package"], "https://wealth.example/replication")
+        self.assertNotIn("section", fields)
+        self.assertIn("url_2", fields)
+        self.assertEqual({row["field"] for row in report["bibliographic_conflicts"]}, {"title", "author"})
+
+    def test_digital_library_duplicate_citekey_unions_cross_category_keywords(self):
+        records = [
+            {
+                "id": "src-topography",
+                "section": "Wealth Topography",
+                "source": "SharedData2026",
+                "citekey": "SharedData2026",
+                "bib": {
+                    "entry_type": "misc",
+                    "title": "Shared Dataset",
+                    "author": "Data Office",
+                    "year": "2026",
+                    "keywords": "Data Sources: Wealth Topography",
+                },
+            },
+            {
+                "id": "src-inequality",
+                "section": "Wealth Inequality",
+                "source": "SharedData2026",
+                "citekey": "SharedData2026",
+                "bib": {
+                    "entry_type": "misc",
+                    "title": "Shared Dataset",
+                    "author": "Data Office",
+                    "year": "2026",
+                    "keywords": "Data Sources: Wealth Inequality,Distributional Accounts",
+                },
+            },
+        ]
+
+        entries, report = common.build_digital_library_entries(records)
+
+        self.assertEqual(
+            entries["SharedData2026"]["fields"]["keywords"],
+            "Data Sources: Wealth Topography,Data Sources: Wealth Inequality,Distributional Accounts",
+        )
+        self.assertEqual([row["citekey"] for row in report["duplicate_citekeys"]], ["SharedData2026"])
+        self.assertEqual([row["citekey"] for row in report["multi_data_source_keyword_exports"]], ["SharedData2026"])
+
+
 class ExcelHelperTests(unittest.TestCase):
     def test_sanitize_excel_string_removes_invalid_xml_chars(self):
         raw = "Alpha" + chr(0) + "Beta" + chr(0xD800) + "\nGamma"

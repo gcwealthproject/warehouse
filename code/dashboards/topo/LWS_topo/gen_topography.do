@@ -3,7 +3,7 @@
 // Check the following lines always before running the code
 local general_source = "LWS_topo" // The source does not change across the do-file
 qui local sector_list S14
-qui local country_list AT AU CA CL DE EE ES FI GR IT JP LU NO SE SI SK UK US ZA 
+qui local country_list AT AU CA CL DE EE ES FI GR IT JP LU NO SE SI SK UK US ZA FR DK IN KR // MX
 	
 global bycountry "${topo_dir_raw}/LWS_topo/intermediate"
 global bycountry_data "${topo_dir_raw}/LWS_topo/intermediate/populated_grid"
@@ -107,16 +107,25 @@ foreach s in `sector_list'{
 	drop na_code
 	rename source_code na_code
 	
-	qui levelsof na_code, local(cod_`ctry') clean 
-	qui levelsof varname_source, local(varnamesource_`ctry') clean 
-	qui levelsof nacode_label, local(nacodelabel_`ctry') clean 
+	qui levelsof na_code, local(cod_`ctry') clean
+	qui levelsof varname_source, local(varnamesource_`ctry') clean
+	qui levelsof nacode_label, local(nacodelabel_`ctry') clean
 
 	qui di as result upper("`ctry'") _continue
-	qui di as text " has these na_codes available `cod_`ctry''"  
+	qui di as text " has these na_codes available `cod_`ctry''"
 
 	foreach cod in `codes' { // Loop over concepts
-		
-		qui local iter = 1 
+
+		// Skip fadepo for countries where the relevant deposit variable includes cash:
+		// KR, NO: hafc includes cash; US: hafct (and hence hafc) includes cash; MX: hafcs includes cash
+		if "`cod'" == "fadepo" {
+			if "`ctry'" == "KR" | "`ctry'" == "NO" | "`ctry'" == "US" | "`ctry'" == "MX" {
+				qui di as text "  Skipping `cod' for `ctry': deposit variable includes cash"
+				continue
+			}
+		}
+
+		qui local iter = 1
 	
 		foreach com in `comp' { // Loop over composition for a given concept
 		*go only if not empty  

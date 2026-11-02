@@ -6,13 +6,13 @@ from collections import Counter
 from pathlib import Path
 
 from common import load_registry, normalize_whitespace, parse_bib_entries
-from source_paths import DEFAULT_DATA_BIB_PATH, DEFAULT_RECONCILIATION_REPORT_PATH, DEFAULT_REGISTRY_PATH
+from source_paths import DEFAULT_DIGITAL_BIB_PATH, DEFAULT_RECONCILIATION_REPORT_PATH, DEFAULT_REGISTRY_PATH
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--registry", default=DEFAULT_REGISTRY_PATH)
-    parser.add_argument("--bib", default=DEFAULT_DATA_BIB_PATH)
+    parser.add_argument("--bib", default=DEFAULT_DIGITAL_BIB_PATH)
     parser.add_argument("--out", default=DEFAULT_RECONCILIATION_REPORT_PATH)
     args = parser.parse_args()
 
@@ -46,7 +46,7 @@ def main() -> int:
         f"- Records missing citekey: {len(missing_citekey)}",
         f"- Records where source != citekey: {len(mismatched)}",
         f"- Duplicate source keys: {len(dup_source)}",
-        f"- Orphan bib entries (not referenced by citekey): {len(orphan_bib)}",
+        f"- Bib entries not referenced by registry citekey: {len(orphan_bib)}",
         "",
         "## Sample Mismatches (source != citekey)",
     ]
@@ -54,7 +54,7 @@ def main() -> int:
     for r in mismatched[:30]:
         lines.append(f"- `{r.get('source','')}` -> `{r.get('citekey','')}`")
 
-    lines += ["", "## Sample Orphan Bib Entries"]
+    lines += ["", "## Sample Bib Entries Not Referenced By Registry"]
     for key in orphan_bib[:30]:
         lines.append(f"- `{key}`")
 

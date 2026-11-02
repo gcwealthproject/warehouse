@@ -13,10 +13,9 @@ if str(SOURCE_DIR) not in sys.path:
 from source_paths import (
     DEFAULT_ALIASES_PATH,
     DEFAULT_CHANGE_LOG_PATH,
-    DEFAULT_DATA_BIB_PATH,
+    DEFAULT_DIGITAL_BIB_PATH,
     DEFAULT_DICTIONARY_PATH,
     DEFAULT_REGISTRY_PATH,
-    DEFAULT_WEALTH_BIB_PATH,
     DEFAULT_WEALTH_CHANGE_LOG_PATH,
 )
 from common import DEFAULT_REGISTRY
@@ -181,7 +180,6 @@ class UiLocalHtmlTests(unittest.TestCase):
             ".search-panel",
             ".search-results",
             "#status",
-            "#wealth_status",
             ".status-ok",
             ".status-fail",
             ".status-warn",
@@ -189,14 +187,22 @@ class UiLocalHtmlTests(unittest.TestCase):
         ]:
             self.assertIn(marker, self.html)
 
-    def test_wealth_online_compare_hooks_exist(self):
+    def test_single_library_editor_replaces_wealth_editor(self):
         for marker in [
-            "onclick='wealthCompareOnlineBib()'",
-            "async function wealthCompareOnlineBib()",
-            "/api/wealth/compare_online_bib",
-            "targetId: 'wealth_status'",
+            "id='branch_library_tab'",
+            "onclick=\"switchBranch('library')\"",
+            "id='branch_library'",
         ]:
             self.assertIn(marker, self.html)
+        for marker in [
+            "branch_wealth_tab",
+            "id='branch_wealth'",
+            "wealth_bib_paste",
+            "wealthApplyAndBuild",
+            "wealthCompareOnlineBib",
+            "wealth_status",
+        ]:
+            self.assertNotIn(marker, self.html)
 
     def test_status_renderer_supports_post_save_next_message(self):
         body = self.js_function("setStatusWithChecks")
@@ -207,6 +213,7 @@ class UiLocalHtmlTests(unittest.TestCase):
         body = self.js_function("resetDataAddFormAfterSave")
         for marker in [
             "'bib_paste'",
+            "'is_data_source'",
             "'section'",
             "'aggsource'",
             "'legend'",
@@ -224,6 +231,31 @@ class UiLocalHtmlTests(unittest.TestCase):
             self.assertIn(marker, body)
         self.assertNotIn("'editor_name'", body)
 
+    def test_data_source_checkbox_and_category_hooks_exist(self):
+        for marker in [
+            "id='is_data_source'",
+            "The source is recorded in the data warehouse",
+            "id='data_source_categories' class='checkbox-group'",
+            "type='checkbox' value='Taxes on Wealth'",
+            "id='research_categories' class='checkbox-group'",
+            "type='checkbox' value='Wealth Taxation'",
+            "data-source-field",
+            "function onDataSourceCheckboxChange()",
+            "function onDataSourceCategoriesChange()",
+            "function syncKeywordsFromControls()",
+            "const RESEARCH_CATEGORY_KEYWORDS = [",
+            "'Wealth Topography': 'Data Sources: Wealth Topography'",
+            "'Unclassified': 'Data Sources: Unclassified'",
+        ]:
+            self.assertIn(marker, self.html)
+        self.assertNotIn("<select id='section' onchange='onSectionChange()'>", self.html)
+
+    def test_get_payload_includes_data_source_checkbox_state(self):
+        body = self.js_function("getPayload")
+        self.assertIn("syncKeywordsFromControls();", body)
+        self.assertIn("is_data_source: Boolean(document.getElementById('is_data_source').checked)", body)
+        self.assertIn("data_source_categories: selectedValues('data_source_categories')", body)
+
     def test_data_add_save_reset_only_runs_after_non_empty_add_success(self):
         body = self.js_function("applyAndBuild")
         self.assertIn("const emptyAddPayload = isEmptyAddPayload(payload);", body)
@@ -239,97 +271,66 @@ class UiLocalHtmlTests(unittest.TestCase):
         self.assertIn("loadedCitekeyValue = v('citekey_value');", body)
         self.assertIn("clearDirty();", body)
 
-    def test_wealth_add_save_resets_entry_fields_but_preserves_editor(self):
-        body = self.js_function("resetWealthAddFormAfterSave")
+    def test_library_add_save_resets_unified_keyword_controls(self):
+        body = self.js_function("resetDataAddFormAfterSave")
         for marker in [
-            "'wealth_bib_paste'",
-            "'wealth_target'",
-            "'wealth_key'",
-            "'wealth_entry_type'",
-            "'wealth_title'",
-            "'wealth_author'",
-            "'wealth_year'",
-            "'wealth_abstract'",
-            "document.getElementById('wealth_extra_fields').value = '{}';",
-            "wealthLoadedKey = ''",
-            "wealthOnEntryTypeChange()",
-            "clearWealthDirty()",
+            "'data_source_categories'",
+            "'research_categories'",
+            "'bib_keywords'",
+            "document.getElementById('is_data_source').checked = false;",
+            "setSelectedValues('data_source_categories', [])",
+            "setSelectedValues('research_categories', [])",
+            "setDataSourceFieldsEnabled(false)",
+            "syncKeywordsFromControls()",
             "next.focus()",
         ]:
             self.assertIn(marker, body)
-        self.assertNotIn("'wealth_editor_name'", body)
 
-    def test_wealth_add_save_reset_only_runs_after_non_empty_add_success(self):
-        body = self.js_function("wealthApplyAndBuild")
-        self.assertIn("const emptyAddPayload = wealthIsEmptyAddPayload(payload);", body)
-        self.assertIn("const out = await req('/api/wealth/apply_and_build', payload);", body)
-        self.assertIn(
-            "const addReadyMessage = (payload.mode === 'add' && !emptyAddPayload) ? 'Next: The form was cleared and is ready for another entry.' : '';",
-            body,
-        )
-        self.assertIn("nextMessage: addReadyMessage", body)
-        self.assertIn("if (payload.mode === 'add' && !emptyAddPayload) {", body)
-        self.assertIn("resetWealthAddFormAfterSave();", body)
-        self.assertIn("} else {\n      clearWealthDirty();\n    }", body)
-
-    def test_default_registry_contains_wealth_online_compare_config(self):
+    def test_default_registry_contains_digital_library_config_only(self):
         cfg = DEFAULT_REGISTRY["config"]
         self.assertIn("online_bib_reference_url", cfg)
         self.assertIn("online_bib_timeout_seconds", cfg)
-        self.assertIn("wealth_online_bib_reference_url", cfg)
-        self.assertIn("wealth_online_bib_timeout_seconds", cfg)
+        self.assertIn("digital_bib_output", cfg)
+        self.assertNotIn("wealth_bib_input", cfg)
+        self.assertNotIn("wealth_online_bib_reference_url", cfg)
+        self.assertNotIn("wealth_online_bib_timeout_seconds", cfg)
 
-    def test_online_compare_uses_selected_library_config(self):
+    def test_online_compare_uses_digital_library_config(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = pathlib.Path(tmpdir)
-            data_path = root / DEFAULT_DATA_BIB_PATH
-            wealth_path = root / DEFAULT_WEALTH_BIB_PATH
+            data_path = root / DEFAULT_DIGITAL_BIB_PATH
             data_path.parent.mkdir(parents=True, exist_ok=True)
             data_path.write_text("@misc{data,\n  title = {Data}\n}\n", encoding="utf-8")
-            wealth_path.write_text("@article{wealth,\n  title = {Wealth}\n}\n", encoding="utf-8")
             registry = {
                 "config": {
-                    "bib_output": str(data_path),
-                    "wealth_bib_input": str(wealth_path),
+                    "digital_bib_output": str(data_path),
                     "online_bib_reference_url": "https://example.test/data.bib",
                     "online_bib_timeout_seconds": 3,
-                    "wealth_online_bib_reference_url": "https://example.test/wealth.bib",
-                    "wealth_online_bib_timeout_seconds": 4,
                 }
             }
             calls = []
 
             def fake_fetch(url, timeout_seconds):
                 calls.append((url, timeout_seconds))
-                if url.endswith("/wealth.bib"):
-                    return {"text": wealth_path.read_text(encoding="utf-8"), "method": "test"}
                 return {"text": data_path.read_text(encoding="utf-8"), "method": "test"}
 
             original_fetch = self.mod._fetch_url_text
             self.mod._fetch_url_text = fake_fetch
             try:
                 data_out = self.mod.compare_local_bib_with_online(registry)
-                wealth_out = self.mod.compare_local_bib_with_online(registry, "wealth_research")
             finally:
                 self.mod._fetch_url_text = original_fetch
 
-            self.assertEqual(data_out["library"], "data_sources")
-            self.assertEqual(data_out["library_label"], "Data Sources")
+            self.assertEqual(data_out["library"], "digital_library")
+            self.assertEqual(data_out["library_label"], "Digital Library")
             self.assertEqual(data_out["local_bib_path"], str(data_path))
             self.assertEqual(data_out["reference_url"], "https://example.test/data.bib")
             self.assertEqual(data_out["timeout_seconds"], 3)
             self.assertEqual(data_out["status"], "up_to_date")
-            self.assertEqual(wealth_out["library"], "wealth_research")
-            self.assertEqual(wealth_out["library_label"], "Wealth Research")
-            self.assertEqual(wealth_out["local_bib_path"], str(wealth_path))
-            self.assertEqual(wealth_out["reference_url"], "https://example.test/wealth.bib")
-            self.assertEqual(wealth_out["timeout_seconds"], 4)
-            self.assertEqual(wealth_out["status"], "up_to_date")
             self.assertEqual(
                 calls,
                 [
                     ("https://example.test/data.bib", 3),
-                    ("https://example.test/wealth.bib", 4),
                 ],
             )
 
@@ -449,24 +450,37 @@ class UiLocalHtmlTests(unittest.TestCase):
     def test_history_tab_restore_guidance_and_cleanup_hooks_exist(self):
         for marker in [
             "branch_history_tab",
+            "History shows changes recorded through the unified Library editor.",
+            "wealth_research_change_log.yaml",
             "Show Changes Up To",
             "Restore Guidance",
-            "Remove History Record",
+            "Advanced history cleanup",
+            "Remove Selected Log Entry",
             "Filter to this time",
-            "Removes history records only. Source records and generated files are not changed.",
+            "Development-only cleanup removes entries from the unified Library history log only.",
             "/api/history",
             "/api/history/delete_entry",
             "history_summary_strip",
+            "Total changes",
+            "Visible changes",
+            "Latest actor",
             "history_cleanup_reason",
             "history_cleanup_reason_suggestions",
             "historyApplyCleanupReason('testing noise')",
-            "Remove History Records For This Source",
+            "Remove Log Entries For This Record",
             "cleanup_scope",
             "Relaunch App",
             "/api/relaunch",
             "relaunchApp()",
         ]:
             self.assertIn(marker, self.html)
+        for marker in [
+            "history_branch_filter",
+            "All branches",
+            "Data Sources rows",
+            "Legacy Wealth Research",
+        ]:
+            self.assertNotIn(marker, self.html)
 
     def test_maintenance_tab_and_hybrid_key_hooks_exist(self):
         for marker in [
@@ -478,12 +492,10 @@ class UiLocalHtmlTests(unittest.TestCase):
             "shared_citekey_note",
             "/api/maintenance/health",
             "/api/maintenance/rebuild_artifacts",
-            "/api/maintenance/normalize_citekey",
             "/api/maintenance/mark_shared_citekey",
             "/api/maintenance/bulk_label_preview",
             "/api/maintenance/bulk_label_apply",
             "maintenanceLoad()",
-            "maintenanceNormalizeCitekey",
             "maintenanceMarkSharedCitekey",
             "Bulk Label Update",
             "bulk_label_field",
@@ -495,6 +507,7 @@ class UiLocalHtmlTests(unittest.TestCase):
             "maintenanceBulkLabelSelectAll",
         ]:
             self.assertIn(marker, self.html)
+        self.assertNotIn("maintenanceNormalizeCitekey", self.html)
 
     def test_ref_link_review_compact_topbar_scan_hooks_exist(self):
         for marker in [
@@ -571,7 +584,7 @@ class UiLocalHtmlTests(unittest.TestCase):
 
     def test_history_file_descriptors_cover_data_registry_and_cleanup_paths(self):
         files = self.mod._history_file_descriptors(
-            "data_sources",
+            "library",
             "edit",
             "Edited via local UI",
             pathlib.Path(DEFAULT_REGISTRY_PATH),
@@ -585,9 +598,71 @@ class UiLocalHtmlTests(unittest.TestCase):
         self.assertIn(DEFAULT_CHANGE_LOG_PATH, indexed)
         self.assertIn(DEFAULT_ALIASES_PATH, indexed)
         self.assertTrue(indexed[DEFAULT_ALIASES_PATH]["optional"])
+        self.assertIn(DEFAULT_DIGITAL_BIB_PATH, indexed)
+        self.assertEqual(indexed[DEFAULT_DIGITAL_BIB_PATH]["category"], "generated")
         self.assertEqual(ordered_paths[0], self.mod.DEFAULT_DICTIONARY_PATH)
-        self.assertTrue(ordered_paths[1].endswith('.bib'))
-        self.assertTrue(ordered_paths[2].endswith('.bib'))
+        self.assertEqual(ordered_paths[1], DEFAULT_DIGITAL_BIB_PATH)
+
+    def test_history_feed_uses_current_library_log_only(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = pathlib.Path(tmpdir)
+            current_log = tmp / "change_log.yaml"
+            legacy_log = tmp / "wealth_research_change_log.yaml"
+            current_log.write_text(
+                json.dumps(
+                    {
+                        "changes": [
+                            {
+                                "operation": "edit",
+                                "record_id": "current-source",
+                                "reason": "current test",
+                                "actor": "current actor",
+                                "updated_at": "2026-03-24T10:00:00Z",
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            legacy_log.write_text(
+                json.dumps(
+                    {
+                        "changes": [
+                            {
+                                "operation": "add",
+                                "record_id": "legacy-source",
+                                "reason": "legacy test",
+                                "actor": "legacy actor",
+                                "updated_at": "2026-03-25T10:00:00Z",
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            class App:
+                registry_path = tmp / "sources.yaml"
+                changelog_path = current_log
+                aliases_path = tmp / "aliases.yaml"
+
+            feed = self.mod.build_history_feed(
+                App(),
+                {"config": {"wealth_change_log": str(legacy_log)}},
+            )
+            self.assertEqual(feed["summary"]["total"], 1)
+            self.assertEqual(feed["summary"]["latest_actor"], "current actor")
+            self.assertNotIn("data_sources", feed["summary"])
+            self.assertNotIn("wealth_research", feed["summary"])
+            self.assertEqual(feed["entries"][0]["history_id"], "library:0")
+            self.assertEqual(feed["entries"][0]["library"], "library")
+            self.assertEqual(feed["entries"][0]["record_id"], "current-source")
+            self.assertNotIn("legacy-source", json.dumps(feed))
+            affected = {entry["path"] for entry in feed["entries"][0]["affected_files"]}
+            self.assertIn(str(App.registry_path), affected)
+            self.assertIn(str(current_log), affected)
+            self.assertIn(DEFAULT_DICTIONARY_PATH, affected)
+            self.assertIn(DEFAULT_DIGITAL_BIB_PATH, affected)
 
     def test_delete_history_entry_removes_selected_row(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -618,7 +693,7 @@ class UiLocalHtmlTests(unittest.TestCase):
             log_path = root / "change_log.json"
             source_path = root / DEFAULT_REGISTRY_PATH
             dictionary_path = root / DEFAULT_DICTIONARY_PATH
-            bib_path = root / "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"
+            bib_path = root / DEFAULT_DIGITAL_BIB_PATH
             for path, content in [
                 (
                     log_path,

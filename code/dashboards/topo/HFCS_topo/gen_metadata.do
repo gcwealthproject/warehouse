@@ -27,12 +27,14 @@ qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "netwea"
 qui replace varcode = varcode+"ga" if substr(varcode, 10, 6) == "nnhass"
 qui replace varcode = varcode+"lb" if substr(varcode, 10, 6) == "fliabi"
 qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "facdbl"
+qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "fadepo"
 qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "faeqfd"
 qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "falipe"
 qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "nfabus"
 qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "nfadur"
 qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "offsho"
 qui replace varcode = varcode+"na" if substr(varcode, 10, 6) == "nfahou"
+qui replace varcode = varcode+"lb" if substr(varcode, 10, 6) == "fliabm"
 
 *qui destring year, gen(yearr)
 *qui drop year

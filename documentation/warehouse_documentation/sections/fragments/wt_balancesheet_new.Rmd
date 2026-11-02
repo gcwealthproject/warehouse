@@ -1,0 +1,55 @@
+---
+output: pdf_document
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+---
+
+```{r tbs, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+tibble(
+  asset_item = c(
+    "Housing \\& Land",
+    "\\hspace{1.5em} Housing",
+    "\\hspace{1.5em} Land",
+    "Financial Assets \\& Fixed Capital of Personal Business",
+    "\\hspace{1.5em}\\hangindent=1.5em\\hangafter=1 Fixed Capital of Personal Businesses",
+    "\\hspace{1.5em} Cash, Deposits, Bonds \\& Loans",
+    "\\hspace{3em} Deposits",
+    "\\hspace{1.5em}\\hangindent=1.5em\\hangafter=1 Stocks, Business Equities \\& Fund Shares",
+    "\\hspace{1.5em} Pensions \\& Life Insurance",
+    "Offshore Financial Wealth",
+    "Consumer Durables",
+    "", "", "", ""
+  ),
+  asset_value = c(1510, 800, 710, 3518, 26, 684, 350, 1550, 1258, 241, 278, NA, NA, NA, NA),
+  liability_item = c(
+    "", "", "", "", "", "", "", "", "", "", "",
+    "Debt",
+    "\\hspace{1.5em}\\hangindent=1.5em\\hangafter=1 Debt Secured by a Mortgage",
+    "Net Wealth",
+    "\\hangindent=0em Net Wealth incl. Offshore Wealth and Consumer Durable Goods"
+  ),
+  liability_value = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 695, 400, 4333, 4852)
+) %>%
+  mutate(
+    asset_value     = if_else(is.na(asset_value), "", as.character(asset_value)),
+    liability_value = if_else(is.na(liability_value), "", as.character(liability_value))
+  ) %>%
+  kbl(
+    col.names = c("Assets", "", "Liabilities and Net Worth", ""),
+    align     = c("l", "r", "l", "r"),
+    booktabs  = TRUE,
+    escape    = FALSE,
+    caption   = "Wealth Topography: Balance Sheet Example"
+  ) %>%
+  kable_styling(full_width = FALSE, latex_options = "hold_position") %>%
+  column_spec(1, width = "6cm") %>%
+  column_spec(2, width = "1.5cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "1.5cm") %>%
+  row_spec(13, extra_latex_after = "\\\\[6pt]")
+```

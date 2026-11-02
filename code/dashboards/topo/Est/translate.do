@@ -20,7 +20,10 @@ global intermediate "${topo_dir_raw}/Est/intermediate"
 
 *import delimited "${origin}/nasa_10_f_bs__custom_3518312_linear.csv",  varnames(1) delimiter(";") clear // June 2023 Version
 *import delimited "${origin}/nasa_10_f_bs__custom_7119296_linear.csv",  varnames(1) clear // August 2023 Version
-import delimited "${origin}/nasa_10_f_bs__custom_11875082_linear.csv",  varnames(1) clear // Juni 2024 Version
+*import delimited "${origin}/nasa_10_f_bs__custom_11875082_linear.csv",  varnames(1) clear // Juni 2024 Version
+*import delimited "${origin}/nasa_10_f_bs__custom_18259401_linear.csv",  varnames(1) clear // October 2025 Version			
+import delimited "${origin}/nasa_10_f_bs__custom_20747415_linear.csv",  varnames(1) clear // October 2025 Version			
+
 
 // drop vars we don't need
 drop dataflow lastupdate freq obs_flag
@@ -59,114 +62,68 @@ levelsof sector, local(loc_sector)
 tempfile temp_1
 save `temp_1'
 
-
 foreach s of local loc_sector {
 
-	use `temp_1'
-	
-	keep if sector ==  "`s'" 
+    use `temp_1', clear
+    keep if sector=="`s'"
 
-	tempfile temp_2
-	save `temp_2'
+    levelsof area, local(loc_area)
 
-		levelsof area, local(loc_area)
+    foreach a of local loc_area {
 
-		foreach a of local loc_area {
+        * 1) Filter to this country/sector
+        use `temp_1', clear
+        keep if sector=="`s'" & area=="`a'"
+        count
+        if r(N)==0 continue    // nothing to do
 
-			use `temp_2'
+        * 2) Build wide table: one column per na_code
+        keep year na_code obs_value
+        * If there are accidental duplicates: uncomment the next line
+        * duplicates drop year na_code, force
 
-			keep if area ==  "`a'" 
+        reshape wide obs_value, i(year) j(na_code) string
 
-			levelsof na_code, local(loc_na_code)
+        * 3) Make clean variable names: obs_valueA_AF62 -> A_AF62, etc.
+        ds obs_value*
+        foreach v of varlist `r(varlist)' {
+            local new = subinstr("`v'","obs_value","",1)
+            rename `v' `new'
+        }
 
-			foreach cod of local loc_na_code {
-	
-				qui gen `cod' = .
-				qui replace `cod' = obs_value if "`cod'" == na_code
-			}
+        * 4) Add identifiers
+        gen area   = "`a'"
+        gen sector = cond("`s'"=="S1M","hn",cond("`s'"=="S14","hs","np"))
+        order year area sector
 
-			drop na_code
-			drop obs_value
+        tempfile _wide
+        save `_wide'
 
-			drop sector area 
-			
-			ds _all
-			local first = word("`r(varlist)'", 2) // first variable
-			ds _all
-			local nwords :  word count `r(varlist)'
-			local last = word("`r(varlist)'", `nwords') // last variable
+        * 5) Merge onto your year grid template so all expected columns exist
+        use "${grid}/grid_a_stock.dta", clear
+        merge 1:1 year using `_wide', update
+        drop _merge
 
-			
-			collapse `first'-`last', by(year)
+        * 6) Compute BF90 if the aggregates exist; otherwise leave missing
+        capture confirm variable A_AF
+        if !_rc capture confirm variable L_AF
+        if !_rc {
+            capture drop BF90
+            gen double BF90 = A_AF - L_AF
+        }
 
+        * 7) Source + final ordering
+        gen source = "Est"
+        replace sector = cond("`s'"=="S1M","hn",cond("`s'"=="S14","hs","np"))
+        replace area   = "`a'"
+        order year area sector source
 
-			// replace with missing variables that are always missing
-			foreach var of varlist `first'-`last' {
-
-				egen checksum = total(`var'), by(year)
-				order checksum, after(`var')
-				if checksum == 0 {
-					replace `var' = .
-				}
-				drop checksum
-			}
-
-			// sector
-			qui gen sector = ""
-
-			qui gen area = "`a'"
-
-
-			if "`s'" == "S1M" {
-				qui replace sector = "hn"
-				   }
-			else if "`s'" == "S14"  {
-				qui replace sector = "hs"
-				   }
-			else if "`s'" == "S15"  {
-				qui replace sector = "np"
-				   }
-			
-			qui order year, first
-			qui order area sector, after(year)
-
-			tempfile temp_3
-			save `temp_3'
-			
-			qui use "${grid}/grid_a_stock.dta", clear
-
-			qui merge 1:1 year using "`temp_3'", update 
-
-			qui drop _merge
-			
-			qui replace BF90 = A_AF - L_AF
-			
-			sort year 
-			
-			gen source = "Est"
-			if "`s'" == "S1M" {
-				qui replace sector = "hn"
-				   }
-			else if "`s'" == "S14"  {
-				qui replace sector = "hs"
-				   }
-			else if "`s'" == "S15"  {
-				qui replace sector = "np"
-			}
-			replace area = "`a'"
-			
-			keep year-source 
-
-			order area sector source, after(year)
-			
-			qui save "${intermediate_to_erase}/pop_grid_`a'_`s'.dta", replace
-			
+        * 8) Save exactly like your original naming
+        save "${intermediate_to_erase}/pop_grid_`a'_`s'.dta", replace
+    }
 }
-
-
-}
-
-
+ 
+ 
 drop _all
 
 //put all the metadata together 
@@ -184,4 +141,4 @@ foreach f in "$files" {
 }
 
 save "${topo_dir_raw}/Est/intermediate/populated_grid.dta", replace
-
+ 

@@ -1,0 +1,576 @@
+# Unified Source Manager Migration Report
+
+## Summary
+
+- Wealth Research entries imported into sources.yaml: 442
+- Wealth Research entries merged into existing registry records: 74
+- Duplicate registry record groups collapsed: 6
+- Category keyword backfills/cleanups: 0
+- Bibliographic metadata conflicts: 3
+- Preserved URL-like fields: 1
+- Records requiring manual review: 0
+- Duplicate citekeys remaining in sources.yaml: 0
+- Archived files: 1
+
+## Imported Wealth Research Entries
+
+- `2007_OffshoreTaxEvasionStashingCash` -> `ref-2007-offshoretaxevasionstashingcash` keywords=`Wealth Taxation`
+- `Adermonetal2018` -> `ref-adermonetal2018` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Ageretal2021` -> `ref-ageretal2021` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Agrawaletal2024` -> `ref-agrawaletal2024` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Albaceteetal2022` -> `ref-albaceteetal2022` keywords=`Wealth Taxation`
+- `Alfani2022` -> `ref-alfani2022` keywords=`Determinants of Wealth and Wealth Inequality`
+- `AlfaniGarciaMontero2022` -> `ref-alfanigarciamontero2022` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Alstadsaeteretal2018` -> `ref-alstadsaeteretal2018` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Alstadsaeteretal2019` -> `ref-alstadsaeteretal2019` keywords=`Wealth Taxation`
+- `AltonjiSiow1987` -> `ref-altonjisiow1987` keywords=`Methods of Estimation of Wealth Inequality`
+- `Alvaredoetal2013` -> `ref-alvaredoetal2013` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Alvaredoetal2016` -> `ref-alvaredoetal2016` keywords=`Methods of Estimation of Wealth Inequality`
+- `Alvaredoetal2017` -> `ref-alvaredoetal2017` keywords=`Cross-National Comparisons,Intergenerational Wealth`
+- `Alvaredoetal2017a` -> `ref-alvaredoetal2017a` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Alvaredoetal2018a` -> `ref-alvaredoetal2018a` keywords=`Methods of Estimation of Wealth Inequality`
+- `AlvaredoSaez2009` -> `ref-alvaredosaez2009` keywords=`Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Alvarez-PelaezDiaz2005` -> `ref-alvarez-pelaezdiaz2005` keywords=`Impacts of Wealth Inequality`
+- `AnandKumar2023` -> `ref-anandkumar2023` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Andersenetal2023` -> `ref-andersenetal2023` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Andersenetal2024` -> `ref-andersenetal2024` keywords=`Determinants of Wealth and Wealth Inequality`
+- `AndersenNielsen2011` -> `ref-andersennielsen2011` keywords=`Intergenerational Wealth`
+- `Anetal2022` -> `ref-anetal2022` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `AntunesErcolani2020` -> `ref-antunesercolani2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `ArtolaBlancoetal2021` -> `ref-artolablancoetal2021` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Assouad2023` -> `ref-assouad2023` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Astarita2015` -> `ref-astarita2015` keywords=`Estate Inheritance and Gift Taxes,Wealth Taxation`
+- `Atkinson1971` -> `ref-atkinson1971` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Wealth Taxation`
+- `Atkinson1971a` -> `ref-atkinson1971a` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Wealth Taxation`
+- `Atkinson1972` -> `ref-atkinson1972` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Intergenerational Wealth,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Atkinson1978` -> `ref-atkinson1978` keywords=`Methods of Estimation of Wealth Inequality,Wealth Taxation`
+- `Atkinson2015` -> `ref-atkinson2015` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Wealth Taxation`
+- `Atkinson2018` -> `ref-atkinson2018` keywords=`Cross-National Comparisons,Intergenerational Wealth`
+- `Atkinsonetal1989` -> `ref-atkinsonetal1989` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Atkinsonetal2011` -> `ref-atkinsonetal2011` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Atkinsonetal2017` -> `ref-atkinsonetal2017` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Auerbach1988` -> `ref-auerbach1988` keywords=`Wealth Taxation`
+- `Bachetal2018` -> `ref-bachetal2018` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Bachetal2019` -> `ref-bachetal2019` keywords=`Methods of Estimation of Wealth Inequality`
+- `Bachetal2020` -> `ref-bachetal2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Bajardetal2022` -> `ref-bajardetal2022` keywords=`Methods of Estimation of Wealth Inequality`
+- `Baker2018` -> `ref-baker2018` keywords=`Methods of Estimation of Wealth Inequality`
+- `BalandPlatteau1997` -> `ref-balandplatteau1997` keywords=`Impacts of Wealth Inequality`
+- `BalandPlatteau1998` -> `ref-balandplatteau1998` keywords=`Impacts of Wealth Inequality`
+- `Bardhanetal2000` -> `ref-bardhanetal2000` keywords=`Impacts of Wealth Inequality`
+- `BartelsMorelli2021` -> `ref-bartelsmorelli2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Barthetal2020` -> `ref-barthetal2020` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Bartscheretal2020` -> `ref-bartscheretal2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `BaselgiaFoellmi2023` -> `ref-baselgiafoellmi2023` keywords=`Impacts of Wealth Inequality`
+- `BatchelderKamin2019` -> `ref-batchelderkamin2019` keywords=`Estate Inheritance and Gift Taxes,Wealth Taxation`
+- `Bauluzetal2022` -> `ref-bauluzetal2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Beckert2022` -> `ref-beckert2022` keywords=`Intergenerational Wealth`
+- `BenhabibBisin2018` -> `ref-benhabibbisin2018` keywords=`Methods of Estimation of Wealth Inequality`
+- `Benhabibetal2011` -> `ref-benhabibetal2011` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Intergenerational Wealth,Wealth Taxation`
+- `Benhabibetal2015` -> `ref-benhabibetal2015` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Benhabibetal2017` -> `ref-benhabibetal2017` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Benhabibetal2019` -> `ref-benhabibetal2019` keywords=`Determinants of Wealth and Wealth Inequality`
+- `BerishaMeszaros2019` -> `ref-berishameszaros2019` keywords=`Determinants of Wealth and Wealth Inequality`
+- `BermanMorelli2022` -> `ref-bermanmorelli2022` keywords=`Methods of Estimation of Wealth Inequality`
+- `Bernheimetal2004` -> `ref-bernheimetal2004` keywords=`Estate Inheritance and Gift Taxes`
+- `Bjorklundetal2012` -> `ref-bjorklundetal2012` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Blacketal2020` -> `ref-blacketal2020` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Blacketal2022` -> `ref-blacketal2022` keywords=`Intergenerational Wealth`
+- `Blanchetetal2021` -> `ref-blanchetetal2021` keywords=`Methods of Estimation of Wealth Inequality`
+- `Blanchetetal2022` -> `ref-blanchetetal2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `BlanchetMartinez-Toledano2022` -> `ref-blanchetmartinez-toledano2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Blinder1973` -> `ref-blinder1973` keywords=`Intergenerational Wealth`
+- `Boadwayetal2010a` -> `ref-boadwayetal2010a` keywords=`Estate Inheritance and Gift Taxes,Wealth Taxation`
+- `Boberg-Fazlicetal2022` -> `ref-boberg-fazlicetal2022` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `BoertienLopez-Gay2023` -> `ref-boertienlopez-gay2023` keywords=`Determinants of Wealth and Wealth Inequality`
+- `BofingerScheuermeyer2018` -> `ref-bofingerscheuermeyer2018` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Bonkeetal2017` -> `ref-bonkeetal2017` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `BorgerhoffMulderetal2010` -> `ref-borgerhoffmulderetal2010` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Boserupetal2014` -> `ref-boserupetal2014` keywords=`Intergenerational Wealth`
+- `Boserupetal2016` -> `ref-boserupetal2016` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Boserupetal2018` -> `ref-boserupetal2018` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Wealth Taxation`
+- `BouchaudFarmer2020` -> `ref-bouchaudfarmer2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Bourdieuetal2019` -> `ref-bourdieuetal2019` keywords=`Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `BourneRosenmerkel2014` -> `ref-bournerosenmerkel2014` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Bourquinetal2021` -> `ref-bourquinetal2021` keywords=`Intergenerational Wealth`
+- `BovenbergGoulder2002` -> `ref-bovenberggoulder2002` keywords=`Wealth Taxation`
+- `Bover2010` -> `ref-bover2010` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Bradbury2013` -> `ref-bradbury2013` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Brickeretal2016a` -> `ref-brickeretal2016a` keywords=`Methods of Estimation of Wealth Inequality`
+- `Brickeretal2017` -> `ref-brickeretal2017` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Brickeretal2019` -> `ref-brickeretal2019` keywords=`Methods of Estimation of Wealth Inequality`
+- `Brulhartetal2018` -> `ref-brulhartetal2018` keywords=`Intergenerational Wealth`
+- `Brulhartetal2022` -> `ref-brulhartetal2022` keywords=`Wealth Taxation`
+- `BrzezinskiSalach2020` -> `ref-brzezinskisalach2020` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Wealth Taxation`
+- `Brzozowskietal2010` -> `ref-brzozowskietal2010` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `BurrowsLennartz2021` -> `ref-burrowslennartz2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `CagettiDeNardi2006` -> `ref-cagettidenardi2006` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `CagettiDeNardi2008` -> `ref-cagettidenardi2008` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Callaghanetal2021` -> `ref-callaghanetal2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `CannariDAlessio2008` -> `ref-cannaridalessio2008` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `CannariDAlessio2018a` -> `ref-cannaridalessio2018a` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Capraraetal2020` -> `ref-capraraetal2020` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `CarrollCohen-Kristiansen2021` -> `ref-carrollcohen-kristiansen2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Carrolletal2017` -> `ref-carrolletal2017` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Castanedaetal2003` -> `ref-castanedaetal2003` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Cesarinietal2017` -> `ref-cesarinietal2017` keywords=`Impacts of Wealth Inequality`
+- `Chamberlain2015` -> `ref-chamberlain2015` keywords=`Impacts of Wealth Inequality`
+- `Chamley1986` -> `ref-chamley1986` keywords=`Wealth Taxation`
+- `CharlesHurst2003` -> `ref-charleshurst2003` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `CharpentierFlachaire2022` -> `ref-charpentierflachaire2022` keywords=`Methods of Estimation of Wealth Inequality`
+- `Chatterjeeetal2021` -> `ref-chatterjeeetal2021` keywords=`Wealth Taxation`
+- `Chauvel2022` -> `ref-chauvel2022` keywords=`Cross-National Comparisons,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Chauveletal2019` -> `ref-chauveletal2019` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Cheetal2021` -> `ref-cheetal2021` keywords=`Determinants of Wealth and Wealth Inequality,Wealth Taxation`
+- `Chettyetal2014` -> `ref-chettyetal2014` keywords=`Wealth Taxation`
+- `ChowLin1971` -> `ref-chowlin1971` keywords=`Methods of Estimation of Wealth Inequality`
+- `CohenRavivLewin-Epstein2022` -> `ref-cohenravivlewin-epstein2022` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Collins2004` -> `ref-collins2004` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Cooperetal2016` -> `ref-cooperetal2016` keywords=`Wealth Taxation`
+- `Cowell2011` -> `ref-cowell2011` keywords=`Cross-National Comparisons`
+- `Cowelletal2017` -> `ref-cowelletal2017` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Cowelletal2018` -> `ref-cowelletal2018` keywords=`Cross-National Comparisons`
+- `Cowelletal2018a` -> `ref-cowelletal2018a` keywords=`Estate Inheritance and Gift Taxes`
+- `CowellVanKerm2015` -> `ref-cowellvankerm2015` keywords=`Impacts of Wealth Inequality`
+- `CrawfordHood2016` -> `ref-crawfordhood2016` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Cummins2021` -> `ref-cummins2021` keywords=`Intergenerational Wealth,Wealth Taxation`
+- `Cummins2022` -> `ref-cummins2022` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Davies2008` -> `ref-davies2008` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Davies2011` -> `ref-davies2011` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Daviesetal2008` -> `ref-daviesetal2008` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Daviesetal2009` -> `ref-daviesetal2009` keywords=`Cross-National Comparisons`
+- `Daviesetal2011` -> `ref-daviesetal2011` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Daviesetal2017` -> `ref-daviesetal2017` keywords=`Methods of Estimation of Wealth Inequality`
+- `Daviesetal2017a` -> `ref-daviesetal2017a` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `DaviesShorrocks2000` -> `ref-daviesshorrocks2000` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `DaviesShorrocks2021` -> `ref-daviesshorrocks2021` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Daysaletal2022` -> `ref-daysaletal2022` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `DeNardi2004` -> `ref-denardi2004` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `DeNardietal2020` -> `ref-denardietal2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `DeRosa` -> `ref-derosa` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Devlin-Foltzetal2016` -> `ref-devlin-foltzetal2016` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Diazetal2003` -> `ref-diazetal2003` keywords=`Determinants of Wealth and Wealth Inequality`
+- `DoorleyPestel2020` -> `ref-doorleypestel2020` keywords=`Intergenerational Wealth`
+- `DruedahlMartinello2022` -> `ref-druedahlmartinello2022` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `DunfordGreco2005` -> `ref-dunfordgreco2005` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Duran-CabreEstellerMore2021` -> `ref-duran-cabreestellermore2021` keywords=`Determinants of Wealth and Wealth Inequality,Wealth Taxation`
+- `Duran-Cabreetal2019` -> `ref-duran-cabreetal2019` keywords=`Determinants of Wealth and Wealth Inequality,Wealth Taxation`
+- `EadsTach2016` -> `ref-eadstach2016` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Echevarriaetal2019` -> `ref-echevarriaetal2019` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `EdlundKopczuk2009` -> `ref-edlundkopczuk2009` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Elinderetal2012` -> `ref-elinderetal2012` keywords=`Intergenerational Wealth`
+- `Elinderetal2014` -> `ref-elinderetal2014` keywords=`Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Elinderetal2018` -> `ref-elinderetal2018` keywords=`Impacts of Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality,Wealth Taxation`
+- `Elleretal2001` -> `ref-elleretal2001` keywords=`Estate Inheritance and Gift Taxes`
+- `EplandKirkeberg2012` -> `ref-eplandkirkeberg2012` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `EvgenidisFasianos2020` -> `ref-evgenidisfasianos2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Fagerengetal2020` -> `ref-fagerengetal2020` keywords=`Methods of Estimation of Wealth Inequality`
+- `Fagerengetal2021` -> `ref-fagerengetal2021` keywords=`Impacts of Wealth Inequality`
+- `Fagerengetal2021a` -> `ref-fagerengetal2021a` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Farhietal2012` -> `ref-farhietal2012` keywords=`Wealth Taxation`
+- `FarhiWerning2010` -> `ref-farhiwerning2010` keywords=`Estate Inheritance and Gift Taxes,Intergenerational Wealth`
+- `FeivesonSabelhaus2018` -> `ref-feivesonsabelhaus2018` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `FeivesonSabelhaus2019` -> `ref-feivesonsabelhaus2019` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `FeldmanSlemrod2007` -> `ref-feldmanslemrod2007` keywords=`Wealth Taxation`
+- `Fesseauetal2013` -> `ref-fesseauetal2013` keywords=`Cross-National Comparisons,Methods of Estimation of Wealth Inequality`
+- `Finlay2012` -> `ref-finlay2012` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Fisheretal2022` -> `ref-fisheretal2022` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Fismanetal2020` -> `ref-fismanetal2020` keywords=`Wealth Taxation`
+- `Ford2019` -> `ref-ford2019` keywords=`Impacts of Wealth Inequality`
+- `Fox2016` -> `ref-fox2016` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `FremeauxLeturcq2020` -> `ref-fremeauxleturcq2020` keywords=`Methods of Estimation of Wealth Inequality`
+- `FreundOliver2016` -> `ref-freundoliver2016` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `FrickGrabka2013` -> `ref-frickgrabka2013` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `FrydmanMolloy2011` -> `ref-frydmanmolloy2011` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `FrydmanSaks2010` -> `ref-frydmansaks2010` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Gabaixetal2016` -> `ref-gabaixetal2016` keywords=`Determinants of Wealth and Wealth Inequality`
+- `GabaixIbragimov2011` -> `ref-gabaixibragimov2011` keywords=`Methods of Estimation of Wealth Inequality`
+- `Galbraith2019` -> `ref-galbraith2019` keywords=`Methods of Estimation of Wealth Inequality`
+- `GaleScholz1994` -> `ref-galescholz1994` keywords=`Intergenerational Wealth`
+- `Gallman1969` -> `ref-gallman1969` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `GallusserKrapf2022` -> `ref-gallusserkrapf2022` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Garbintietal2022` -> `ref-garbintietal2022` keywords=`Impacts of Wealth Inequality`
+- `GarbintiSavignac2022` -> `ref-garbintisavignac2022` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `GarzaKrozer2023` -> `ref-garzakrozer2023` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Ghoshrayetal2021` -> `ref-ghoshrayetal2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Glogowsky2021` -> `ref-glogowsky2021` keywords=`Estate Inheritance and Gift Taxes`
+- `Goda2018` -> `ref-goda2018` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Gokhaleetal2001` -> `ref-gokhaleetal2001` keywords=`Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Goldsmithetal1956` -> `ref-goldsmithetal1956` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Gollier2001` -> `ref-gollier2001` keywords=`Impacts of Wealth Inequality`
+- `GomezGouin-Bonenfant2024` -> `ref-gomezgouin-bonenfant2024` keywords=`Determinants of Wealth and Wealth Inequality`
+- `GornickSierminska2021` -> `ref-gornicksierminska2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `GreggKanabar2023` -> `ref-greggkanabar2023` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Grohetal2020` -> `ref-grohetal2020` keywords=`Intergenerational Wealth,Wealth Taxation`
+- `GurievRachinsky2008` -> `ref-gurievrachinsky2008` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Guvenenetal2021` -> `ref-guvenenetal2021` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `HallstenPfeffer2017` -> `ref-hallstenpfeffer2017` keywords=`Impacts of Wealth Inequality,Intergenerational Wealth`
+- `HallstenThaning2022` -> `ref-hallstenthaning2022` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `HalvorsenThoresen2021` -> `ref-halvorsenthoresen2021` keywords=`Wealth Taxation`
+- `Haneretal2023` -> `ref-haneretal2023` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `HansenToft2021` -> `ref-hansentoft2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `HansenWiborg2019` -> `ref-hansenwiborg2019` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Harburyetal1977` -> `ref-harburyetal1977` keywords=`Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `HarburyHitchens1979` -> `ref-harburyhitchens1979` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Harrington2016` -> `ref-harrington2016` keywords=`Cross-National Comparisons,Wealth Taxation`
+- `Hauneretal2020` -> `ref-hauneretal2020` keywords=`Cross-National Comparisons,Impacts of Wealth Inequality`
+- `Headeyetal2005` -> `ref-headeyetal2005` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Heathcoteetal2023` -> `ref-heathcoteetal2023` keywords=`Methods of Estimation of Wealth Inequality`
+- `Hendricks2007` -> `ref-hendricks2007` keywords=`Methods of Estimation of Wealth Inequality`
+- `Henry2012` -> `ref-henry2012` keywords=`Wealth Taxation`
+- `HepburnHamilton2017` -> `ref-hepburnhamilton2017` keywords=`Cross-National Comparisons,Methods of Estimation of Wealth Inequality`
+- `HiltRahn2016` -> `ref-hiltrahn2016` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Holtz-Eakinetal1993` -> `ref-holtz-eakinetal1993` keywords=`Intergenerational Wealth`
+- `Hongetal2006` -> `ref-hongetal2006` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `HongMishra2006` -> `ref-hongmishra2006` keywords=`Impacts of Wealth Inequality`
+- `Horioka2009` -> `ref-horioka2009` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `HouSchuler2022` -> `ref-houschuler2022` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Hubmeretal2021` -> `ref-hubmeretal2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Humeretal2017` -> `ref-humeretal2017` keywords=`Cross-National Comparisons,Intergenerational Wealth,Wealth Taxation`
+- `IaconoRanaldi2020` -> `ref-iaconoranaldi2020` keywords=`Impacts of Wealth Inequality`
+- `Isaac2014` -> `ref-isaac2014` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `IschinskyTisch2023` -> `ref-ischinskytisch2023` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Islam2018` -> `ref-islam2018` keywords=`Cross-National Comparisons,Impacts of Wealth Inequality`
+- `Jacobsetal2020` -> `ref-jacobsetal2020` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Janttietal2013` -> `ref-janttietal2013` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Jappellietal2014` -> `ref-jappellietal2014` keywords=`Estate Inheritance and Gift Taxes`
+- `Jayadev2008` -> `ref-jayadev2008` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Jenkins1988` -> `ref-jenkins1988` keywords=`Cross-National Comparisons`
+- `Jestl2021` -> `ref-jestl2021` keywords=`Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `Johannesenetal2020` -> `ref-johannesenetal2020` keywords=`Wealth Taxation`
+- `JohannesenStolper2021` -> `ref-johannesenstolper2021` keywords=`Wealth Taxation`
+- `JohannesenZucman2014` -> `ref-johannesenzucman2014` keywords=`Wealth Taxation`
+- `JohnsenDellinger2018` -> `ref-johnsendellinger2018` keywords=`Wealth Taxation`
+- `Jones2015` -> `ref-jones2015` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Jordaetal2020` -> `ref-jordaetal2020` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Joulfaian2006` -> `ref-joulfaian2006` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `JoulfaianWilhelm1994` -> `ref-joulfaianwilhelm1994` keywords=`Intergenerational Wealth`
+- `Kamin2015` -> `ref-kamin2015` keywords=`Methods of Estimation of Wealth Inequality,Wealth Taxation`
+- `KapelleLersch2020` -> `ref-kapellelersch2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Kapelleretal2023` -> `ref-kapelleretal2023` keywords=`Wealth Taxation`
+- `Karagiannaki2017` -> `ref-karagiannaki2017` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Keister2000` -> `ref-keister2000` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Keister2000a` -> `ref-keister2000a` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Kennedy1980` -> `ref-kennedy1980` keywords=`Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Kennickell2019` -> `ref-kennickell2019` keywords=`Methods of Estimation of Wealth Inequality`
+- `Kennickelletal2022` -> `ref-kennickelletal2022` keywords=`Methods of Estimation of Wealth Inequality`
+- `KesslerWolff1991` -> `ref-kesslerwolff1991` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `KillewaldBryan2016` -> `ref-killewaldbryan2016` keywords=`Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Killewaldetal2017` -> `ref-killewaldetal2017` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `KindermannKrueger2022` -> `ref-kindermannkrueger2022` keywords=`Wealth Taxation`
+- `King1927` -> `ref-king1927` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Kitamuraetal2003` -> `ref-kitamuraetal2003` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Knightetal2020` -> `ref-knightetal2020` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Koeplinetal2000` -> `ref-koeplinetal2000` keywords=`Methods of Estimation of Wealth Inequality`
+- `Konigetal2020` -> `ref-konigetal2020` keywords=`Cross-National Comparisons,Methods of Estimation of Wealth Inequality`
+- `Kopczuk2010` -> `ref-kopczuk2010` keywords=`Wealth Taxation`
+- `Kopczuk2013` -> `ref-kopczuk2013` keywords=`Wealth Taxation`
+- `Kopczuk2013a` -> `ref-kopczuk2013a` keywords=`Cross-National Comparisons,Estate Inheritance and Gift Taxes,Intergenerational Wealth`
+- `Kopczuk2015` -> `ref-kopczuk2015` keywords=`Methods of Estimation of Wealth Inequality`
+- `Korom2018` -> `ref-korom2018` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `KotlikoffSummers1981` -> `ref-kotlikoffsummers1981` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `KrivoKaufman2004` -> `ref-krivokaufman2004` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `KrusellSmithJr.1998` -> `ref-krusellsmithjr-1998` keywords=`Impacts of Wealth Inequality`
+- `Kuhnetal2020a` -> `ref-kuhnetal2020a` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Kukketal2023` -> `ref-kukketal2023` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Kumar2017` -> `ref-kumar2017` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `KuypersMarx2021` -> `ref-kuypersmarx2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Laitner2001` -> `ref-laitner2001` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Laitner2002` -> `ref-laitner2002` keywords=`Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Lampman1962` -> `ref-lampman1962` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `LansingSonquist1969` -> `ref-lansingsonquist1969` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Larudee2015` -> `ref-larudee2015` keywords=`Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Leitner2016` -> `ref-leitner2016` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Lersch2017` -> `ref-lersch2017` keywords=`Determinants of Wealth and Wealth Inequality`
+- `LerschBaxter2021` -> `ref-lerschbaxter2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Levy2022` -> `ref-levy2022` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Lindert2000` -> `ref-lindert2000` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `LindhOhlsson1998` -> `ref-lindhohlsson1998` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `LiWan2015` -> `ref-liwan2015` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Londono-VelezAvila-Mahecha2021` -> `ref-londono-velezavila-mahecha2021` keywords=`Wealth Taxation`
+- `Lorenz1905` -> `ref-lorenz1905` keywords=`Methods of Estimation of Wealth Inequality`
+- `Luoetal2017` -> `ref-luoetal2017` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Lusardietal2017` -> `ref-lusardietal2017` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Lustig2018` -> `ref-lustig2018` keywords=`Methods of Estimation of Wealth Inequality`
+- `Madsen2019` -> `ref-madsen2019` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Maki-Frantietal2022` -> `ref-maki-frantietal2022` keywords=`Determinants of Wealth and Wealth Inequality`
+- `MalghanSwaminathan2021` -> `ref-malghanswaminathan2021` keywords=`Cross-National Comparisons`
+- `Marcinkiewicz2023` -> `ref-marcinkiewicz2023` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `MarcinkiewiczChybalski2023` -> `ref-marcinkiewiczchybalski2023` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `MarcinkiewiczChybalski2023a` -> `ref-marcinkiewiczchybalski2023a` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Martinez2022` -> `ref-martinez2022` keywords=`Wealth Taxation`
+- `McKenzie2013` -> `ref-mckenzie2013` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Meh2005` -> `ref-meh2005` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Wealth Taxation`
+- `Menchik1979` -> `ref-menchik1979` keywords=`Intergenerational Wealth`
+- `MenchikJianakoplos1997` -> `ref-menchikjianakoplos1997` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Mentaetal2021` -> `ref-mentaetal2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Mianetal2020` -> `ref-mianetal2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `MichaillatSaez2021` -> `ref-michaillatsaez2021` keywords=`Impacts of Wealth Inequality`
+- `Milanovic2017` -> `ref-milanovic2017` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `MilanovicKapstein2000` -> `ref-milanovickapstein2000` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Modigliani1988` -> `ref-modigliani1988` keywords=`Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Morelli2020` -> `ref-morelli2020` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `MorelliAtkinson2015` -> `ref-morelliatkinson2015` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Morellietal2018` -> `ref-morellietal2018` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Morellietal2021` -> `ref-morellietal2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Morgan2021` -> `ref-morgan2021` keywords=`Estate Inheritance and Gift Taxes`
+- `MorganScott2007` -> `ref-morganscott2007` keywords=`Intergenerational Wealth`
+- `Morissetteetal2006` -> `ref-morissetteetal2006` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `MorissetteZhang2006` -> `ref-morissettezhang2006` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Mulderetal2009` -> `ref-mulderetal2009` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `MumtazTheophilopoulou2020` -> `ref-mumtaztheophilopoulou2020` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `MunozMorelli2021` -> `ref-munozmorelli2021` keywords=`Methods of Estimation of Wealth Inequality`
+- `Nakajima2023` -> `ref-nakajima2023` keywords=`Impacts of Wealth Inequality`
+- `NekoeiSeim2023` -> `ref-nekoeiseim2023` keywords=`Intergenerational Wealth`
+- `Nishietal2015` -> `ref-nishietal2015` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Nolanetal2020` -> `ref-nolanetal2020` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Nolanetal2021` -> `ref-nolanetal2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Nolanetal2022` -> `ref-nolanetal2022` keywords=`Cross-National Comparisons,Intergenerational Wealth`
+- `NortonAriely2011` -> `ref-nortonariely2011` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Novokmetetal2018a` -> `ref-novokmetetal2018a` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Ohlssonetal2020` -> `ref-ohlssonetal2020` keywords=`Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `OwensSaint-Amans2009` -> `ref-owenssaint-amans2009` keywords=`Wealth Taxation`
+- `Palanetal2013` -> `ref-palanetal2013` keywords=`Cross-National Comparisons,Wealth Taxation`
+- `Palominoetal2022` -> `ref-palominoetal2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Pellegrinietal2016` -> `ref-pellegrinietal2016` keywords=`Wealth Taxation`
+- `PetachTavani2021` -> `ref-petachtavani2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Pfeffer2018` -> `ref-pfeffer2018` keywords=`Impacts of Wealth Inequality`
+- `Pfefferetal2013` -> `ref-pfefferetal2013` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Pfefferetal2016` -> `ref-pfefferetal2016` keywords=`Methods of Estimation of Wealth Inequality`
+- `Pfefferetal2016a` -> `ref-pfefferetal2016a` keywords=`Intergenerational Wealth`
+- `PfefferKillewald2016` -> `ref-pfefferkillewald2016` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `PfefferKillewald2018` -> `ref-pfefferkillewald2018` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `PfefferKillewald2019` -> `ref-pfefferkillewald2019` keywords=`Impacts of Wealth Inequality,Intergenerational Wealth`
+- `PfefferSchoeni2016` -> `ref-pfefferschoeni2016` keywords=`Impacts of Wealth Inequality`
+- `PfefferWaitkus2021` -> `ref-pfefferwaitkus2021` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `PfefferWaitkus2021a` -> `ref-pfefferwaitkus2021a` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `PfefferWaitkus2021b` -> `ref-pfefferwaitkus2021b` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Piketty2003` -> `ref-piketty2003` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Piketty2014` -> `ref-piketty2014` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Pikettyetal2014` -> `ref-pikettyetal2014` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Pikettyetal2017` -> `ref-pikettyetal2017` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Pikettyetal2018` -> `ref-pikettyetal2018` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Pikettyetal2022` -> `ref-pikettyetal2022` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `PikettySaez2003` -> `ref-pikettysaez2003` keywords=`Estate Inheritance and Gift Taxes`
+- `PikettySaez2013` -> `ref-pikettysaez2013` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Wealth Taxation`
+- `PikettySaez2014` -> `ref-pikettysaez2014` keywords=`Cross-National Comparisons,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `PikettyZucman2014` -> `ref-pikettyzucman2014` keywords=`Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `PikettyZucman2015` -> `ref-pikettyzucman2015` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Pondetal1980` -> `ref-pondetal1980` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Intergenerational Wealth,Wealth Taxation`
+- `Poterbaetal2018` -> `ref-poterbaetal2018` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Ranaldi2022` -> `ref-ranaldi2022` keywords=`Methods of Estimation of Wealth Inequality`
+- `RanaldiPalagi2022` -> `ref-ranaldipalagi2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Rauscher2016` -> `ref-rauscher2016` keywords=`Impacts of Wealth Inequality,Intergenerational Wealth`
+- `Raya-Munte2021` -> `ref-raya-munte2021` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `RehmSchnetzer2015` -> `ref-rehmschnetzer2015` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Rosenthal2016` -> `ref-rosenthal2016` keywords=`Determinants of Wealth and Wealth Inequality`
+- `RosenthalAustin2016` -> `ref-rosenthalaustin2016` keywords=`Impacts of Wealth Inequality,Wealth Taxation`
+- `Rothwelletal2020` -> `ref-rothwelletal2020` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `RyabovaIvanushchenko2021` -> `ref-ryabovaivanushchenko2021` keywords=`Estate Inheritance and Gift Taxes`
+- `SabelhausVolz2019` -> `ref-sabelhausvolz2019` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `SabelhausVolz2022` -> `ref-sabelhausvolz2022` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `SaezStantcheva2018` -> `ref-saezstantcheva2018` keywords=`Wealth Taxation`
+- `SaezZucman2014` -> `ref-saezzucman2014` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `SaezZucman2019a` -> `ref-saezzucman2019a` keywords=`Wealth Taxation`
+- `SaezZucman2021` -> `ref-saezzucman2021` keywords=`Wealth Taxation`
+- `SaezZucman2021a` -> `ref-saezzucman2021a` keywords=`Wealth Taxation`
+- `SaezZucman2022` -> `ref-saezzucman2022` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Salas-RojoRodriguez2022` -> `ref-salas-rojorodriguez2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Methods of Estimation of Wealth Inequality`
+- `Salverdaetal2013` -> `ref-salverdaetal2013` keywords=`Impacts of Wealth Inequality`
+- `Samra2021` -> `ref-samra2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Schechtl2021` -> `ref-schechtl2021` keywords=`Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `SchechtlTisch2023` -> `ref-schechtltisch2023` keywords=`Cross-National Comparisons,Wealth Taxation`
+- `ScheuerSlemrod2021` -> `ref-scheuerslemrod2021` keywords=`Wealth Taxation`
+- `ScholzLevine2004` -> `ref-scholzlevine2004` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Schroderetal2020` -> `ref-schroderetal2020` keywords=`Methods of Estimation of Wealth Inequality`
+- `Schwartz2016` -> `ref-schwartz2016` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Seelkopfetal2021` -> `ref-seelkopfetal2021` keywords=`Estate Inheritance and Gift Taxes,Intergenerational Wealth`
+- `Seim2017` -> `ref-seim2017` keywords=`Wealth Taxation`
+- `SemyonovLewin-Epstein2013` -> `ref-semyonovlewin-epstein2013` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `SemyonovLewin-Epstein2021` -> `ref-semyonovlewin-epstein2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Shapiro2004` -> `ref-shapiro2004` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Intergenerational Wealth`
+- `Shchepelevaetal2022` -> `ref-shchepelevaetal2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Sierminskaetal2006` -> `ref-sierminskaetal2006` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Sierminskaetal2013` -> `ref-sierminskaetal2013` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `Sinha2006` -> `ref-sinha2006` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Skopeketal2014` -> `ref-skopeketal2014` keywords=`Cross-National Comparisons`
+- `Slemrod2000` -> `ref-slemrod2000` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Slemrod2007` -> `ref-slemrod2007` keywords=`Wealth Taxation`
+- `SlemrodYitzhaki2002` -> `ref-slemrodyitzhaki2002` keywords=`Wealth Taxation`
+- `Sloan2014` -> `ref-sloan2014` keywords=`Wealth Taxation`
+- `SmileyWest2012` -> `ref-smileywest2012` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Smith1997` -> `ref-smith1997` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Wealth Taxation`
+- `Soltow1979` -> `ref-soltow1979` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Soltow1981` -> `ref-soltow1981` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Spieker2020` -> `ref-spieker2020` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Stantcheva2015` -> `ref-stantcheva2015` keywords=`Estate Inheritance and Gift Taxes`
+- `Stantcheva2021` -> `ref-stantcheva2021` keywords=`Estate Inheritance and Gift Taxes`
+- `Stojanovic2023` -> `ref-stojanovic2023` keywords=`Determinants of Wealth and Wealth Inequality`
+- `StortiDagnes2021` -> `ref-stortidagnes2021` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `StrandMirkay2020` -> `ref-strandmirkay2020` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Wealth Taxation`
+- `SubramanianJayaraj2008` -> `ref-subramanianjayaraj2008` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Summerfieldetal2023` -> `ref-summerfieldetal2023` keywords=`Methods of Estimation of Wealth Inequality`
+- `Sussetal2024` -> `ref-sussetal2024` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `SykesMaroto2016` -> `ref-sykesmaroto2016` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Tachibanaki1989` -> `ref-tachibanaki1989` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Tachibanaki2005` -> `ref-tachibanaki2005` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Intergenerational Wealth,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Thiemannetal2021` -> `ref-thiemannetal2021` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes`
+- `ThompsonConley2016` -> `ref-thompsonconley2016` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Intergenerational Wealth`
+- `TischIschinsky2023` -> `ref-tischischinsky2023` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Tiwarietal2022` -> `ref-tiwarietal2022` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `vanBavel2022` -> `ref-vanbavel2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality`
+- `vanderWeideetal2018` -> `ref-vanderweideetal2018` keywords=`Methods of Estimation of Wealth Inequality`
+- `Wahl2003` -> `ref-wahl2003` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Waldenstrom2016` -> `ref-waldenstrom2016` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `WallersteinPrzeworski1995` -> `ref-wallersteinprzeworski1995` keywords=`Wealth Taxation`
+- `Waltl2022` -> `ref-waltl2022` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `WaltlChakraborty2022` -> `ref-waltlchakraborty2022` keywords=`Methods of Estimation of Wealth Inequality`
+- `Wangetal2022` -> `ref-wangetal2022` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `WanZhu2019` -> `ref-wanzhu2019` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes`
+- `Wedgwood1928` -> `ref-wedgwood1928` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Wedgwood1929` -> `ref-wedgwood1929` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Intergenerational Wealth`
+- `Wedgwood1939` -> `ref-wedgwood1939` keywords=`Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Intergenerational Wealth`
+- `WeiYang2021` -> `ref-weiyang2021` keywords=`Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `Williams2016` -> `ref-williams2016` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Wolff1987` -> `ref-wolff1987` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff1989` -> `ref-wolff1989` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff1992` -> `ref-wolff1992` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff1994` -> `ref-wolff1994` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff1995` -> `ref-wolff1995` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff1996` -> `ref-wolff1996` keywords=`Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2002` -> `ref-wolff2002` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2006` -> `ref-wolff2006` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2015` -> `ref-wolff2015` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2016` -> `ref-wolff2016` keywords=`Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2017a` -> `ref-wolff2017a` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Wolff2019` -> `ref-wolff2019` keywords=`Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2022` -> `ref-wolff2022` keywords=`Determinants of Wealth and Wealth Inequality`
+- `WolffGittleman2014` -> `ref-wolffgittleman2014` keywords=`Determinants of Wealth and Wealth Inequality,Intergenerational Wealth`
+- `WolffMarley1989` -> `ref-wolffmarley1989` keywords=`Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Xavier2021` -> `ref-xavier2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `Yonzanetal2022` -> `ref-yonzanetal2022` keywords=`Cross-National Comparisons,Methods of Estimation of Wealth Inequality`
+- `YuCui2021` -> `ref-yucui2021` keywords=`Determinants of Wealth and Wealth Inequality`
+- `ZachariasVakulabharanam2011` -> `ref-zachariasvakulabharanam2011` keywords=`Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `Zimmer2008` -> `ref-zimmer2008` keywords=`Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality`
+- `Zoutman2014` -> `ref-zoutman2014` keywords=`Wealth Taxation`
+- `Zucman2013` -> `ref-zucman2013` keywords=`Wealth Taxation`
+- `Zucman2014` -> `ref-zucman2014` keywords=`Wealth Taxation`
+- `Zwijnenburg2022` -> `ref-zwijnenburg2022` keywords=`Methods of Estimation of Wealth Inequality`
+
+## Merged Wealth Research Entries
+
+- `Acciarietal2024` -> `src-acciari2024` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Advanietal2021` -> `src-advani2021` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Albersetal2022` -> `src-albers2022` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Alvaredoetal2018` -> `src-alvaredo2018` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `AlvaredoSaez2010` -> `src-alvaredo2010` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `AnandKumar2022` -> `src-anand2022` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Assouad2021` -> `src-assouad2021` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `BaselgiaMartinez2024` -> `src-baselgia2024` `Data Sources: Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Battyetal2019` -> `src-batty2019` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Battyetal2022` -> `src-batty2022` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Bharti2018` -> `src-bharti2018` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `BlanchetMartinez-Toledano2023` -> `src-blanchet2023` `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Brandolinietal2006` -> `src-brandolini2006` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Brickeretal2016` -> `src-bricker2016` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Brickeretal2018` -> `src-bricker2018` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Brickeretal2021` -> `src-bricker2021` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `CannariDAlessio2018` -> `src-cannari2018` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Carranzaetal2023` -> `src-carranza2023` `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Catherineetal2021` -> `src-catherine2021` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Chatterjeeetal2022` -> `src-chatterjee2022` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Corlett2018` -> `src-corlett2018` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `DaviesDiMatteo2021` -> `src-davies2021` `Data Sources: Taxes on Wealth,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Delletal2007` -> `src-dell2007` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Disslbacheretal2023` -> `src-disslbacher2023` `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `Drometeretal2018` -> `src-drometer2018` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `Easton1983` -> `src-easton1983` `Data Sources: Taxes on Wealth,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Fricketal2010` -> `src-frick2010` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Galiana2016` -> `src-galiana2016` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Garbintietal2021` -> `src-garbinti2021` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Genscheletal2023` -> `src-genschel2023` `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `IaconoPalagi2023` -> `src-iacono2023` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Jacobsetal2021` -> `src-jacobs2021` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Jacobsonetal2007` -> `src-jacobson2007` `Data Sources: Taxes on Wealth,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Taxes on Wealth,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Jakobsenetal2020` -> `src-jakobsen2020` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Jappellietal2011` -> `src-jappelli2011` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `KaticLeigh2016` -> `src-katic2016` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Kennickell2024` -> `src-kennickell2021` `Data Sources: Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `KesslerPestieau1991` -> `src-kessler1991a` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `Kim2018` -> `src-kim2018` `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `KitaoYamada2019` -> `src-kitao2019` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Kley2012` -> `src-kley2012` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `KopczukSaez2004` -> `src-kopczuk2004` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Kuhnetal2020` -> `src-kuhn2020` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality`
+- `LundbergWaldenstrom2018` -> `src-lundberg2018` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Martinez-Toledano2022` -> `src-martineztoledano2022` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Millis1905` -> `src-millis1905` `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes`
+- `Novokmetetal2018` -> `src-novokmet2018` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `OECD2021_InheritanceTaxationOECDCountries` -> `src-oecd-eig` `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Estate Inheritance and Gift Taxes,Trends in Aggregate Wealth and Wealth Inequality`
+- `Piketty2011` -> `src-piketty2011long` `Data Sources: Inheritance Trends` -> `Data Sources: Inheritance Trends,Determinants of Wealth and Wealth Inequality,Intergenerational Wealth,Trends in Aggregate Wealth and Wealth Inequality`
+- `Piketty2020` -> `src-piketty2020` `Data Sources: Taxes on Wealth,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Intergenerational Wealth,Wealth Taxation` -> `Data Sources: Taxes on Wealth,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Estate Inheritance and Gift Taxes,Impacts of Wealth Inequality,Intergenerational Wealth,Wealth Taxation`
+- `Pikettyetal2006` -> `src-piketty2006` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Pikettyetal2019` -> `src-piketty2019` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `PikettyYang2022` -> `src-pikettyyang2022` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Profetaetal2014` -> `src-profeta2014` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `RoineWaldenstrom2009` -> `src-roine2009` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `RoineWaldenstrom2015` -> `src-roine2015` `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `SaezZucman2016` -> `src-saez2016` `Data Sources: Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `SaezZucman2019` -> `src-saez2019` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `SaezZucman2020a` -> `src-saez2020a` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Methods of Estimation of Wealth Inequality`
+- `SaezZucman2020b` -> `src-saez2020b` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Salverda2019` -> `src-salverda2019` `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `ScheveStasavage2012` -> `src-yaleinheritancescheve2012` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `SchuppSzydlik2004` -> `src-schupp2004` `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes` -> `Data Sources: Taxes on Wealth,Estate Inheritance and Gift Taxes`
+- `Smithetal2020` -> `src-smith2020` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality,Wealth Taxation`
+- `Smithetal2023` -> `src-smith2023` `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `TargaYang2024` -> `src-targa2024` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Toussaintetal2022` -> `src-toussaint2022` `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Trends in Aggregate Wealth and Wealth Inequality`
+- `vanBavelFrankema2017` -> `src-vanbavel2017` `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Vellutinietal2019` -> `src-ecow` `Data Sources: Wealth Topography,Cross-National Comparisons,Wealth Taxation` -> `Data Sources: Wealth Topography,Cross-National Comparisons,Wealth Taxation`
+- `Vermeulen2018` -> `src-vermeulen2018` `Data Sources: Wealth Inequality,Cross-National Comparisons,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Cross-National Comparisons,Methods of Estimation of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `vonFintelOrthofer2020` -> `src-vonfintel2020` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2017` -> `src-wolff2017` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Wolff2021` -> `src-wolff2021` `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Determinants of Wealth and Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+- `Zucman2019` -> `src-zucman2019` `Data Sources: Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality` -> `Data Sources: Wealth Inequality,Impacts of Wealth Inequality,Trends in Aggregate Wealth and Wealth Inequality`
+
+## Collapsed Duplicate Registry Records
+
+- `BoardofGovernorsoftheFederalReserveSystem_FinancialAccountsUnitedStatesRelease` kept `src-fed-b101`, merged src-fed-b101h, src-fed-b101n, src-fed-s3a-ima; keywords=`Data Sources: Wealth Topography`
+- `CreditSuisse_CreditSuisseGlobalWealthReport` kept `src-cs-ineq`, merged src-cs-topo; keywords=`Data Sources: Wealth Inequality,Data Sources: Wealth Topography`
+- `EuropeanCentralBank2024_DistributionalWealthAccounts` kept `src-ecb-dwa-ineq`, merged src-ecb-dwa-topo; keywords=`Data Sources: Wealth Inequality,Data Sources: Wealth Topography`
+- `HouseholdFinanceandConsumptionNetwork2021` kept `src-hfcs-ineq`, merged src-hfcs-topo; keywords=`Data Sources: Wealth Inequality,Data Sources: Wealth Topography`
+- `LIS_LuxembourgWealthStudyDatabase` kept `src-lws-ineq`, merged src-lws-topo; keywords=`Data Sources: Wealth Inequality,Data Sources: Wealth Topography`
+- `WorldInequalityDatabase_Data` kept `src-wid-ineq`, merged src-wid-topo; keywords=`Data Sources: Wealth Inequality,Data Sources: Wealth Topography`
+
+## Category Backfills And Cleanups
+
+- None
+
+## Bibliographic Metadata Conflicts
+
+- `Kennickell2024` field `title`; kept `Kennickell (2021)`; other `Chasing the Tail: A Generalized Pareto Distribution Approach to Estimating Wealth Inequality`; incoming `wealth_research`
+- `Piketty2011` field `title`; kept `On the long-run evolution of inheritance: France 1820--2050`; other `On the Long-Run Evolution of Inheritance: {{France}} 1820--2050`; incoming `wealth_research`
+- `Piketty2011` field `journal`; kept `The quarterly journal of economics`; other `Quarterly Journal of Economics`; incoming `wealth_research`
+
+## Bibliographic Backfills
+
+- `2007_OffshoreTaxEvasionStashingCash` `author` -> `Unknown`
+- `Astarita2015` `author` -> `Unknown`
+- `Davies2008` `author` -> `Unknown`
+- `DeRosa` `year` -> `1900`
+- `HepburnHamilton2017` `author` -> `Unknown`
+- `Slemrod2000` `author` -> `Unknown`
+- `Wolff2006` `author` -> `Unknown`
+
+## Unresolved Records
+
+- None
+
+## Duplicate Citekeys Remaining
+
+- None
+
+## Archived Files
+
+- `documentation/BibTeX files/GCWealthProject_WealthResearchLibrary.bib` -> `documentation/BibTeX files/old/GCWealthProject_WealthResearchLibrary.bib` (archived)

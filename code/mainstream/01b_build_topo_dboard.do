@@ -4,9 +4,9 @@ run "code/mainstream/auxiliar/all_paths.do"
 
 local iter = 1
 //loop over sources 
-foreach f in Est LWS_topo WID_topo ECB_IDCSA HFCS_topo ///
+foreach f in  OECD_NA Est LWS_topo WID_topo ECB_IDCSA HFCS_topo ///
 	BoI_NA ECB_QSA BoI_FA OECD_FA FED_S3a_IMA FED_B101 ///
-	FED_B101h FED_B101n AOW ECOW CS_topo ECB_DWA_topo  { 
+	FED_B101h FED_B101n AOW ECOW CS_topo ECB_DWA_topo StatCan_DWA_topo { 
 	
 	//inform activity 
 	di as result "working with `f':"

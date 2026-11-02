@@ -1,0 +1,282 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(stringr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(readxl)
+```
+
+# Estate, Inheritances, and Gift Taxes (EIG) {#sec:eig}
+
+## Introduction to the Estate, Inheritances, and Gift Taxes Section
+
+The Estate, Inheritance, and Gift Tax (EIG) section of the GC Wealth Project provides a comprehensive data collection on wealth transfer taxes across countries and over time. The EIG section compiles tax policy information as well as tax revenue data. The section contains information about these taxes for up to over 160 countries, in some instances dating back as far as the 18th century. The EIG section codifies and harmonizes information on features common among these taxes, such as top tax rates among closest relatives, personal tax exemptions, or full tax schedules. The section also provides revenue statistics for EIG taxes from cumulative sources from 1960 onward. Information is obtained from academic, government, and corporate research, government legislation and legislative information, as well as cross-national research and official statistics. 
+This chapter introduces the reader to the data structure of the EIG section, as well as the general interpretation and construction of each concept.  
+
+
+## The `varcode` in the Estate, Inheritance, and Gift Taxes Section
+
+As described in the general warehouse structure section, the `varcode` uniquely identifies each value in the EIG section using five elements. The first element of the `varcode` is a 1-digit code that identifies the `section` of the GC Wealth Project, which for the case of the Estate, Inheritance, and Gift Taxes takes the value `x`. Hence, the `varcode` takes the following form: 
+
+\begin{equation}
+\notag \underbrace{\textcolor{blue}{x}}_{\text{Section}} - \underbrace{hs}_{\text{Sector}} - \underbrace{CCC}_{\text{Variable Type}} - \underbrace{DDDDDD}_{\text{Concept}} - \underbrace{ZZ}_{\text{Section Specific}} 
+\end{equation}
+
+
+
+### `Sector`: Households
+
+The next two letters of the `varcode` indicate the `Sector`, which for this section will always be `hs` for 
+households, since these taxes are levied on individuals and estates of private 
+citizens. 
+
+### `Variable Type`
+
+The next three letters of the `varcode` represent the `Variable Type`, which will vary in this section. Specifically, five types of variables are used within the EIG section. These are described in Table \ref{tab:eigt_vt}.
+
+```{r eigt_vt, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
+
+eigt_vt <- read_excel("old/eigt_vartype.xlsx", na = " ") %>%
+  mutate_all(~ ifelse(is.na(.), " ", as.character(.)))
+
+eigt_vt %>%
+kbl(format="latex", align = "l", booktabs = T, longtable=T, caption = "EIG: Variable Type") %>%
+  kable_styling(latex_options = "striped")  %>%
+  column_spec(1, width = "1cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "11cm") 
+
+```
+
+
+
+### `Concept`: Variables
+The next six letters, indicating `Concept` encode the specific variables for this section, and details for each can be found in Table \ref{tab:EIG_defs}. 
+
+```{r EIG_defs, echo=FALSE, comment=NA, message=FALSE, warning=TRUE}
+#\begin{spacing}{1}
+
+#filter EIGT concepts 
+source("documentation_warehouse_version.R")
+vcdlist <- read_delim(paste0("../../output/databases/dashboards/eigt_warehouse_v", ver, ".csv"), col_select = c('varcode')) %>% unique() %>% separate(varcode, into = c("part1", "part2", "part3", "Code", "part5"), sep = "-") %>%
+  select(Code) %>%
+  distinct()
+
+# Merge with Dictionary varcode labels
+eig_dict <- read_excel("../../handmade_tables/dictionary.xlsx", sheet = "d4_concept") %>%
+  select(Code = code, Label = label, Description = description)  %>% 
+  inner_join(vcdlist) %>% select(Code, Label, Description)
+
+eig_dict %>%
+ kbl(format="latex",align = c('r', 'l', 'l'), 
+  caption = "Estate, Inheritance, and Gift Tax Variable Definitions", 
+  longtable=TRUE, booktabs = T, linesep = "\\addlinespace")%>% 
+  column_spec(1, width="0.8cm")%>% column_spec(2, width="4cm") %>%
+  column_spec(3, width="17cm") %>% 
+  kable_styling(latex_options = "striped") %>%
+  landscape()
+
+```
+
+### `Section Specific`: Bracket Numbers {#subsubsec:brack}
+
+Finally, the last two letters in the `varcode` denote the section-specific variables, which for the EIG section refer to the tax bracket number when needed. Full tax schedule information will vary by tax bracket. For instance, in the event of a flat rate of 10% on individual shares of an inheritance valued at 100,000 currency units, the first bracket (`01`) will cover inheritances worth between 0 and 100,000 currency units and a corresponding tax rate of 0%, while the second bracket (`02`) will cover all inheritances valued over 100,000 with a corresponding tax rate of 10% (see section \ref{subsec:sched}). Information not contained within a tax schedule does not vary by bracket and is contained in the row with bracket number `00`. An example of tax bracket numbers— and the tax schedule more generally—is laid out in Table \ref{tab:eig_ex1}.  
+
+
+
+## Data Structure and Interpretation
+
+Downloaded data is provided in long format. All information in the data is sorted by a country's two-letter ISO code (`GEO`), or its full name (`GEO_long`) and `year`. Information unrelated to the tax schedule is listed with `bracket` "00" in the `varcode`, while the schedule variables, which vary within a country-year, have positive bracket values. The final number of observations per country-year varies depending on the number of tax brackets in that country-year (and hence the number of `varcodes`). 
+
+An example illustrated in Table \ref{tab:eig_ex1l} is the UK's tax schedule in 2019. Users can access the tax revenue of `GEO` "UK" by selecting the `value` of the `varcode` corresponding to that `concept` (*x-hs-agg-totrev-00*). Similarly, to display the `value` of the upper bound of the first tax schedule bracket for the UK, the user can select the `varcode` corresponding to that `concept` (*x-hs-thr-ad1ubo-01*). All `varcode` conventions follow the logic detailed in section 5.1.  
+
+
+```{r eig_ex1l, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
+
+eig_ex1l <- read_excel("old/eigt_data_ex1_long.xlsx") %>%
+  mutate_all(~ ifelse(is.na(.), " ", as.character(.)))
+
+
+#, linesep = "\\addlinespace"
+eig_ex1l %>%
+ kbl(format="latex", align = "l",
+  caption = "Simplified Illustration of EIG Data in Long Format", 
+  booktabs = T)%>% 
+  kable_styling(latex_options = "striped") %>% 
+  #kable_paper(full_width = F) %>%
+   column_spec(1, width="0.53cm")%>% 
+   column_spec(2, width="2.95cm")%>% 
+   column_spec(3, width="1.55cm")%>% 
+   column_spec(4, width="1.5cm") %>% 
+   column_spec(5, width="8cm") 
+  # column_spec(6, width="0.8cm")%>%
+  # column_spec(7, width="1.4cm")%>%
+  # column_spec(8, width="0.7cm")
+  #column_spec(8, width="0.5cm")
+
+```
+
+```{r eig_ex1, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
+
+eig_ex1 <- read_excel("old/eigt_data_ex1.xlsx", na = " ") %>%
+  mutate_all(~ ifelse(is.na(.), " ", as.character(.)))
+
+eig_ex1 %>%
+ kbl(format="latex",
+  caption = "Simplified Illustration of a Tax Schedule", 
+  booktabs = T, linesep = "\\addlinespace")%>% 
+  kable_styling(latex_options = "striped")
+
+```
+
+If transformed into wide format, any observation is uniquely identified by country, year, and tax bracket to accommodate full tax schedules. That is, variables containing tax schedule information vary within each country-year. Hence, information will look considerably different from the example detailed in Table \ref{tab:eig_ex1l} above. 
+
+To illustrate a wide structure, consider the UK tax schedule in 2019. There is a flat tax of 40 percent on estates over GBP 325,000. The revenue for the UK under the estate tax in 2019 was GBP 5.165 billion. A simplified subset of the variables (non-identifying variable names changed for ease of explanation) is shown in Table \ref{tab:eig_ex1}. As this example illustrates, selecting `GEO` "UK" and `year` "2019" will not be sufficient to uniquely identify one observation per country. For instance, any user interested in total revenue information would need to additionally select `bracket` "0". Importantly, variables that are not related to the tax schedule will not be filled for country-year observations other than in the zero bracket.
+
+
+
+
+
+### Non-Schedule Tax Parameters
+
+#### Binary Indicators for Tax Status
+
+A set of binary variables is used to indicate whether a country 
+or region has any wealth transfer taxes (*eigsta*), as well as 
+the specific types of taxes that are levied (*esttax*, *inhtax*, 
+*giftax*), when applicable. Taxes that are not deemed estate- 
+or inheritance-specific taxes may be indicated as either “$Y$\” 
+(yes) or “$N$\” (no) for the binary 
+variables, but have their schedules, rates or exemption information 
+filled. There may therefore be inconsistencies between these 
+variables; for instance, Colombia does not tax inheritances or 
+estates specifically, but includes them as capital gains—data 
+for Colombia indicates that an inheritance tax and a gift tax 
+are present; however, the revenue information shows no government 
+revenues for these taxes. Countries for which no data is 
+available other than the tax revenue from the OECD are marked 
+as having an estate, inheritance, or gift tax if the revenue 
+information is non-zero and not decreasing as a pattern, which 
+would indicate a possible repeal. When possible, the data further include 
+a variable indicating the first year for which any wealth 
+transfer tax has been levied in a country or region (*eigfir*) [@GenschelSeelkopf2019].
+
+
+#### Tax Reductions and Relationship-Based Parameters {#subsubs:reb}
+
+Estate and inheritance tax exemptions can vary in complexity and detail, 
+and countries differ in how they offer reductions to the final 
+tax bill (exemptions, deductions, rebates, credits, *etc.*). The data 
+in this section encode these as "exemptions", for instance, by 
+calculating how much of an estate or inheritance would be exempt under a credit. 
+
+
+Inheritance taxes frequently vary in generosity of exemptions or rates 
+by the closeness of relationship between decedents and recipients, 
+which are divided into "classes." If this is the case, *itaxre* will be 
+"Y." The data pick up the exemptions (*chiexe*) and rates 
+for direct descendants without any additional mitigating factors (for 
+instance, higher exemptions or lower rates for minors). Because 
+classes of inheritors are not generally applicable for estate taxes, 
+information in country-years with estate taxes tends to 
+apply to everybody, and the exemptions and rates apply to the 
+aggregate of all property bequeathed by a decedent. The exception to 
+this is if a country with estate taxes has an estate tax, but individual 
+share-based exemptions vary beyond those for spouses and minor 
+children. In this case, the indicator *ieexem* will contain the value "$Y$,\" and the 
+corresponding exemptions indicate the exemption applicable to the 
+proportion of the estate that corresponds to direct descendant's shares, 
+even though the tax is paid on the overall estate. 
+
+
+In cases where *eigsta* indicates the existence of an EIG tax, a missing value for *chiexe* means that inheritances (or the respective portions of estates) are fully exempt for direct descendants if *toprat* is equal to zero. 
+When tax rates cannot be determined without determining additional 
+information about the recipient or decedent, assumptions are made in 
+order to select the lowest applicable rates for direct descendants. In 
+Spain, for instance, the tax rates vary by relationship and increase 
+with the pre-existing wealth owned by the recipient. The data is 
+entered under the assumption that the recipient possesses no 
+pre-existing wealth. For such cases, however, more information will 
+be made available in the metadata.
+
+
+### Tax Schedules {#subsec:sched}
+
+#### General Structure and Interpretation
+
+
+Progressive tax schedules are split into brackets by the value of the estate or inheritance, each with identical variable values for non-schedule variables. Bracket number, the dashboard-specific variable 
+encoded in the last two letters of the `varcode`, specifies the order of
+the brackets that constitute a full tax schedule. 
+
+The structure of the tax schedule data is the same as the statutory schedules
+provided by many governments for estate taxes and other progressive taxes.
+The basic structure of all tax schedules in the data consists of tax 
+brackets arranged in ascending order, which indicate the range of amounts 
+to which a tax rate applies, as well as the tax liability on amounts 
+below that bracket. Each bracket corresponds to a single row, and all brackets
+that form a schedule have the same logistical variable values; all non-schedule 
+tax variables are constant for a schedule, and therefore identical for all 
+brackets (or rows).
+
+The schedules are typically cumulative in structure, such that the rate in a bracket that corresponds to an aggregate inherited (or estate) value only 
+applies to the proportion of the inheritance that is greater than the highest 
+amount in the previous bracket. That is, if the inherited amount misses a 
+lower tax bracket by one currency unit, the higher tax rate only applies 
+to one currency unit.
+
+
+
+#### Schedule Transformation for Adjusted Schedules
+
+We adjust the schedules to make them more comparable across countries, as detailed below. 
+
+Estate, inheritance, and gift taxes typically only apply above a certain threshold. 
+We modify all schedules that do not already include a bracket with a zero tax rate that 
+corresponds to the exempted amount (that is, a zero tax rate on amounts
+ranging from zero to the exemption threshold), to include such a bracket.
+This can be complicated because tax schedules are not standardized with respect
+to exemptions. Some exemptions might be included in a tax schedule and do not 
+require any additional calculation. Others are calculated as deductions or 
+credits, which means that a tax is calculated on the entirety of the estate, 
+and the tax that would be owed on the exemption amount is subsequently 
+subtracted from the total tax liability. For instance, consider the U.S. federal estate tax: The statutory schedule contains a progressive 
+schedule, but because the exemption deduction is so high (nearly 13 million 
+USD as of 2023), every bracket but 
+the last is effectively 
+within the deduction range. Therefore (assuming no other deductions or credits
+apply), all amounts below (and many above) the 
+last bracket would yield a final tax bill of zero. The result is a flat tax 
+rate that applies to relatively large estates of several million dollars. 
+
+In order to transform tax schedules to adjusted and effective, 
+we assume that taxes will be paid on a monetary
+transfer to one adult child upon the death of a decedent, assuming no
+additional circumstantial deductions, reliefs, or credits apply unless
+otherwise specified. In the case of a country like Spain, it is additionally assumed that the recipient owns no prior wealth. Historical information is adjusted to reflect the most recent local currency.
+
+
+
+#### Regional Information
+
+As of the public release v.2, the data also include regional-level tax information for all U.S. states. Varcodes and variables for the regional level adhere to the database structure outlined above. We note some important conceptual differences:
+
+First, the tax status variables (*eigsta*, *esttax*, *inhtax*, *giftax*) refer to the existence of a tax at the state-level, irrespective of federal taxes that also apply within state boundaries. Thus, if a given state indicates *esttax* = "N", estates in that state can still be subject to the federal estate tax, if it applies. 
+
+Second, adjusted tax schedule variables (e.g., *chiexe*, *ad1lb*, *ad1ub*, etc.) combine full tax schedule information of federal- and state-level taxes. That is, EIG taxes levied by the state can provide adjustments of the statutory schedule depending on interactions with the federal tax. Thus, our state-level adjusted schedules take the joint structure of taxes at both levels into account in order to arrive at tax exemptions, brackets, and marginal rates that are readily comparable across states within the U.S.
+
+Third, top marginal tax rate variables (e.g., *toprat*) also indicate the combined information of the federal estate tax and state estate, inheritance, and gift taxes. Combining the federal estate tax and gift and inheritance taxes at the state level yields harmonized top marginal tax rates across states, however, we cannot provide separate top rates by type of tax as combining taxes at different levels jointly yields the adjusted top rates. All top rates and adjusted schedules thus refer to adult, direct descendants without siblings.
+
+Fourth, state and federal tax interactions can lead to marginal tax structures with spikes within the tax bracket structure. Put differently, the highest tax rate in an adjusted schedule might be in a lower bracket and inheritances above that bracket will be subject to lower rates. In such cases, the top marginal tax rate refers to the last bracket in the (progressive) tax schedule rather than to the highest tax rate.
+
+
+
+

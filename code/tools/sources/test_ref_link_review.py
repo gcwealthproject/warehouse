@@ -40,15 +40,21 @@ class RefLinkReviewScanTests(unittest.TestCase):
 
     def test_blank_exact_citekey_match_is_ready_to_apply(self):
         registry = {
-            "config": {"bib_output": "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"},
+            "config": {"digital_bib_output": "documentation/BibTeX files/digital_library.bib"},
             "records": [
                 {
                     "id": "src-example",
+                    "is_data_source": True,
                     "source": "Example2024",
                     "citekey": "Example2024",
                     "ref_link": "",
                     "link": "https://example.org/source",
-                    "bib": {"title": "Example Title", "author": "Example, Eve", "year": "2024"},
+                    "bib": {
+                        "title": "Example Title",
+                        "author": "Example, Eve",
+                        "year": "2024",
+                        "keywords": "Data Sources: Wealth Topography",
+                    },
                 }
             ],
         }
@@ -70,15 +76,21 @@ class RefLinkReviewScanTests(unittest.TestCase):
 
     def test_existing_ref_link_mismatch_stays_in_needs_review(self):
         registry = {
-            "config": {"bib_output": "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"},
+            "config": {"digital_bib_output": "documentation/BibTeX files/digital_library.bib"},
             "records": [
                 {
                     "id": "src-example",
+                    "is_data_source": True,
                     "source": "Example2024",
                     "citekey": "Example2024",
                     "ref_link": "https://bibbase.org/network/publication/example-old-2023",
                     "link": "https://example.org/source",
-                    "bib": {"title": "Example Title", "author": "Example, Eve", "year": "2024"},
+                    "bib": {
+                        "title": "Example Title",
+                        "author": "Example, Eve",
+                        "year": "2024",
+                        "keywords": "Data Sources: Wealth Topography",
+                    },
                 }
             ],
         }
@@ -97,15 +109,21 @@ class RefLinkReviewScanTests(unittest.TestCase):
 
     def test_hosted_bibbase_drift_downgrades_exact_match_to_needs_review(self):
         registry = {
-            "config": {"bib_output": "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"},
+            "config": {"digital_bib_output": "documentation/BibTeX files/digital_library.bib"},
             "records": [
                 {
                     "id": "src-example",
+                    "is_data_source": True,
                     "source": "Example2024",
                     "citekey": "Example2024",
                     "ref_link": "",
                     "link": "https://example.org/source",
-                    "bib": {"title": "Example Title", "author": "Example, Eve", "year": "2024"},
+                    "bib": {
+                        "title": "Example Title",
+                        "author": "Example, Eve",
+                        "year": "2024",
+                        "keywords": "Data Sources: Wealth Topography",
+                    },
                 }
             ],
         }
@@ -122,16 +140,22 @@ class RefLinkReviewScanTests(unittest.TestCase):
 
     def test_scan_registry_ref_links_reports_progress_and_identity_fields(self):
         registry = {
-            "config": {"bib_output": "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"},
+            "config": {"digital_bib_output": "documentation/BibTeX files/digital_library.bib"},
             "records": [
                 {
                     "id": "src-example",
+                    "is_data_source": True,
                     "source": "Example2024",
                     "citekey": "Example2024",
                     "legend": "Example (2024)",
                     "ref_link": "",
                     "link": "https://example.org/source",
-                    "bib": {"title": "Example Title", "author": "Example, Eve", "year": "2024"},
+                    "bib": {
+                        "title": "Example Title",
+                        "author": "Example, Eve",
+                        "year": "2024",
+                        "keywords": "Data Sources: Wealth Topography",
+                    },
                 }
             ],
         }
@@ -270,21 +294,27 @@ class RefLinkReviewScanTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             local_bib_path = pathlib.Path(tmpdir) / "local.bib"
             local_bib_path.write_text("@article{Example2024,}\n", encoding="utf-8")
-            profile_source_url = "https://bibbase.org/f/example/GCWealthProject_DataSourcesLibrary.bib"
+            profile_source_url = "https://bibbase.org/f/example/digital_library.bib"
             registry = {
                 "config": {
-                    "bib_output": str(local_bib_path),
+                    "digital_bib_output": str(local_bib_path),
                     "bibbase_profile_source_url": profile_source_url,
                     "bibbase_timeout_seconds": 7,
                 },
                 "records": [
                     {
                         "id": "src-example",
+                        "is_data_source": True,
                         "source": "Example2024",
                         "citekey": "Example2024",
                         "ref_link": "",
                         "link": "https://example.org/source",
-                        "bib": {"title": "Example Title", "author": "Example, Eve", "year": "2024"},
+                        "bib": {
+                            "title": "Example Title",
+                            "author": "Example, Eve",
+                            "year": "2024",
+                            "keywords": "Data Sources: Wealth Topography",
+                        },
                     }
                 ],
             }
@@ -308,22 +338,28 @@ class RefLinkReviewScanTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             local_bib_path = pathlib.Path(tmpdir) / "local.bib"
             local_bib_path.write_text("@article{Example2024,}\n", encoding="utf-8")
-            default_source_url = "https://bibbase.org/f/default/GCWealthProject_DataSourcesLibrary.bib"
-            override_source_url = "https://bibbase.org/f/session/GCWealthProject_DataSourcesLibrary.bib"
+            default_source_url = "https://bibbase.org/f/default/digital_library.bib"
+            override_source_url = "https://bibbase.org/f/session/digital_library.bib"
             registry = {
                 "config": {
-                    "bib_output": str(local_bib_path),
+                    "digital_bib_output": str(local_bib_path),
                     "bibbase_profile_source_url": default_source_url,
                     "bibbase_timeout_seconds": 7,
                 },
                 "records": [
                     {
                         "id": "src-example",
+                        "is_data_source": True,
                         "source": "Example2024",
                         "citekey": "Example2024",
                         "ref_link": "",
                         "link": "https://example.org/source",
-                        "bib": {"title": "Example Title", "author": "Example, Eve", "year": "2024"},
+                        "bib": {
+                            "title": "Example Title",
+                            "author": "Example, Eve",
+                            "year": "2024",
+                            "keywords": "Data Sources: Wealth Topography",
+                        },
                     }
                 ],
             }
@@ -354,8 +390,8 @@ class RefLinkReviewScanTests(unittest.TestCase):
             local_bib_path.write_text("@article{Example2024,}\n", encoding="utf-8")
             registry = {
                 "config": {
-                    "bib_output": str(local_bib_path),
-                    "bibbase_profile_source_url": "https://bibbase.org/f/default/GCWealthProject_DataSourcesLibrary.bib",
+                    "digital_bib_output": str(local_bib_path),
+                    "bibbase_profile_source_url": "https://bibbase.org/f/default/digital_library.bib",
                     "bibbase_timeout_seconds": 7,
                 },
                 "records": [],
@@ -372,15 +408,21 @@ class RefLinkReviewScanTests(unittest.TestCase):
 
     def test_scan_registry_ref_links_includes_row_level_status(self):
         registry = {
-            "config": {"bib_output": "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"},
+            "config": {"digital_bib_output": "documentation/BibTeX files/digital_library.bib"},
             "records": [
                 {
                     "id": "src-example",
+                    "is_data_source": True,
                     "source": "Example2024",
                     "citekey": "Example2024",
                     "ref_link": "",
                     "link": "https://example.org/source",
-                    "bib": {"title": "Example Title", "author": "Example, Eve", "year": "2024"},
+                    "bib": {
+                        "title": "Example Title",
+                        "author": "Example, Eve",
+                        "year": "2024",
+                        "keywords": "Data Sources: Wealth Topography",
+                    },
                 }
             ],
         }

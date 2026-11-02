@@ -1,0 +1,56 @@
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(glue)
+library(stringr)
+library(tidyr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(expss)
+
+# Load warehouse 
+whouse <- "../../output/databases/warehouse.csv"
+whouse %<>% read_delim() 
+head(whouse)
+
+#select observations to show 
+compact <- 
+  mutate(whouse, percentile = as.character(percentile))
+whsubs1 <- filter(compact, source == "Wolff2021" & percentile == "p90p100" & year >= 2007)
+whsubs1 <- unique(whsubs1)
+whsubs2 <- filter(compact, source == "ECB_QSA" & GEO == "FR" & 
+              varcode == "p-hs-agn-falipe-ga" & year >= 2017)
+whsubs3 <- filter(compact, varcode == "x-hs-cat-eigsta-00", GEO == "IT" & year >= 2016) %>%
+  mutate(value_str = paste0(substr(value_str, 1, 8) , "..."))
+whsubs4 <- filter(compact, source == "LWS_ineq", percentile == "p0p50", GEO %in% c("AU", "ZA") & year >= 2014)
+whsubs5 <- filter(compact, source == "WID_topo", GEO == "CN", year >= 2011, varcode == "p-hn-agg-faeqfd-ga")
+whsubs <- rbind(whsubs1, whsubs2, whsubs3, whsubs4, whsubs5)
+                
+#shorten some data points for viz 
+whsubs %<>% mutate(
+  longname = paste0(substr(longname, 1, 9) , "..."), 
+  varcode = paste0(substr(varcode, 1, 8), "..."),
+  source = paste0(substr(source, 1, 6) , "..."), 
+  GEO_long = paste0(substr(GEO_long, 1, 8), "...")
+  )
+```
+
+# Overview {-}
+
+This document describes the structure of the database underlying the GC Wealth Project, which users can either visualize on our website or download and manipulate with the statistical software of their choice. The website is designed to be user-friendly and interactive, providing various tools for data exploration and visualization. Users can filter data by country, year, or specific variables of interest.
+
+The main ambition in this project is to gather all the relevant statistics on wealth accumulation and its determinants in a single place. Such endeavor not only consists in scraping and organizing data from the main global-data producers, i.e., OECD, WID.world, Credit Suisse or LWS, but also a careful inspection of country-specific sources, scientific papers, national balance sheets, documentation from central banks or even legal tax schedules. 
+
+It appears to us that the complexity and --sometimes-- the variety of estimates of wealth inequality can be difficult to navigate, even to specialized academic researchers. Different units, definitions, sources and methods coexist within the wealth literature. One of our main goals is thus to offer a guided view on wealth accumulation dynamics, helping researchers and other members of the civil society to navigate a burgeoning literature. Although a few developed countries concentrate most of the scientific attention, we aim to provide a global view on the subject. Hence we have made an effort to include data on developing countries too.  
+
+We see our warehouse as a public good, protected by a creative commons licence, which allows free access and manipulation for non-commercial use, with the sole requirement of crediting the original source. We therefore ask you to use it in good faith and to report any issues you could find. All the code we wrote to scrape, clean, process, and analyze the data will soon be available for scrutiny in a GitHub repository.\footnote{\url{https://github.com/gcwealthproject}} 
+
+This document is divided into seven sections. In the first two sections, we provide an overview of the GC Wealth Project and its data structure. This includes a description of the building blocks that make up the warehouse, as well as an explanation of the data creation process. In the following sections, we provide database-specific documentation, which includes information on wealth topography, inequality trends, methodological tables, and inheritances, estate and gift taxation. These sections are designed to provide detailed information on each database, allowing users to fully understand the underlying data and how it was created. The last section includes appendices.   
+
+

@@ -6,9 +6,10 @@ global origin "${topo_dir_raw}/BoI_FA/raw data"
 
 * Import dates
 *import delimited "${origin}/export_1667306562203/20221101_134241_REPORT.csv", delimiter(";") clear // update (June 2023)
-import delimited "${origin}/export_1691521458232/20230808_210417_REPORT.csv", delimiter(";") clear // update (August 2023)
-import delimited "${origin}/export_1718732915412/20240618_194833_REPORT.csv", delimiter(";") clear // update (May 2024)
-
+*import delimited "${origin}/export_1691521458232/20230808_210417_REPORT.csv", delimiter(";") clear // update (August 2023)
+*import delimited "${origin}/export_1718732915412/20240618_194833_REPORT.csv", delimiter(";") clear // update (May 2024)
+*import delimited "${origin}/export_1751470006896/20250702_172646_REPORT.csv", delimiter(";") clear // update (July 2025)
+import delimited "${origin}/export_1774471543900/20260325_214542_REPORT.csv", delimiter(";") clear // update (March 2026)
 
 keep v1
 gen n = _n

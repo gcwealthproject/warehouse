@@ -6,7 +6,7 @@ global intermediate "${topo_dir_raw}/BoI_NA/intermediate"
 
 
 * Data are in millions of euros
-import excel "${origin}/data.xlsx", sheet("data")  cellrange(A1:U42)  clear
+import excel "${origin}/data.xlsx", sheet("data")  cellrange(A1:W42)  clear
 	
 	
 drop A // Drop varname_source in Italian

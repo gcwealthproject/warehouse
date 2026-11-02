@@ -7,7 +7,7 @@
 // Check the following lines always before running the code
 local general_source = "ECB_IDCSA" // The source does not change across the do-file
 qui local sector_list S1M
-qui local country_list albania brazil canada chile colombia iceland israel ///
+qui local country_list albania australia brazil canada chile colombia iceland israel india ///
 		japan korea mexico newzealand northmacedonia norway russia ///
 		switzerland turkey gb usa
 		

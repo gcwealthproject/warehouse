@@ -1,136 +1,178 @@
-
 ** Set paths here
 run "code/mainstream/auxiliar/all_paths.do"
-tempfile all
+tempfile big map
 
-* Origin folder: it contains the excel files to import
-global origin "${topo_dir_raw}/ECB_IDCSA/raw data/csv files" 
+* Folders
+global aux          "${topo_dir_raw}/ECB_IDCSA/auxiliary files"
+global destination  "${topo_dir_raw}/ECB_IDCSA/intermediate"
+global raw          "${topo_dir_raw}/ECB_IDCSA/raw data"
 
-* Auxiliary folder
-global aux "${topo_dir_raw}/ECB_IDCSA/auxiliary files" 
-
-* Intermediate to erase
-global intermediate "${topo_dir_raw}/ECB_IDCSA/intermediate to erase" 
-
-* Destination folder
-global destination "${topo_dir_raw}/ECB_IDCSA/intermediate"
+* ---- 1) Read the NEW single big file ONCE ----
+* (Update the filename if needed)
+use "${raw}/hh_IDCSA.dta",  clear
 
 
+* Keep the columns we need; adjust names if your header differs
+keep ref_area ref_sector accounting_entry instr_asset maturity key time_period obs_value comment_ts
 
-** DISAGGREGATED SECTORS
+* Normalize fields used downstream (build na_code like the old per-country code did)
+gen str2  _AL = cond(trim(accounting_entry)=="A","A_","L_")
+gen str12 _AF = subinstr(instr_asset,"F","AF",.)   // e.g. F4 -> AF4, F51M -> AF51M
+gen str1  _mat = ""
+replace _mat = "1" if maturity=="S"
+replace _mat = "2" if maturity=="L"
+gen str20 na_code = _AL + _AF + _mat
 
+* Parse time_period (take latest non-missing per slice)
+gen str20 _tp = lower(time_period)
+replace _tp = subinstr(_tp,"-","",.)
+gen tq = quarterly(_tp,"YQ")
+format tq %tq
+
+save `big', replace
+
+* 1) Split comment_ts into hyphen-delimited chunks
+split comment_ts, parse(" - ") gen(seg) trim    // creates seg1 seg2 seg3 seg4 ...
+
+* 2) Extract asset type and maturity text
+gen strL asset_type    = strtrim(seg3)
+gen strL maturity_text = strtrim(seg4)
+
+* 3) Normalize maturity label (keep nice phrasing even if seg4 varies)
+* Default
+generate strL maturity_std = "All original maturities"
+
+* If seg4 contains "short"
+replace maturity_std = "Short-term original maturity (up to 1 year)" ///
+    if regexm(lower(maturity_text), "short")
+
+* If seg4 contains "long"
+replace maturity_std = "Long-term original maturity (over 1 year or no stated maturity)" ///
+    if regexm(lower(maturity_text), "long")
+
+* 4) Label for A/L from accounting_entry
+gen strL al_label = cond(accounting_entry=="A", ///
+    "Assets (Net Acquisition of)", "Liabilities (Net Incurrence of)")
+	
+gen strL varname_source =  al_label + ", " + asset_type + ", " + maturity_std
+gen strL nacode_label =  asset_type + ", " + maturity_std
+
+tempfile big
+save `big', replace
+
+drop seg* asset_type maturity_text maturity_std al_label 
+tempfile big
+save `big', replace
+
+* ---- 2) Country code map for your IDCSA list ----
+local countries australia brazil canada chile colombia  gb iceland israel  japan korea mexico norway northmacedonia newzealand ///
+                russia turkey usa switzerland
+
+capture program drop _area_of
+program define _area_of
+    syntax , Country(name)
+    if      "`country'"=="canada"          local area "CA"
+	else if "`country'"=="australia"	   local area "AU"
+	else if "`country'"=="brazil"   	   local area "BR"
+	else if "`country'"=="chile"           local area "CL"
+    else if "`country'"=="colombia"        local area "CO"
+    else if "`country'"=="iceland"         local area "IS"
+    else if "`country'"=="israel"          local area "IL"
+	else if "`country'"=="india"           local area "IN"
+    else if "`country'"=="japan"           local area "JP"
+	else if "`country'"=="korea"           local area "KR"
+    else if "`country'"=="mexico"          local area "MX"
+    else if "`country'"=="newzealand"      local area "NZ"
+    else if "`country'"=="northmacedonia"  local area "MK"
+    else if "`country'"=="norway"          local area "NO"
+	else if "`country'"=="russia"          local area "RU"
+    else if "`country'"=="switzerland"     local area "CH"
+    else if "`country'"=="turkey"          local area "TR"
+    else if "`country'"=="gb"              local area "GB"
+	else if "`country'"=="usa"   		   local area "US"
+    else                                   local area ""
+    c_local area "`area'"
+end
+
+
+* ---- 3) Build the grid workbook (one sheet per country × sector) ----
+local workbook "${destination}/grid_hs_np.xlsx"
+display as txt "Writing workbook to: `workbook'"
 
 foreach s in S14 S15 {
+    foreach c of local countries {
+		quietly {
+        use `big', clear
+        _area_of, country(`c')
 
+        * Slice the big file by country & sector
+        keep if ref_area  == "`area'"
+        keep if ref_sector == "`s'"
 
-	foreach c in canada colombia iceland israel japan mexico newzealand ///
-		northmacedonia norway switzerland turkey gb {		
-	
-	qui import delimited "${origin}/`c'_idcs.csv", varnames(1) ///
-			delimiter(comma) clear 
+        count
+        local sliceN = r(N)
 
-	qui rename datasource* datasource
-	qui keep if datasource == ""
-	qui drop datasource
-	qui gen index = ""
-	qui replace index = "source_code" if [_n] == 1
-	qui replace index = "varname_source" if [_n] == 2
-	qui order index, first 
+        * If slice is empty, write EMPTY sheet and continue to next combo
+        if `sliceN'==0 {
+						* --- EMPTY SLICE: write an empty (one-blank-row) sheet and continue ---
+			import excel "${aux}/grid_empty.xlsx", sheet("grid_empty") firstrow clear
+			keep in 1                         // keep 1 row to satisfy export
+			foreach v of varlist _all {       // blank out that row
+				capture confirm string variable `v'
+				if _rc==0 replace `v'=""
+				capture confirm numeric variable `v'
+				if _rc==0 replace `v'=.
+			}
+			export excel using "`workbook'", sheet("`c'_`s'") firstrow(variables) sheetreplace
+			continue
+        }
+		}
+        * Keep only needed columns
+        keep na_code varname_source tq obs_value
 
-	qui sxpose, clear firstnames
-	
-	qui keep if strpos(source_code, "`s'")
-	
-	qui gen na_code = source_code
-	qui order na_code, before(source_code)
+        * Latest non-missing per na_code
+        bysort na_code (tq): keep if _n==_N
+        keep if obs_value < .
+        drop tq obs_value
+        duplicates drop na_code, force
 
-	qui replace na_code = subinstr(na_code, "IDCS.A.N.", "", .) // Delete Dataset name
-		
-	if "`c'" == "albania" {
-		qui replace na_code = subinstr(na_code, "AL.", "", .) // Delete area
-	}
-	else if "`c'" == "brazil" {
-		qui replace na_code = subinstr(na_code, "BR.", "", .) // Delete area
-	}
-	else if "`c'" == "canada" {
-		qui replace na_code = subinstr(na_code, "CA.", "", .) // Delete area
-	}
-	else if "`c'" == "chile" {
-		qui replace na_code = subinstr(na_code, "CL.", "", .) // Delete area
-	}
-		qui else if "`c'" == "colombia" {
-		replace na_code = subinstr(na_code, "CO.", "", .) // Delete area
-	}
-	else if "`c'" == "iceland" {
-		qui replace na_code = subinstr(na_code, "IS.", "", .) // Delete area
-	}	   
-	else if "`c'" == "israel" {
-		qui replace na_code = subinstr(na_code, "IL.", "", .) // Delete area
-	}			   
-	else if "`c'" == "japan" {
-		qui replace na_code = subinstr(na_code, "JP.", "", .) // Delete area
-	}	   
-	else if "`c'" == "korea" {
-		qui replace na_code = subinstr(na_code, "KR.", "", .) // Delete area
-	}		   
-	else if "`c'" == "mexico" {
-		qui replace na_code = subinstr(na_code, "MX.", "", .) // Delete area
-	}		   
-	else if "`c'" == "newzealand" {
-		qui replace na_code = subinstr(na_code, "NZ.", "", .) // Delete area
-	}		   
-	else if "`c'" == "northmacedonia" {
-		qui replace na_code = subinstr(na_code, "MK.", "", .) // Delete area
-	}	   
-	else if "`c'" == "norway" {
-		qui replace na_code = subinstr(na_code, "NO.", "", .) // Delete area
-	}		   
-	else if "`c'" == "russia" {
-		qui replace na_code = subinstr(na_code, "RU.", "", .) // Delete area
-	}		   
-	else if "`c'" == "switzerland" {
-		qui replace na_code = subinstr(na_code, "CH.", "", .) // Delete area
-	}	   
-	else if "`c'" == "turkey" {
-		qui replace na_code = subinstr(na_code, "TR.", "", .) // Delete area
-	}	
-	else if "`c'" == "gb" {
-		qui replace na_code = subinstr(na_code, "GB.", "", .) // Delete area
-	}		   
-	else if "`c'" == "usa" {
-		qui replace na_code = subinstr(na_code, "US.", "", .) // Delete area
-	}
-		   
-	// Delete Counterpart ara (W0: World), 
-	// Frequency, Adjustment indicator (N: Neaither seasonally adjusted nor calendar adjusted), 
-	// Reference sector (S1M: Households and NPISH/S14:Households/S15:NPISH), 
-	// Counterpart sector (S1: Total economy)
-	
-	qui replace na_code = subinstr(na_code, "W0.`s'.S1.N.", "", .) 	
-	qui replace na_code = subinstr(na_code, "._Z.XDC._T.S.V.N._T", "", .) 	
-	qui replace na_code = subinstr(na_code, "._Z", "", .) // Delete the rest
-	qui replace na_code = subinstr(na_code, ".T", "", .) // Delete "original maturities"
-	qui replace na_code = subinstr(na_code, "A.LE.", "A_A", .) // Replace financial assets
-	qui replace na_code = subinstr(na_code, "L.LE.", "L_A", .) // Replace liabilities
-	qui replace na_code = subinstr(na_code, ".S", "1", .) // Delete "short maturities"
-	qui replace na_code = subinstr(na_code, ".L", "2", .) // Delete "long maturities"
-	
-	qui save "${intermediate}/intermediate_mapping.dta", replace
+        count
+        local afterN = r(N)
 
-	qui import excel "${aux}/grid_empty.xlsx", sheet("grid_empty") firstrow clear 
+        tempfile map
+        save `map', replace emptyok
 
-	qui drop source_code varname_source
+        * Merge with template and export
+        import excel "${aux}/grid_empty.xlsx", sheet("grid_empty") firstrow clear
+        capture drop varname_source   // avoid type clash from template
+        merge m:1 na_code using `map', keep(1 3) nogen
 
-	qui merge m:1 na_code using "${intermediate}/intermediate_mapping.dta"
+        count
+        local mergedN = r(N)
 
-	qui drop _merge
-	qui drop if na_code == "" & nacode_label == "" &  source_code == "" &  varname_source == ""
-	qui drop if  source_code == "" &  varname_source == "" 
+        * Optional pruning
+        drop if varname_source==""
+        capture drop source_code
+        drop if nacode_label==""
 
-	qui drop source_code
-	qui drop if nacode_label == "" // drop extra country-source-sector related items
+        count
+        local finalN = r(N)
 
-	export excel "${destination}/grid_hs_np", sheet("`c'_`s'", modify) firstrow(variables) 
+        * If pruning killed everything, still write an EMPTY sheet
+       if `finalN'==0 {
+			import excel "${aux}/grid_empty.xlsx", sheet("grid_empty") firstrow clear
+			keep in 1
+			foreach v of varlist _all {
+				capture confirm string variable `v'
+				if _rc==0 replace `v'=""
+				capture confirm numeric variable `v'
+				if _rc==0 replace `v'=.
+			}
+			export excel using "`workbook'", sheet("`c'_`s'") firstrow(variables) sheetreplace
+			continue
+		}
 
+        export excel using "`workbook'", sheet("`c'_`s'") firstrow(variables) sheetreplace
+    }
 }
-}
+

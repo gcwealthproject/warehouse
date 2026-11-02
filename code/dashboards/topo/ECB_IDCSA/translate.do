@@ -1,4 +1,4 @@
-
+ 
 ** Set paths here
 tempfile all2
 
@@ -19,7 +19,7 @@ global destination "${topo_dir_raw}/ECB_IDCSA/intermediate"
 
 local counter = 1
 
-use  "${origin}/hh_IDCSA_24", replace
+use  "${origin}/hh_IDCSA", replace
 
 *unit_mult==6 -> multiplu obs value with 1000000
 
@@ -51,14 +51,8 @@ rename obs_value* *
 	*replace `var'=obs_value if instr_asset2=="`var'"
 *}
 
-** Dates column
-forvalues t=1950(1)2023 {
-qui drop if time_period=="`t'-Q1"
-qui drop if time_period=="`t'-Q2"
-qui drop if time_period=="`t'-Q3"
-qui drop if time_period=="`t'-Q4"
-replace time_period="`t'-Q4" if time_period=="`t'"
-}
+replace time_period = time_period + "-Q4" if !strpos(time_period,"-Q")
+keep if substr(time_period, -2, 2) == "Q4"
 
 
 qui rename time_period fulldate

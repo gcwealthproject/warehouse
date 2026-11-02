@@ -15,14 +15,20 @@
         },
         "shared_citekey_note": {
           "type": "string"
+        },
+        "is_data_source": {
+          "type": "boolean"
+        },
+        "source_aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
         "id",
-        "section",
         "legend",
-        "source",
-        "link",
         "citekey",
         "bib"
       ]

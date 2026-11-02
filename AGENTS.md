@@ -12,9 +12,9 @@ In short: this repo is large, but agents should work only on the source-registry
 
 Agents should limit changes to the source-registry area:
 
-- `metadata/sources/`
+- `code/tools/metadata/sources/`
 - `code/tools/sources/`
-- `documentation/workflow/sources/`
+- `code/tools/documentation/workflow/sources/`
 - `code/tools/source_manager_mac.command`
 - `code/tools/source_manager_win.bat`
 - `code/tools/source_manager_linux.sh`
@@ -22,11 +22,16 @@ Agents should limit changes to the source-registry area:
 
 Generated artifacts may also be updated when required by source-registry work:
 
-- `documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib`
-- `documentation/BibTeX files/GCWealthProject_WealthResearchLibrary.bib`
-- `documentation/BibTeX files/BothLibraries.bib`
+- `documentation/BibTeX files/digital_library.bib`
+- `documentation/BibTeX files/old/GCWealthProject_DataSourcesLibrary.bib`
+- `documentation/BibTeX files/old/GCWealthProject_WealthResearchLibrary.bib`
+- `documentation/BibTeX files/old/BothLibraries.bib`
 - `handmade_tables/dictionary.xlsx`
-- `metadata/sources/reconciliation_report.md`
+- `code/tools/metadata/sources/reconciliation_report.md`
+- `code/tools/metadata/sources/*migration_report.md`
+
+The archived split BibTeX files under `documentation/BibTeX files/old/` are
+legacy transition artifacts, not active public exports.
 
 ## Out Of Scope By Default
 
@@ -44,7 +49,7 @@ Do not make opportunistic cleanup changes outside the source-registry subsystem.
 ## Working Rules
 
 - Prefer the canonical registry workflow over ad hoc edits.
-- Treat `metadata/sources/sources.yaml` as the canonical store for Data Sources.
+- Treat `code/tools/metadata/sources/sources.yaml` as the canonical store for data-source and research library records.
 - Treat generated files as derived artifacts, not primary editing targets, unless the workflow specifically requires them.
 - Prefer using the local source-registry tools and validation scripts in `code/tools/sources/`.
 - If a request would require touching both the source registry and the broader warehouse pipeline, stop and ask for explicit confirmation before expanding scope.

@@ -1,90 +1,175 @@
-//settings
+// Update of Stat Norway
+
+
 clear all
-local source StatisticsNorway
-run "code/mainstream/auxiliar/all_paths.do"
 
-//define internal paths 
-local sourcef "${ineq_dir_raw}/`source'"
-local rawdata "`sourcef'/raw data/Statistics_Norway_2022_06_24.xlsx"
-local results "`sourcef'/final_table/`source'"
+local source "StatisticsNorway"
 
-//import - wealth shares 
-qui import excel "`rawdata'", sheet("inequality-indicators") ///
-	cellrange (A1:O12) firstrow clear
 
-//clean
-gen year = real(A)
-drop A Total
+** Working Directories Local
+********************************************************************************
+*global path	"`:env USERPROFILE'/OneDrive - Universita degli Studi Roma Tre\Research\GC - Update"
+*cd "$path"
 
-//rename to reshape
-rename (Decile10 Decile1) (Top10 Top910)
-rename (Top5percent Top1percent Top01percent) (Top5 Top1 Top901)
+global ineq_dir_raw raw_data/ineq
 
-//gen new variables
-gen Top920 = Top910 + Decile2
-gen Top930 = Top920 + Decile3
-gen Top940 = Top930 + Decile4
-gen Top950 = Top940 + Decile5
-gen Top960 = Top950 + Decile6
-gen Top970 = Top960 + Decile7
-gen Top980 = Top970 + Decile8
-gen Top990 = Top980 + Decile9
-gen Top5090 =  Decile6 + Decile7 + Decile8 + Decile9
-gen Top20 = Top10 + Decile9
-gen Top909 = Top10 - Top1
-gen Top905 = Top5 - Top1
-drop Decile*
+	local sourcef "${ineq_dir_raw}/`source'"
+	local rawdata "`sourcef'/raw data/Statistics_Norway_2026_04_01.csv"
+	local results "`sourcef'/final_table/`source'"
+********************************************************************************
+
+
+
+
+import delimited "`rawdata'" , clear 
+** Assets: unit Millions of Dollars
+
+
+********************************************************************************
+** Rename Variables
+********************************************************************************
+keep if _n<=15
+br
+
+rename share share_2010
+rename average average_2010
+rename lowest lowest_2010
+rename number number_2010
+
+local v=6
+forvalues y=2011(1)2024 {
+foreach var in share average lowest number {
+		
+		rename v`v' `var'_`y'
+		
+		local v=`v'+1
+}	
+}
+
+drop number*
+destring lowest*, replace force
+
+
+
+********************************************************************************
+** Reshape Data
+********************************************************************************
+forvalues y=2010(1)2024 {
+foreach var in share average lowest {
+	preserve
+		keep decile `var'_`y'
+		gen year=`y'
+		gen varcode="`var'"
+		rename `var'_`y' value
+		
+		tempfile `var'_`y'
+		save ``var'_`y'', replace
+	restore
+}
+}
+
+clear
+forvalues y=2010(1)2024 {
+foreach var in share average lowest {
+	append using ``var'_`y''
+}
+}
+
+
+** Clean
+********************************************************************************
+gen percentile="p0p100" if decile=="Total"
+replace percentile="p0p100" 	if decile=="Total"
+replace percentile="p0p10" 	if decile=="Decile 1"
+replace percentile="p10p20" 	if decile=="Decile 2"
+replace percentile="p20p30" 	if decile=="Decile 3"
+replace percentile="p30p40" 	if decile=="Decile 4"
+replace percentile="p40p50" 	if decile=="Decile 5"
+replace percentile="p50p60" 	if decile=="Decile 6"
+replace percentile="p60p70" 	if decile=="Decile 7"
+replace percentile="p70p80" 	if decile=="Decile 8"
+replace percentile="p80p90" 	if decile=="Decile 9"
+replace percentile="p90p100" 	if decile=="Decile 10"
+replace percentile="p95p100" 	if decile=="Top 5 per cent"
+replace percentile="p99p100" 	if decile=="Top 1 per cent"
+replace percentile="p99_9p100" 	if decile=="Top 0,1 per cent"
+
+
+drop if percentile==""
+drop if varcode=="share" & percentile=="p0p100"
+drop if varcode=="lowest" & percentile=="p0p100"
+drop if varcode=="lowest" & percentile=="p0p10"
+drop decile
+
+** Add Some Extra Points
+********************************************************************************
 	
-//reshape
-reshape long Top, i(year) j(percentiles)
+	** Shares
+	preserve
+		keep if varcode=="share"
+		reshape wide value , i(year) j(percentile) string
 
-//rename correctly
-gen percentile = ""
-qui replace percentile = "p99p100" if percentiles==1
-qui replace percentile = "p90p100" if percentiles==10
-qui replace percentile = "p0p50" if percentiles==950
-qui replace percentile = "p50p90" if percentiles==5090
-qui replace percentile = "p80p100" if percentiles==20
-qui replace percentile = "p95p100" if percentiles==5
-qui replace percentile = "p99.9p100" if percentiles==901
-qui replace percentile = "p90p99" if percentiles==909
-qui replace percentile = "p95p99" if percentiles==905
-qui replace percentile = "p0p10" if percentiles==910
-qui replace percentile = "p0p20" if percentiles==920
-qui replace percentile = "p0p30" if percentiles==930
-qui replace percentile = "p0p40" if percentiles==940
-qui replace percentile = "p0p60" if percentiles==960
-qui replace percentile = "p0p70" if percentiles==970
-qui replace percentile = "p0p80" if percentiles==980
-qui replace percentile = "p0p90" if percentiles==990
-drop percentiles
+		gen valuep0p50=valuep0p10	+ valuep10p20	+ valuep20p30	+ valuep30p40	+ valuep40p50
+		gen valuep0p80=valuep0p50	+ valuep50p60	+ valuep60p70	+ valuep70p80
+		gen valuep0p90=valuep0p80	+ valuep80p90
 
-//gen value
-rename Top value
-qui replace value = value * 100 if percentile=="p0p100"
-//drop missing
-drop if missing(value)
+		gen valuep50p90=valuep50p60 + valuep60p70 	+ valuep70p80 	+ valuep80p90
 
-//generate code variables
-gen dashboard = "t"
-gen sector = "hs"
-gen vartype = "dsh"
-qui replace vartype = "gin" if percentile=="p0p100"
-gen concept = "netwea"
-gen specific = "ho"
+		gen valuep80p100=valuep80p90 + valuep90p100 	
 
-egen varcode = concat(dashboard sector vartype concept specific), punct ("-")  
+		gen valuep90p95=valuep90p100-valuep95p100
+		gen valuep90p99=valuep90p100-valuep99p100
 
-drop dashboard sector vartype concept specific
+		reshape long value , i(year) j(percentile) string
 
-//gen warehouse variables	
-gen area = "NO"
+		replace varcode="t-hs-dsh-netwea-ho"
+
+		tempfile share
+		save `share', replace
+	restore
+	
+	
+	** Averages
+	preserve
+		keep if varcode=="average"
+		reshape wide value , i(year) j(percentile) string
+
+		gen valuep0p50=(valuep0p10	+ valuep10p20	+ valuep20p30	+ valuep30p40	+ valuep40p50)/5
+		gen valuep0p80=(valuep0p50	+ valuep50p60	+ valuep60p70	+ valuep70p80)/8
+		gen valuep0p90=(valuep0p80	+ valuep80p90)/9
+
+		gen valuep50p90=(valuep50p60 + valuep60p70 	+ valuep70p80 	+ valuep80p90)/4
+
+		gen valuep80p100=(valuep80p90 + valuep90p100)/2	
+
+		
+		reshape long value , i(year) j(percentile) string
+
+		replace varcode="t-hs-avg-netwea-ho"
+
+		tempfile average
+		save `average', replace
+	restore
+	
+	
+	
+	** Threshold
+	preserve
+		keep if varcode=="lowest"
+		
+		replace varcode="t-hs-thr-netwea-ho"
+
+		tempfile lowest
+		save `lowest', replace
+	restore
+	
+	
+** Append
+clear
+use `share'
+append using `average'
+append using `lowest'
 gen source = "`source'"
+gen area="NO"
 
-//gen method of estimation - 
-//qui gen data_type = "" 
-
-order area year value percentile varcode 
-
-//export
-qui export delimited "`results'", replace
+order area year value percentile varcode source

@@ -1,33 +1,26 @@
-
+* paths 
 global origin "${topo_dir_raw}/FED_B101/raw data"
 global aux "${topo_dir_raw}/FED_B101/auxiliary files"
 global intermediate_to_erase "${topo_dir_raw}/FED_B101/intermediate to erase"
 global intermediate "${topo_dir_raw}/FED_B101/intermediate"
 
-	
 * Import dates
-import delimited "${origin}/FRB_Z1.csv", numericcols(1) delimiter(comma) clear
-
-gen n = _n
-order n, first
-
-drop if n == 1 | n == 2 | n == 3 | n == 4 | n == 5 
-	
-*drop v11 v21 v31 v37 v40 // duplicate
-	
-// assing varname_source	
-foreach var of varlist v2-v53{
-	
-	replace `var' = subinstr(`var', ".", "", .) if _n == 1
-
-	rename `var' `=`var'[1]'
-	
+import delimited "${origin}/b101.csv", delimiter(comma) varnames(1) stringcols(_all) clear
+keep if substr(date, -2, 2) == "Q4"
+ds
+foreach v of varlist `r(varlist)' {
+    rename `v' `=upper("`v'")'
 }
+gen year = real(substr(DATE, 1, 4))
+drop DATE
+rename (*Q) (*A)
 
-drop if n == 6
-drop n	
-rename v1 year
-
+* Aggregate morgtage debt FL153165005.A = FL153165105.A + FL163165505.A (https://www.federalreserve.gov/apps/fof/SeriesAnalyzer.aspx?s=FL153165005&t=S.6.A&bc=S.6.A:FL154123005&suf=A)
+* Destring the variables
+destring FL153165105A, replace
+destring FL163165505A, replace
+gen FL153165005A = FL153165105A + FL163165505A
+tostring FL153165005A, replace
 
 preserve
 
@@ -77,10 +70,8 @@ foreach v of var `r(varlist)'{
 	
 }
 
-****
 
 
-	
 	
 tempfile pre_pop
 save `pre_pop'

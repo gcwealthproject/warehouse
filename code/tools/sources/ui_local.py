@@ -31,22 +31,40 @@ from urllib.request import Request, urlopen
 
 from common import (
     BIB_FIELD_ORDER,
+    BIB_EXPORT_BLOCKED_FIELDS,
+    CANONICAL_DATA_SOURCE_KEYWORDS,
+    DATA_SOURCE_KEYWORD_TO_SECTION,
+    DATA_SOURCE_KEYWORD_PREFIX,
+    RESEARCH_CATEGORY_KEYWORDS,
+    RESEARCH_CATEGORY_KEYWORD_SET,
+    build_digital_library_entries,
+    canonical_data_source_keyword_for_section,
+    canonical_data_source_keywords_for_sections,
+    data_source_keywords_from_value,
+    format_keywords,
+    is_canonical_data_source_keyword,
+    is_data_source_keyword,
     load_json_yaml,
     load_registry,
     normalize_text,
     normalize_url,
     normalize_whitespace,
     parse_bib_entries,
+    record_is_data_source,
+    record_data_source_keywords,
+    read_source_alias_sheet,
     read_sources_sheet,
     save_registry,
+    set_data_source_keywords,
+    split_keywords,
+    strip_data_source_keywords,
     write_parsed_bib_entries,
 )
 from ref_link_review import apply_selected_ref_links, fetch_and_scan_registry_ref_links
 from source_paths import (
     DEFAULT_ALIASES_PATH,
-    DEFAULT_BOTH_BIB_PATH,
     DEFAULT_CHANGE_LOG_PATH,
-    DEFAULT_DATA_BIB_PATH,
+    DEFAULT_DIGITAL_BIB_PATH,
     DEFAULT_DICTIONARY_PATH,
     DEFAULT_REGISTRY_PATH,
     DEFAULT_WEALTH_BIB_PATH,
@@ -129,7 +147,11 @@ def now_utc() -> str:
 
 
 def _data_bib_path(cfg: dict) -> Path:
-    return Path(cfg.get("bib_output", DEFAULT_DATA_BIB_PATH))
+    return _digital_bib_path(cfg)
+
+
+def _digital_bib_path(cfg: dict) -> Path:
+    return Path(cfg.get("digital_bib_output", DEFAULT_DIGITAL_BIB_PATH))
 
 
 def _dictionary_output_path(cfg: dict) -> Path:
@@ -138,10 +160,6 @@ def _dictionary_output_path(cfg: dict) -> Path:
 
 def _wealth_bib_path(cfg: dict) -> Path:
     return Path(cfg.get("wealth_bib_input", DEFAULT_WEALTH_BIB_PATH))
-
-
-def _both_bib_path(cfg: dict) -> Path:
-    return Path(cfg.get("both_bib_output", DEFAULT_BOTH_BIB_PATH))
 
 
 def _wealth_change_log_path(cfg: dict) -> Path:
@@ -165,7 +183,7 @@ def _is_artifact_only_duplicate_failure(canonical_errors: List[str], artifact_er
 
 
 def _generated_data_artifact_paths(cfg: dict) -> List[Path]:
-    return [_dictionary_output_path(cfg), _data_bib_path(cfg), _both_bib_path(cfg)]
+    return [_dictionary_output_path(cfg), _digital_bib_path(cfg)]
 
 
 def _stale_artifact_payload(registry: dict, registry_path: Path, artifact_errors: List[str]) -> dict:
@@ -215,6 +233,8 @@ def _wealth_entry_to_record(key: str, entry: dict) -> dict:
     for field_name in sorted(fields.keys()):
         if field_name in WEALTH_BIB_FIELDS:
             continue
+        if normalize_whitespace(str(field_name)).lower() in BIB_EXPORT_BLOCKED_FIELDS:
+            continue
         val = normalize_whitespace(str(fields.get(field_name, "")))
         if val:
             extras[field_name] = val
@@ -241,7 +261,7 @@ def _wealth_record_to_entry(record: dict) -> dict:
     for field_name, value in sorted(extras.items(), key=lambda x: str(x[0]).lower()):
         k = normalize_whitespace(str(field_name)).lower()
         v = normalize_whitespace(str(value))
-        if not k or not v or k in fields:
+        if not k or not v or k in fields or k in BIB_EXPORT_BLOCKED_FIELDS:
             continue
         fields[k] = v
     return {"key": key, "entry_type": entry_type, "fields": fields}
@@ -386,12 +406,12 @@ def _validate_wealth_candidate(
     )
 
     if key and key in data_keys and (mode == "add" or key != target_norm):
-        errors.append(f"Key conflicts with DataSources library: {key}. Choose a different key.")
+        errors.append(f"Key conflicts with Source Manager registry: {key}. Choose a different key.")
     checks.append(
         {
             "name": "Cross-library key collision",
             "passed": not (key and key in data_keys and (mode == "add" or key != target_norm)),
-            "detail": "No forbidden key collision with DataSources"
+            "detail": "No forbidden key collision with Source Manager registry"
             if not (key and key in data_keys and (mode == "add" or key != target_norm))
             else "Collision detected",
         }
@@ -417,10 +437,13 @@ def _append_wealth_change(changelog_path: Path, op: str, rec_id: str, reason: st
     changelog_path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def _rebuild_both_bib(cfg: dict) -> int:
-    from build_sources_artifacts import merge_bib_libraries  # pylint: disable=import-outside-toplevel
+def _rebuild_digital_bib(registry_path: Path, cfg: dict) -> int:
+    from build_sources_artifacts import write_digital_library_bib  # pylint: disable=import-outside-toplevel
 
-    return merge_bib_libraries(_data_bib_path(cfg), _wealth_bib_path(cfg), _both_bib_path(cfg))
+    registry = load_registry(registry_path)
+    records = records_sorted(registry.get("records", []))
+    report = write_digital_library_bib(_digital_bib_path(cfg), records)
+    return int(report.get("entry_count", 0))
 
 
 def append_change(changelog_path: Path, op: str, rec_id: str, reason: str, actor: str) -> None:
@@ -478,7 +501,10 @@ def _bulk_label_values(records: List[dict]) -> Dict[str, List[dict]]:
 
 
 def _bulk_section_keyword(label: str) -> str:
-    return f"{BULK_SECTION_KEYWORD_PREFIX}{label}"
+    keyword = canonical_data_source_keyword_for_section(label)
+    if not keyword:
+        raise ValueError(f"section/category must map to a controlled {BULK_SECTION_KEYWORD_PREFIX} keyword")
+    return keyword
 
 
 def _bulk_label_keyword_preview(rec: dict, field: str, old_label: str, new_label: str) -> dict:
@@ -491,7 +517,7 @@ def _bulk_label_keyword_preview(rec: dict, field: str, old_label: str, new_label
     bib = rec.get("bib", {}) or {}
     keywords = normalize_whitespace(str(bib.get("keywords", "")))
     old_keywords = _bulk_section_keyword(old_label)
-    if keywords != old_keywords:
+    if data_source_keywords_from_value(keywords) != [old_keywords]:
         return {
             "keyword_mirror_update": False,
             "keywords_before": keywords,
@@ -500,7 +526,7 @@ def _bulk_label_keyword_preview(rec: dict, field: str, old_label: str, new_label
     return {
         "keyword_mirror_update": True,
         "keywords_before": keywords,
-        "keywords_after": _bulk_section_keyword(new_label),
+        "keywords_after": set_data_source_keywords(keywords, [_bulk_section_keyword(new_label)]),
     }
 
 
@@ -602,8 +628,8 @@ def apply_bulk_label_update(registry: dict, payload: dict, changelog_path: Path)
             if not isinstance(bib, dict):
                 bib = {}
                 rec["bib"] = bib
-            if normalize_whitespace(str(bib.get("keywords", ""))) == _bulk_section_keyword(old_label):
-                bib["keywords"] = _bulk_section_keyword(new_label)
+            if data_source_keywords_from_value(str(bib.get("keywords", ""))) == [_bulk_section_keyword(old_label)]:
+                bib["keywords"] = set_data_source_keywords(str(bib.get("keywords", "")), [_bulk_section_keyword(new_label)])
                 keyword_updates += 1
         rec["updated_at"] = timestamp
         rec["updated_by"] = editor
@@ -663,6 +689,8 @@ def suggested_options(records: List[dict]) -> Dict[str, object]:
     data_search_rows = sorted(data_search_rows, key=lambda x: (x.get("citekey", "").lower(), x.get("source", "").lower()))
     return {
         "section": uniq("section"),
+        "data_source_categories": [DATA_SOURCE_KEYWORD_TO_SECTION[keyword] for keyword in CANONICAL_DATA_SOURCE_KEYWORDS],
+        "research_categories": list(RESEARCH_CATEGORY_KEYWORDS),
         "aggsource": uniq("aggsource"),
         "data_type": uniq("data_type"),
         "inclusion_in_warehouse": uniq("inclusion_in_warehouse"),
@@ -727,7 +755,16 @@ def validate_candidate(records: List[dict], candidate: dict, mode: str, target_i
     warnings: List[str] = []
     checks: List[dict] = []
 
-    required = ["section", "aggsource", "legend", "source", "citekey", "link"]
+    bib = candidate.get("bib", {}) or {}
+    is_data_source = bool(candidate.get("is_data_source", False))
+    if "is_data_source" not in candidate:
+        is_data_source = bool(
+            canonical_data_source_keywords_for_sections(candidate.get("section", ""))
+            or data_source_keywords_from_value(str(bib.get("keywords", "")), canonical_only=False)
+        )
+    required = ["legend", "citekey"]
+    if is_data_source:
+        required.extend(["source", "aggsource", "link"])
     missing_required = [k for k in required if not normalize_whitespace(str(candidate.get(k, "")))]
     if missing_required:
         for k in missing_required:
@@ -738,19 +775,12 @@ def validate_candidate(records: List[dict], candidate: dict, mode: str, target_i
         "detail": "All required fields present" if not missing_required else f"Missing: {', '.join(missing_required)}",
     })
 
-    source_matches_citekey = candidate.get("source", "") == candidate.get("citekey", "")
-    if not source_matches_citekey:
-        if mode == "add":
-            errors.append("source and citekey must be the same value for new records")
-        else:
-            warnings.append("source and citekey differ; preserving legacy bibliography key")
     checks.append({
-        "name": "Source/Citekey consistency",
-        "passed": source_matches_citekey or mode == "edit",
-        "detail": "source equals citekey" if source_matches_citekey else "legacy source/citekey mismatch preserved",
+        "name": "Source/Citekey distinction",
+        "passed": True,
+        "detail": "source is the warehouse source code; citekey is the BibTeX key",
     })
 
-    bib = candidate.get("bib", {}) or {}
     missing_bib_required = [k for k in ["entry_type", "title", "author", "year"] if not normalize_whitespace(str(bib.get(k, "")))]
     if missing_bib_required:
         for k in missing_bib_required:
@@ -766,6 +796,56 @@ def validate_candidate(records: List[dict], candidate: dict, mode: str, target_i
     bib_url = normalize_whitespace(str(bib.get("url", "")))
     doi = normalize_whitespace(str(bib.get("doi", "")))
     year = normalize_whitespace(str(bib.get("year", "")))
+    keywords = normalize_whitespace(str(bib.get("keywords", "")))
+    keyword_tokens = split_keywords(keywords)
+    data_source_tokens = [token for token in keyword_tokens if is_data_source_keyword(token)]
+    canonical_data_source_tokens = [token for token in data_source_tokens if is_canonical_data_source_keyword(token)]
+    noncanonical_data_source_tokens = [token for token in data_source_tokens if not is_canonical_data_source_keyword(token)]
+    uncontrolled_tokens = [
+        token
+        for token in keyword_tokens
+        if token not in RESEARCH_CATEGORY_KEYWORD_SET
+        and not is_data_source_keyword(token)
+    ]
+    section_keywords = canonical_data_source_keywords_for_sections(candidate.get("section", ""))
+    unknown_sections = [
+        label
+        for label in re.split(r"[;|]", normalize_whitespace(str(candidate.get("section", ""))))
+        if normalize_whitespace(label) and not canonical_data_source_keyword_for_section(label)
+    ]
+    research_category_tokens = [token for token in keyword_tokens if token in RESEARCH_CATEGORY_KEYWORD_SET]
+    if not keywords:
+        errors.append("Missing required bib field: keywords")
+    if noncanonical_data_source_tokens:
+        errors.append(f"Noncanonical data-source keyword(s): {', '.join(noncanonical_data_source_tokens)}")
+    if uncontrolled_tokens:
+        errors.append(f"Uncontrolled keyword(s): {', '.join(uncontrolled_tokens)}")
+    if unknown_sections:
+        errors.append(f"Unknown data-source section/category: {', '.join(unknown_sections)}")
+    if is_data_source:
+        if not canonical_data_source_tokens:
+            errors.append(f"Data-source records must have one or more canonical {DATA_SOURCE_KEYWORD_PREFIX} keywords")
+        elif section_keywords and set(canonical_data_source_tokens) != set(section_keywords):
+            errors.append("Section/category selection must match the selected data-source keyword(s)")
+    elif data_source_tokens:
+        errors.append("Records unchecked as data sources must not include Data Sources keywords")
+    elif not research_category_tokens:
+        errors.append("Non-data-source records must include at least one controlled research category keyword")
+    taxonomy_ok = (
+        bool(keywords)
+        and not noncanonical_data_source_tokens
+        and not uncontrolled_tokens
+        and not unknown_sections
+        and (
+            (is_data_source and bool(canonical_data_source_tokens) and (not section_keywords or set(canonical_data_source_tokens) == set(section_keywords)))
+            or (not is_data_source and not data_source_tokens and bool(research_category_tokens))
+        )
+    )
+    checks.append({
+        "name": "Data-source keyword taxonomy",
+        "passed": taxonomy_ok,
+        "detail": "Data-source keyword classification is valid" if taxonomy_ok else "Keyword classification has errors",
+    })
 
     bad_urls: List[str] = []
     if link and not URL_RE.match(link):
@@ -777,12 +857,16 @@ def validate_candidate(records: List[dict], candidate: dict, mode: str, target_i
     if bib_url and not URL_RE.match(bib_url):
         bad_urls.append(f"bib.url={bib_url}")
         errors.append(f"Invalid URL in bib.url: {bib_url}")
-    if not link and not bib_url:
+    if is_data_source and not link and not bib_url:
         errors.append("Missing URL: provide at least Link (or bib.url)")
     checks.append({
         "name": "URL checks",
-        "passed": (not bad_urls) and bool(link or bib_url),
-        "detail": "URL fields valid" if (not bad_urls) and bool(link or bib_url) else ("; ".join(bad_urls) if bad_urls else "Missing link/bib.url"),
+        "passed": (not bad_urls) and (not is_data_source or bool(link or bib_url)),
+        "detail": (
+            "URL fields valid"
+            if (not bad_urls) and (not is_data_source or bool(link or bib_url))
+            else ("; ".join(bad_urls) if bad_urls else "Missing link/bib.url")
+        ),
     })
     if doi and not DOI_RE.match(doi):
         warnings.append(f"DOI format looks unusual: {doi}")
@@ -857,7 +941,7 @@ def validate_candidate_against_artifacts(registry: dict, candidate: dict, mode: 
     checks: List[dict] = []
     cfg = registry.get("config", {}) or {}
     dictionary_path = _dictionary_output_path(cfg)
-    bib_path = Path(cfg.get("bib_output", "documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib"))
+    bib_path = _digital_bib_path(cfg)
     target_norm = normalize_whitespace(target)
     skip_values = target_skip_values(registry.get("records", []), target) if mode == "edit" else set()
 
@@ -913,37 +997,14 @@ def validate_candidate_against_artifacts(registry: dict, candidate: dict, mode: 
         else ("; ".join(sorted(set(dict_errors))) if dict_errors else "Dictionary check skipped"),
     })
 
-    bib_checked = False
+    bib_checked = bib_path.exists()
     bib_errors: List[str] = []
-    if bib_path.exists():
-        try:
-            entries = parse_bib_entries(bib_path.read_text(encoding="utf-8"))
-            bib_checked = True
-            for key, entry in entries.items():
-                k_norm = normalize_whitespace(key)
-                if mode == "edit" and ((target_norm and k_norm == target_norm) or k_norm in skip_values):
-                    continue
-                if c_citekey and c_citekey == k_norm:
-                    bib_errors.append(f"Bib duplicate key: {c_citekey}")
-                fields = entry.get("fields", {}) or {}
-                e_url = normalize_url(str(fields.get("url", "")))
-                e_title = normalize_text(str(fields.get("title", "")))
-                e_year = normalize_whitespace(str(fields.get("year", "")))
-                if c_url and c_url == e_url:
-                    bib_errors.append(f"Bib duplicate URL: {c_url} (key {key})")
-                if c_title and c_year and c_title == e_title and c_year == e_year:
-                    bib_errors.append(f"Bib duplicate (title, year): ({c_title}, {c_year}) (key {key})")
-            errors.extend(bib_errors)
-        except Exception as exc:  # pylint: disable=broad-except
-            warnings.append(f"Bib artifact check could not run: {exc}")
-    else:
-        warnings.append(f"Bib artifact not found: {bib_path}")
+    if not bib_checked:
+        warnings.append(f"Digital library artifact not found: {bib_path}")
     checks.append({
-        "name": "Bib artifact duplicate checks",
-        "passed": bib_checked and len(bib_errors) == 0,
-        "detail": "No exact duplicates in generated .bib"
-        if bib_checked and not bib_errors
-        else ("; ".join(sorted(set(bib_errors))) if bib_errors else "Bib check skipped"),
+        "name": "Digital library merge guard",
+        "passed": bib_checked,
+        "detail": "digital_library.bib exists; citekey overlaps are handled by merge-on-build" if bib_checked else "Digital library check skipped",
     })
 
     return {"errors": sorted(set(errors)), "warnings": sorted(set(warnings)), "checks": checks}
@@ -954,9 +1015,7 @@ def _run_build_sources_artifacts(
     *,
     dictionary_template: Optional[Path] = None,
     dictionary_output: Optional[Path] = None,
-    bib_output: Optional[Path] = None,
-    wealth_bib_input: Optional[Path] = None,
-    both_bib_output: Optional[Path] = None,
+    digital_bib_output: Optional[Path] = None,
     quiet: bool = False,
 ) -> None:
     from build_sources_artifacts import main as build_main  # pylint: disable=import-outside-toplevel
@@ -965,9 +1024,7 @@ def _run_build_sources_artifacts(
     optional_args = [
         ("--dictionary-template", dictionary_template),
         ("--dictionary-output", dictionary_output),
-        ("--bib-output", bib_output),
-        ("--wealth-bib-input", wealth_bib_input),
-        ("--both-bib-output", both_bib_output),
+        ("--digital-bib-output", digital_bib_output),
     ]
     for flag, path_value in optional_args:
         if path_value is not None:
@@ -987,17 +1044,14 @@ def _run_build_sources_artifacts(
 
 def generated_artifact_drift(registry_path: Path, cfg: dict) -> dict:
     dictionary_path = _dictionary_output_path(cfg)
-    data_bib_path = _data_bib_path(cfg)
-    wealth_bib_path = _wealth_bib_path(cfg)
-    both_bib_path = _both_bib_path(cfg)
+    digital_bib_path = _digital_bib_path(cfg)
     stale_paths: List[str] = []
     errors: List[str] = []
 
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp_root = Path(tmpdir)
         tmp_dict = tmp_root / "dictionary.xlsx"
-        tmp_data_bib = tmp_root / "data.bib"
-        tmp_both_bib = tmp_root / "both.bib"
+        tmp_digital_bib = tmp_root / "digital_library.bib"
         try:
             if not dictionary_path.exists():
                 errors.append(f"Dictionary artifact missing: {dictionary_path}")
@@ -1007,20 +1061,20 @@ def generated_artifact_drift(registry_path: Path, cfg: dict) -> dict:
                 registry_path,
                 dictionary_template=tmp_dict,
                 dictionary_output=tmp_dict,
-                bib_output=tmp_data_bib,
-                wealth_bib_input=wealth_bib_path,
-                both_bib_output=tmp_both_bib,
+                digital_bib_output=tmp_digital_bib,
                 quiet=True,
             )
 
-            if not data_bib_path.exists() or data_bib_path.read_text(encoding="utf-8") != tmp_data_bib.read_text(encoding="utf-8"):
-                stale_paths.append(str(data_bib_path))
-            if not both_bib_path.exists() or both_bib_path.read_text(encoding="utf-8") != tmp_both_bib.read_text(encoding="utf-8"):
-                stale_paths.append(str(both_bib_path))
+            if not digital_bib_path.exists() or digital_bib_path.read_text(encoding="utf-8") != tmp_digital_bib.read_text(encoding="utf-8"):
+                stale_paths.append(str(digital_bib_path))
             try:
                 current_rows = read_sources_sheet(dictionary_path)
                 rebuilt_rows = read_sources_sheet(tmp_dict)
                 if json.dumps(current_rows, sort_keys=True) != json.dumps(rebuilt_rows, sort_keys=True):
+                    stale_paths.append(str(dictionary_path))
+                current_alias_rows = read_source_alias_sheet(dictionary_path)
+                rebuilt_alias_rows = read_source_alias_sheet(tmp_dict)
+                if json.dumps(current_alias_rows, sort_keys=True) != json.dumps(rebuilt_alias_rows, sort_keys=True):
                     stale_paths.append(str(dictionary_path))
             except Exception as exc:  # pylint: disable=broad-except
                 errors.append(f"Dictionary artifact check could not run: {exc}")
@@ -1034,19 +1088,6 @@ def build_maintenance_health(registry: dict, registry_path: Path) -> dict:
     records = registry.get("records", [])
     cfg = registry.get("config", {}) or {}
     issues: List[dict] = []
-
-    for rec in records:
-        source = normalize_whitespace(str(rec.get("source", "")))
-        citekey = normalize_whitespace(str(rec.get("citekey", "")))
-        if source and citekey and source != citekey:
-            issues.append(
-                {
-                    "type": "source_citekey_mismatch",
-                    "severity": "needs_review",
-                    "record": record_summary(rec),
-                    "message": f"Source {source} uses bibliography citekey {citekey}.",
-                }
-            )
 
     by_citekey: Dict[str, List[dict]] = {}
     for rec in records:
@@ -1072,7 +1113,7 @@ def build_maintenance_health(registry: dict, registry_path: Path) -> dict:
             }
         )
 
-    for label, path in [("Data Sources", _data_bib_path(cfg)), ("Combined", _both_bib_path(cfg))]:
+    for label, path in [("Digital Library", _digital_bib_path(cfg))]:
         try:
             blob = _read_bib_with_duplicate_detection(path)
             duplicate_keys = blob.get("duplicate_keys", [])
@@ -1128,6 +1169,7 @@ def parse_bib_paste(text: str) -> dict:
     fields = entry.get("fields", {})
     return {
         "source_key": key,
+        "citekey": key,
         "bib": {
             "entry_type": normalize_whitespace(entry.get("entry_type", "")),
             "title": fields.get("title", ""),
@@ -1150,9 +1192,35 @@ def parse_bib_paste(text: str) -> dict:
             "extra_fields": {k: v for k, v in fields.items() if k not in {
                 "title", "author", "year", "month", "journal", "booktitle", "volume", "number", "pages",
                 "institution", "publisher", "doi", "url", "urldate", "abstract", "keywords", "note"
-            }},
+            } and normalize_whitespace(str(k)).lower() not in BIB_EXPORT_BLOCKED_FIELDS},
         },
     }
+
+
+def _payload_data_source_keywords(record: dict, raw_keywords: str) -> List[str]:
+    selected = record.get("data_source_categories", [])
+    if isinstance(selected, str):
+        selected_values = [value for value in re.split(r"[;|,]", selected) if normalize_whitespace(value)]
+    elif isinstance(selected, (list, tuple, set)):
+        selected_values = list(selected)
+    else:
+        selected_values = []
+
+    keywords: List[str] = []
+    for value in selected_values:
+        text = normalize_whitespace(str(value))
+        keyword = text if is_canonical_data_source_keyword(text) else canonical_data_source_keyword_for_section(text)
+        if keyword and keyword not in keywords:
+            keywords.append(keyword)
+
+    for keyword in canonical_data_source_keywords_for_sections(record.get("section", "")):
+        if keyword not in keywords:
+            keywords.append(keyword)
+    if not keywords:
+        for keyword in data_source_keywords_from_value(raw_keywords):
+            if keyword not in keywords:
+                keywords.append(keyword)
+    return keywords
 
 
 def make_candidate(payload: dict) -> dict:
@@ -1161,13 +1229,38 @@ def make_candidate(payload: dict) -> dict:
     source_key = normalize_whitespace(record.get("source_key", ""))
     source_value = normalize_whitespace(record.get("source", ""))
     citekey_value = normalize_whitespace(record.get("citekey", ""))
-    if mode == "add":
-        source_value = source_key
-        citekey_value = source_key
-    else:
-        source_value = source_value or source_key
-        citekey_value = citekey_value or source_value or source_key
     bib = record.get("bib", {}) or {}
+    incoming_keywords = normalize_whitespace(bib.get("keywords", ""))
+    raw_keywords = format_keywords(
+        token for token in split_keywords(incoming_keywords)
+        if token in RESEARCH_CATEGORY_KEYWORD_SET
+    )
+    is_data_source = bool(record.get("is_data_source", False))
+    if "is_data_source" not in record:
+        is_data_source = bool(
+            canonical_data_source_keywords_for_sections(record.get("section", ""))
+            or data_source_keywords_from_value(incoming_keywords)
+        )
+    if mode == "add":
+        citekey_value = citekey_value or source_key
+        source_value = source_value or (source_key if is_data_source else "")
+    else:
+        source_value = source_value or (source_key if is_data_source else "")
+        citekey_value = citekey_value or source_key or source_value
+    if not is_data_source:
+        source_value = ""
+    selected_data_source_keywords = _payload_data_source_keywords(record, incoming_keywords)
+    section_value = normalize_whitespace(record.get("section", ""))
+    if is_data_source:
+        raw_keywords = set_data_source_keywords(raw_keywords, selected_data_source_keywords)
+        section_value = "; ".join(
+            DATA_SOURCE_KEYWORD_TO_SECTION[keyword]
+            for keyword in selected_data_source_keywords
+            if keyword in DATA_SOURCE_KEYWORD_TO_SECTION
+        )
+    else:
+        section_value = ""
+        raw_keywords = strip_data_source_keywords(raw_keywords)
     link_value = normalize_whitespace(record.get("link", ""))
     bib_url_value = normalize_whitespace(bib.get("url", ""))
     if mode == "add":
@@ -1175,18 +1268,19 @@ def make_candidate(payload: dict) -> dict:
         bib_url_value = link_value or bib_url_value
     editor_name = normalize_whitespace(payload.get("editor_name", "")) or normalize_whitespace(record.get("editor_name", ""))
     return {
-        "section": normalize_whitespace(record.get("section", "")),
-        "aggsource": normalize_whitespace(record.get("aggsource", "")),
+        "is_data_source": is_data_source,
+        "section": section_value,
+        "aggsource": normalize_whitespace(record.get("aggsource", "")) if is_data_source else "",
         "legend": normalize_whitespace(record.get("legend", "")),
         "source": source_value,
         "citekey": citekey_value,
-        "data_type": normalize_whitespace(record.get("data_type", "")),
+        "data_type": normalize_whitespace(record.get("data_type", "")) if is_data_source else "",
         "link": link_value,
-        "ref_link": normalize_whitespace(record.get("ref_link", "")),
-        "inclusion_in_warehouse": normalize_whitespace(record.get("inclusion_in_warehouse", "")),
-        "multigeo_reference": normalize_whitespace(record.get("multigeo_reference", "")),
-        "metadata": normalize_whitespace(record.get("metadata", "")),
-        "metadatalink": normalize_whitespace(record.get("metadatalink", "")),
+        "ref_link": normalize_whitespace(record.get("ref_link", "")) if is_data_source else "",
+        "inclusion_in_warehouse": normalize_whitespace(record.get("inclusion_in_warehouse", "")) if is_data_source else "",
+        "multigeo_reference": normalize_whitespace(record.get("multigeo_reference", "")) if is_data_source else "",
+        "metadata": normalize_whitespace(record.get("metadata", "")) if is_data_source else "",
+        "metadatalink": normalize_whitespace(record.get("metadatalink", "")) if is_data_source else "",
         "shared_citekey_group": normalize_whitespace(record.get("shared_citekey_group", "")),
         "shared_citekey_note": normalize_whitespace(record.get("shared_citekey_note", "")),
         "editor_name": editor_name,
@@ -1207,7 +1301,7 @@ def make_candidate(payload: dict) -> dict:
             "url": bib_url_value,
             "urldate": normalize_whitespace(bib.get("urldate", "")),
             "abstract": normalize_whitespace(bib.get("abstract", "")),
-            "keywords": normalize_whitespace(bib.get("keywords", "")),
+            "keywords": raw_keywords,
             "note": normalize_whitespace(bib.get("note", "")),
             "extra_fields": bib.get("extra_fields", {}) or {},
         },
@@ -1257,6 +1351,8 @@ def is_empty_add_payload(payload: dict) -> bool:
         return False
     record = payload.get("record", {}) or {}
     bib = record.get("bib", {}) or {}
+    if bool(record.get("is_data_source", False)):
+        return False
     for key in ADD_RECORD_FIELDS:
         if normalize_whitespace(record.get(key, "")):
             return False
@@ -1406,9 +1502,7 @@ def _history_action_label(operation: str, reason: str) -> str:
 def _history_entry_summary(library: str, operation: str, record_id: str, reason: str) -> str:
     action = _history_action_label(operation, reason)
     record = normalize_whitespace(record_id) or "(no record id)"
-    if library == "wealth_research":
-        return f"{action} in Wealth Research for {record}."
-    return f"{action} in Data Sources for {record}."
+    return f"{action} in Library for {record}."
 
 
 def _history_file_sort_key(path_value: str) -> tuple:
@@ -1451,19 +1545,11 @@ def _history_file_descriptors(
     op = normalize_whitespace(operation).lower()
     reason_text = normalize_whitespace(reason).lower()
 
-    if library == "wealth_research":
-        add_descriptor(_wealth_bib_path(cfg), "canonical", "Primary Wealth Research bibliography store.")
-        add_descriptor(changelog_path, "history", "Wealth Research history log.")
-        if op in {"add", "edit", "delete", "build_only"}:
-            add_descriptor(_both_bib_path(cfg), "generated", "Combined bibliography regenerated from both libraries.")
-        return sorted(descriptors, key=lambda item: _history_file_sort_key(item.get("path", "")))
-
-    add_descriptor(registry_path, "canonical", "Primary Data Sources registry.")
-    add_descriptor(changelog_path, "history", "Data Sources history log.")
+    add_descriptor(registry_path, "canonical", "Primary unified Library registry.")
+    add_descriptor(changelog_path, "history", "Unified Library history log.")
     if op in {"add", "edit", "delete", "build_only", "bulk_label_update"}:
         add_descriptor(_dictionary_output_path(cfg), "generated", "Sources sheet rebuilt from canonical registry.")
-        add_descriptor(_data_bib_path(cfg), "generated", "Data Sources BibTeX library regenerated.")
-        add_descriptor(_both_bib_path(cfg), "generated", "Combined bibliography regenerated from both libraries.")
+        add_descriptor(_digital_bib_path(cfg), "generated", "Digital library regenerated from unified registry.")
     if op == "edit" and "ref_link" not in reason_text:
         add_descriptor(
             aliases_path,
@@ -1552,7 +1638,7 @@ def _build_history_entry(
         "history_id": f"{library}:{storage_index}",
         "storage_index": storage_index,
         "library": library,
-        "branch_label": "Wealth Research" if library == "wealth_research" else "Data Sources",
+        "branch_label": "Unified Library",
         "operation": operation,
         "action_label": _history_action_label(operation, reason),
         "record_id": record_id,
@@ -1576,14 +1662,12 @@ def _build_history_entry(
 def build_history_feed(app, registry: dict) -> dict:
     cfg = registry.get("config", {}) or {}
     data_log = load_json_yaml(app.changelog_path) or {"changes": []}
-    wealth_log_path = _wealth_change_log_path(cfg)
-    wealth_log = load_json_yaml(wealth_log_path) or {"changes": []}
     entries: List[dict] = []
 
     for idx, entry in enumerate(data_log.get("changes", []) or []):
         entries.append(
             _build_history_entry(
-                "data_sources",
+                "library",
                 entry or {},
                 idx,
                 app.registry_path,
@@ -1593,27 +1677,13 @@ def build_history_feed(app, registry: dict) -> dict:
             )
         )
 
-    for idx, entry in enumerate(wealth_log.get("changes", []) or []):
-        entries.append(
-            _build_history_entry(
-                "wealth_research",
-                entry or {},
-                idx,
-                app.registry_path,
-                wealth_log_path,
-                app.aliases_path,
-                cfg,
-            )
-        )
-
     entries.sort(key=lambda item: (item.get("updated_at", ""), item.get("history_id", "")), reverse=True)
     latest = entries[0] if entries else {}
     summary = {
         "total": len(entries),
-        "data_sources": sum(1 for item in entries if item.get("library") == "data_sources"),
-        "wealth_research": sum(1 for item in entries if item.get("library") == "wealth_research"),
         "latest_updated_at": latest.get("updated_at", ""),
         "latest_summary": latest.get("summary", ""),
+        "latest_actor": latest.get("actor", ""),
     }
     return {"entries": entries, "summary": summary}
 
@@ -1696,28 +1766,41 @@ def apply_payload(registry: dict, payload: dict, aliases_path: Path, changelog_p
         before_citekey = rec.get("citekey", "")
 
         updated = json.loads(json.dumps(rec))
+        clearable_when_not_data_source = {
+            "section",
+            "aggsource",
+            "source",
+            "data_type",
+            "ref_link",
+            "inclusion_in_warehouse",
+            "multigeo_reference",
+            "metadata",
+            "metadatalink",
+        }
         for k in [
-            "section", "aggsource", "legend", "source", "citekey", "data_type", "link", "ref_link",
+            "is_data_source", "section", "aggsource", "legend", "source", "citekey", "data_type", "link", "ref_link",
             "inclusion_in_warehouse", "multigeo_reference", "metadata", "metadatalink",
             "shared_citekey_group", "shared_citekey_note",
         ]:
             val = candidate.get(k, "")
-            if val != "":
+            if val != "" or (not candidate.get("is_data_source") and k in clearable_when_not_data_source):
                 updated[k] = val
 
         ubib = updated.get("bib", {})
         for k, v in candidate.get("bib", {}).items():
             if k == "extra_fields":
                 continue
-            if v != "":
+            if v != "" or k == "keywords":
                 ubib[k] = v
         updated["bib"] = ubib
         updated["updated_at"] = now_utc()
         updated["updated_by"] = editor_name
 
-        changed_key = before_source != updated.get("source", "") or before_citekey != updated.get("citekey", "")
+        changed_source = before_source != updated.get("source", "")
+        changed_citekey = before_citekey != updated.get("citekey", "")
+        changed_key = changed_citekey or (changed_source and updated.get("is_data_source"))
         if changed_key and not breaking:
-            raise ValueError("You changed Source/Citekey. Confirm key rename in the save confirmation prompt.")
+            raise ValueError("You changed source code or BibTeX citekey. Confirm the change in the save confirmation prompt.")
 
         updated_for_validation = json.loads(json.dumps(updated))
         updated_for_validation["editor_name"] = editor_name
@@ -1728,7 +1811,7 @@ def apply_payload(registry: dict, payload: dict, aliases_path: Path, changelog_p
         rec.update(updated)
 
         if changed_key and breaking:
-            if before_source != rec.get("source", ""):
+            if before_source != rec.get("source", "") and rec.get("source", ""):
                 append_alias(aliases_path, "source", before_source, rec.get("source", ""), reason)
             if before_citekey != rec.get("citekey", ""):
                 append_alias(aliases_path, "citekey", before_citekey, rec.get("citekey", ""), reason)
@@ -1748,6 +1831,7 @@ def apply_payload(registry: dict, payload: dict, aliases_path: Path, changelog_p
 
     newrec = {
         "id": f"src-{re.sub(r'[^A-Za-z0-9]+', '-', candidate.get('source', '').strip()).strip('-').lower()}",
+        "is_data_source": candidate.get("is_data_source", False),
         "section": candidate.get("section", ""),
         "aggsource": candidate.get("aggsource", ""),
         "legend": candidate.get("legend", ""),
@@ -1826,12 +1910,12 @@ def _summarize_wealth_record_diff(before: dict, after: dict) -> List[str]:
     return changed
 
 
-def _data_bib_keys(cfg: dict) -> set:
-    data_path = _data_bib_path(cfg)
-    if not data_path.exists():
-        return set()
-    text = data_path.read_text(encoding="utf-8")
-    return {normalize_whitespace(k) for k in parse_bib_entries(text).keys() if normalize_whitespace(k)}
+def _registry_citekeys(registry: dict) -> set:
+    return {
+        normalize_whitespace(str(record.get("citekey", "")))
+        for record in registry.get("records", [])
+        if normalize_whitespace(str(record.get("citekey", "")))
+    }
 
 
 HTML = """<!doctype html>
@@ -1860,9 +1944,14 @@ body { font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Geor
 .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 label { font-size: 12px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 6px; letter-spacing: 0.03em; text-transform: uppercase; }
 input, textarea, select { width: 100%; padding: 10px; border: 1px solid var(--border-soft); border-radius: 10px; font-size: 13px; background: var(--bg-input); color: var(--text-main); font-family: "Avenir Next", "Segoe UI", sans-serif; transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease; }
+input[type="checkbox"] { width: auto; margin: 0 8px 0 0; }
 input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent-ink); box-shadow: 0 0 0 3px rgba(23, 50, 77, 0.12); background: #fffdf8; }
 textarea { min-height: 86px; }
 .row { margin-bottom: 16px; }
+.checkbox-row label { display: inline-flex; align-items: center; text-transform: none; letter-spacing: 0; color: var(--text-main); font-size: 13px; }
+.checkbox-group { display: grid; gap: 7px; padding: 10px; border: 1px solid var(--border-soft); border-radius: 10px; background: var(--bg-input); }
+.checkbox-group label { display: flex; align-items: flex-start; gap: 8px; margin: 0; text-transform: none; letter-spacing: 0; color: var(--text-main); font-size: 12px; line-height: 1.35; font-weight: 500; }
+.checkbox-group input[type="checkbox"] { flex: 0 0 auto; margin: 2px 0 0; }
 button { background: var(--accent-ink); color: white; border: 0; border-radius: 999px; padding: 11px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; cursor: pointer; font-family: "Avenir Next", "Segoe UI", sans-serif; transition: transform 120ms ease, opacity 120ms ease, box-shadow 120ms ease; box-shadow: 0 10px 18px rgba(23, 50, 77, 0.16); }
 button:hover { transform: translateY(-1px); }
 button.secondary { background: #5c6670; box-shadow: 0 10px 18px rgba(73, 81, 89, 0.14); }
@@ -1873,15 +1962,16 @@ small { color: var(--text-muted); }
 .app-subtitle { margin: 0 0 20px; font-size: 0.95rem; color: var(--text-muted); }
 .panel { margin-bottom: 18px; padding: 18px; border: 1px solid rgba(109, 95, 74, 0.18); border-radius: 20px; background: linear-gradient(180deg, rgba(255, 253, 248, 0.96) 0%, rgba(250, 245, 236, 0.92) 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7); }
 .section-heading { margin: 0 0 14px; font-size: 1.15rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.section-help { margin: -6px 0 14px; color: var(--text-muted); font-size: 13px; line-height: 1.45; }
 pre { background: linear-gradient(180deg, #1d242d 0%, #131920 100%); color: #e8efe8; padding: 16px; border-radius: 16px; overflow: auto; border: 1px solid rgba(132, 145, 160, 0.2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
-#status, #wealth_status { white-space: pre-wrap; line-height: 1.5; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 12px; }
-#status .status-ok, #wealth_status .status-ok { color: #8fd28f; font-weight: 600; }
-#status .status-fail, #wealth_status .status-fail { color: #ff9da4; font-weight: 600; }
-#status .status-warn, #wealth_status .status-warn { color: #f0c674; font-weight: 600; }
-#status .git-file, #wealth_status .git-file { color: #8ab4f8; }
-#status .git-hunk, #wealth_status .git-hunk { color: #c792ea; }
-#status .git-add, #wealth_status .git-add { color: #8fd28f; }
-#status .git-del, #wealth_status .git-del { color: #ff9da4; }
+#status { white-space: pre-wrap; line-height: 1.5; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 12px; }
+#status .status-ok { color: #8fd28f; font-weight: 600; }
+#status .status-fail { color: #ff9da4; font-weight: 600; }
+#status .status-warn { color: #f0c674; font-weight: 600; }
+#status .git-file { color: #8ab4f8; }
+#status .git-hunk { color: #c792ea; }
+#status .git-add { color: #8fd28f; }
+#status .git-del { color: #ff9da4; }
 .help { background: rgba(248, 243, 233, 0.95); border: 1px solid rgba(109, 95, 74, 0.18); padding: 12px; border-radius: 14px; color: #4b5662; font-size: 12px; line-height: 1.55; }
 .req { color: #ad2b2b; }
 .step { font-weight: 700; color: var(--accent-ink); margin-bottom: 6px; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.78rem; }
@@ -2001,7 +2091,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
 .history-kpi { padding: 14px 16px; border: 1px solid rgba(109, 95, 74, 0.18); border-radius: 16px; background: rgba(255, 251, 244, 0.88); }
 .history-kpi-label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
 .history-kpi-value { font-family: "Avenir Next Condensed", "Gill Sans", "Trebuchet MS", sans-serif; color: var(--accent-ink); font-size: 1.1rem; line-height: 1.2; }
-.history-toolbar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.history-toolbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: end; }
 .history-filter-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .history-layout { display: grid; grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr); gap: 18px; align-items: start; }
 .history-list { max-height: 640px; overflow: auto; display: grid; gap: 10px; padding-right: 2px; }
@@ -2076,7 +2166,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
   <div class='app-header'>
     <div class='app-header-main'>
       <h1>ADAM SSM - Sleepless Source Manager</h1>
-      <p class='app-subtitle'><small>This UI validates and writes locally.</small></p>
+      <p class='app-subtitle'><small>This app writes locally. Recompile the warehouse and documentation to see changes. Update the website's copy of digital_library.bib to publish d</small></p>
     </div>
     <div class='app-header-actions'>
       <button id='relaunch_app_button' class='secondary' onclick='relaunchApp()'>Relaunch App</button>
@@ -2084,13 +2174,12 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
     </div>
   </div>
   <div class='branch-tabs'>
-    <button id='branch_data_tab' class='branch-tab active' onclick="switchBranch('data')">Data Sources</button>
-    <button id='branch_wealth_tab' class='branch-tab' onclick="switchBranch('wealth')">Wealth Research</button>
+    <button id='branch_library_tab' class='branch-tab active' onclick="switchBranch('library')">Library</button>
     <button id='branch_history_tab' class='branch-tab' onclick="switchBranch('history')">History</button>
     <button id='branch_maintenance_tab' class='branch-tab' onclick="switchBranch('maintenance')">Maintenance</button>
   </div>
 
-  <div id='branch_data'>
+  <div id='branch_library'>
   <div class='grid3 row panel'>
     <div>
       <label>Mode <span class='req'>*</span></label>
@@ -2124,35 +2213,43 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
 
   <div id='dataBibPasteWrap' class='panel'>
   <details open>
-    <summary><b>BibTeX Paste</b></summary>
+    <summary><b>Quick import</b></summary>
     <div class='help' style='margin-top:8px;'>
-      Paste a full BibTeX entry here (for example, from Google Scholar), then click <b>Parse BibTeX and fill fields</b>.
-      Parsing copies data into the fields below and <b>overwrites those target fields</b>.
-      Editing the paste box alone does nothing until Parse is clicked again.
-      After parsing, any manual edits in the fields below are what will be saved.
+      Fill most fields automatically by pasting a BibTeX entry below and clicking <b>Parse</b>. Validate/edit fields before saving.
     </div>
     <div class='row' style='margin-top:8px;'>
       <textarea id='bib_paste' placeholder='@article{Key, ...}'></textarea>
-      <button class='secondary' onclick='parseBib()'>Parse BibTeX and fill fields</button>
+      <button class='secondary' onclick='parseBib()'>Parse BibTex</button>
     </div>
   </details>
   </div>
 
   <div class='panel'>
-  <h3 class='section-heading'>Core Source Fields</h3>
+  <h3 class='section-heading'>Source ID</h3>
+  <div class='row checkbox-row'>
+    <label><input id='is_data_source' type='checkbox' onchange='onDataSourceCheckboxChange()'> The source is recorded in the data warehouse</label>
+  </div>
   <div class='grid3'>
-    <div class='row'><label>Section <span class='req'>*</span></label><input id='section' list='section_opts'></div>
-    <div class='row'><label>Aggsource <span class='req'>*</span></label><input id='aggsource' list='aggsource_opts'></div>
-    <div class='row'><label>Legend <span class='req'>*</span></label><input id='legend'></div>
-    <div class='row' id='row_source_key'><label>Source / Citekey <span class='req'>*</span></label><input id='source_key' placeholder='Same value used as Source and citekey'></div>
-    <div class='row hidden' id='row_source_value'><label>Source <span class='req'>*</span></label><input id='source_value'></div>
-    <div class='row hidden' id='row_citekey_value'><label>Citekey <span class='req'>*</span></label><input id='citekey_value'></div>
-    <div class='row'><label>URL / Link <span class='req'>*</span></label><input id='link'></div>
+    <div class='row data-source-field'><label>Classification in warehouse<span class='req'>*</span></label><div id='data_source_categories' class='checkbox-group' role='group' aria-label='Data source categories'>
+      <label><input type='checkbox' value='Wealth Topography' onchange='onDataSourceCategoriesChange()'> Wealth Topography</label>
+      <label><input type='checkbox' value='Wealth Inequality' onchange='onDataSourceCategoriesChange()'> Wealth Inequality</label>
+      <label><input type='checkbox' value='Taxes on Wealth' onchange='onDataSourceCategoriesChange()'> Taxes on Wealth</label>
+      <label><input type='checkbox' value='Inheritance Trends' onchange='onDataSourceCategoriesChange()'> Inheritance Trends</label>
+      <label><input type='checkbox' value='Supplementary Variables' onchange='onDataSourceCategoriesChange()'> Supplementary Variables</label>
+      <label><input type='checkbox' value='Unclassified' onchange='onDataSourceCategoriesChange()'> Unclassified</label>
+    </div></div>
+    <input id='section' type='hidden'>
+    <div class='row data-source-field'><label>Source type (Aggsource) <span class='req'>*</span></label><input id='aggsource' list='aggsource_opts' placeholder='Click for dropdown options'></div>
+    <div class='row'><label>Legend <span class='req'>*</span></label><input id='legend' placeholder='Name (year)'></div>
+    <input id='source_key' type='hidden'>
+    <div class='row data-source-field' id='row_source_value'><label>Source code <span class='req'>*</span></label><input id='source_value' placeholder='Ideally the same than citekey'></div>
+    <div class='row' id='row_citekey_value'><label>Citekey <span class='req'>*</span></label><input id='citekey_value' placeholder='ShortnameYear'></div>
+    <div class='row'><label>URL / Link</label><input id='link'></div>
   </div>
   </div>
 
   <div class='panel'>
-  <h3 class='section-heading'>Bib Fields</h3>
+  <h3 class='section-heading'>Bibliographic Fields</h3>
   <div class='grid3'>
     <div class='row'>
       <label>entry_type <span class='req'>*</span></label>
@@ -2173,15 +2270,15 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
   <div class='row'><label>title <span class='req'>*</span></label><input id='bib_title'></div>
 
   <details>
-    <summary><b>More fields</b> (optional)</summary>
+    <summary><b>Optional fields</b></summary>
     <div class='grid3' style='margin-top:10px;'>
-      <div class='row'><label>Data_type</label><input id='data_type' list='data_type_opts'></div>
-      <div class='row'><label>Ref_link</label><input id='ref_link'></div>
+      <div class='row data-source-field'><label>Data_type</label><input id='data_type' list='data_type_opts'></div>
+      <div class='row data-source-field'><label>Ref_link</label><input id='ref_link'></div>
       <div class='row'><label>Shared citekey group</label><input id='shared_citekey_group'></div>
       <div class='row'><label>Shared citekey note</label><input id='shared_citekey_note'></div>
-      <div class='row'><label>Inclusion_in_Warehouse</label><input id='inclusion_in_warehouse' list='inclusion_in_warehouse_opts'></div>
-      <div class='row'><label>Multigeo_Reference</label><input id='multigeo_reference'></div>
-      <div class='row'><label>Metadatalink</label><input id='metadatalink'></div>
+      <div class='row data-source-field'><label>Inclusion_in_Warehouse</label><input id='inclusion_in_warehouse' list='inclusion_in_warehouse_opts'></div>
+      <div class='row data-source-field'><label>Multigeo_Reference</label><input id='multigeo_reference'></div>
+      <div class='row data-source-field'><label>Metadatalink</label><input id='metadatalink'></div>
       <div class='row'><label>month</label><input id='bib_month'></div>
       <div class='row' id='row_bib_journal'><label>journal</label><input id='bib_journal'></div>
       <div class='row' id='row_bib_booktitle'><label>booktitle</label><input id='bib_booktitle'></div>
@@ -2193,12 +2290,29 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
       <div class='row'><label>doi</label><input id='bib_doi'></div>
       <div class='row hidden' id='row_bib_url'><label>bib.url</label><input id='bib_url'></div>
       <div class='row'><label>urldate</label><input id='bib_urldate'></div>
-      <div class='row'><label>keywords</label><input id='bib_keywords'></div>
       <div class='row'><label>note</label><input id='bib_note'></div>
     </div>
-    <div class='row'><label>Metadata</label><textarea id='metadata'></textarea></div>
+    <div class='row data-source-field'><label>Metadata</label><textarea id='metadata'></textarea></div>
     <div class='row'><label>abstract</label><textarea id='bib_abstract'></textarea></div>
   </details>
+  </div>
+
+  <div class='panel'>
+  <h3 class='section-heading'>Research Library Classification</h3>
+  <p class='section-help'>Choose one or many research themes to include this source in the research library. </p>
+  <div class='grid3'>
+    <div class='row'><label>Categories</label><div id='research_categories' class='checkbox-group' role='group' aria-label='Research categories'>
+      <label><input type='checkbox' value='Cross-National Comparisons' onchange='onResearchCategoriesChange()'> Cross-National Comparisons</label>
+      <label><input type='checkbox' value='Determinants of Wealth and Wealth Inequality' onchange='onResearchCategoriesChange()'> Determinants of Wealth and Wealth Inequality</label>
+      <label><input type='checkbox' value='Estate Inheritance and Gift Taxes' onchange='onResearchCategoriesChange()'> Estate Inheritance and Gift Taxes</label>
+      <label><input type='checkbox' value='Impacts of Wealth Inequality' onchange='onResearchCategoriesChange()'> Impacts of Wealth Inequality</label>
+      <label><input type='checkbox' value='Intergenerational Wealth' onchange='onResearchCategoriesChange()'> Intergenerational Wealth</label>
+      <label><input type='checkbox' value='Methods of Estimation of Wealth Inequality' onchange='onResearchCategoriesChange()'> Methods of Estimation of Wealth Inequality</label>
+      <label><input type='checkbox' value='Trends in Aggregate Wealth and Wealth Inequality' onchange='onResearchCategoriesChange()'> Trends in Aggregate Wealth and Wealth Inequality</label>
+      <label><input type='checkbox' value='Wealth Taxation' onchange='onResearchCategoriesChange()'> Wealth Taxation</label>
+    </div></div>
+  </div>
+  <input id='bib_keywords' type='hidden'>
   </div>
 
   <div class='panel'>
@@ -2209,7 +2323,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
   </div>
   <div class='row'>
     <div class='step'>Step 2: Save and build files locally</div>
-    <small>dictionary.xlsx, GCWealthProject_DataSourcesLibrary.bib, BothLibraries.bib</small>
+    <small>dictionary.xlsx, digital_library.bib</small>
     <div class='row' style='max-width:420px; margin-bottom:8px;'>
       <input id='editor_name' placeholder='your name'>
     </div>
@@ -2220,7 +2334,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
     <button class='secondary' onclick='compareOnlineBib()'>Compare</button>
   </div>
   <div class='row'>
-    <div class='step'>Step 4: Review full-registry ref_link proposals (optional)</div>
+    <div class='step'>Step 4: Review data-source ref_link proposals (optional)</div>
     <button class='secondary' onclick='scanRefLinkReview()'>Review ref_link proposals</button>
   </div>
   </div>
@@ -2288,123 +2402,10 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
     </div>
   </div>
 
-  <div id='branch_wealth' class='hidden'>
-    <div class='grid3 row panel'>
-      <div>
-        <label>Mode <span class='req'>*</span></label>
-        <select id='wealth_mode' onchange='wealthOnModeChange()'>
-          <option value='add'>add (new reference)</option>
-          <option value='edit'>edit (existing reference)</option>
-        </select>
-      </div>
-      <div id='wealthEditTargetWrap' class='hidden'>
-        <label>Edit target (existing key) <span class='req'>*</span></label>
-        <input id='wealth_target' list='wealth_target_opts' placeholder='Choose from search results below'>
-      </div>
-    </div>
-
-    <div id='wealthSearchWrap' class='row hidden panel'>
-      <div class='step'>Browse and search existing references</div>
-      <div class='search-panel'>
-        <label>Search by key/title/author/year</label>
-        <input id='wealth_search' placeholder='Type to filter...' oninput='wealthRenderSearchResults()'>
-        <div class='search-results' id='wealth_search_results'></div>
-      </div>
-    </div>
-
-    <div id='wealthEditToolsWrap' class='row hidden panel'>
-      <div class='step'>Edit tools</div>
-      <div style='display:flex; gap:10px; flex-wrap:wrap;'>
-        <button id='wealthLoadBtn' onclick='wealthLoadTarget()'>Load selected entry into form</button>
-        <button class='warn' onclick='wealthDeleteEntry()'>Delete entry</button>
-      </div>
-    </div>
-
-    <div id='wealthBibPasteWrap' class='panel'>
-    <details open>
-      <summary><b>BibTeX Paste</b></summary>
-      <div class='help' style='margin-top:8px;'>
-        Paste a full BibTeX entry, then click <b>Parse BibTeX and fill fields</b>.
-        Parsed values overwrite fields below.
-      </div>
-      <div class='row' style='margin-top:8px;'>
-        <textarea id='wealth_bib_paste' placeholder='@article{Key, ...}'></textarea>
-        <button class='secondary' onclick='wealthParseBib()'>Parse BibTeX and fill fields</button>
-      </div>
-    </details>
-    </div>
-
-    <div class='panel'>
-    <h3 class='section-heading'>Bib Fields</h3>
-    <div class='grid3'>
-      <div class='row'><label>Key <span class='req'>*</span></label><input id='wealth_key' placeholder='BibTeX key'></div>
-      <div class='row'>
-        <label>entry_type <span class='req'>*</span></label>
-        <select id='wealth_entry_type' onchange='wealthOnEntryTypeChange()'>
-          <option value=''>select entry type</option>
-          <option value='article'>article</option>
-          <option value='book'>book</option>
-          <option value='incollection'>incollection</option>
-          <option value='inproceedings'>inproceedings</option>
-          <option value='techreport'>techreport</option>
-          <option value='misc'>misc</option>
-          <option value='unpublished'>unpublished</option>
-          <option value='mastersthesis'>mastersthesis</option>
-          <option value='phdthesis'>phdthesis</option>
-        </select>
-      </div>
-      <div class='row'><label>author <span class='req'>*</span></label><input id='wealth_author'></div>
-      <div class='row'><label>year <span class='req'>*</span></label><input id='wealth_year'></div>
-      <div class='row'><label>title <span class='req'>*</span></label><input id='wealth_title'></div>
-      <div class='row'><label>month</label><input id='wealth_month'></div>
-      <div class='row hidden' id='wealth_row_journal'><label>journal</label><input id='wealth_journal'></div>
-      <div class='row hidden' id='wealth_row_booktitle'><label>booktitle</label><input id='wealth_booktitle'></div>
-      <div class='row'><label>volume</label><input id='wealth_volume'></div>
-      <div class='row'><label>number</label><input id='wealth_number'></div>
-      <div class='row'><label>pages</label><input id='wealth_pages'></div>
-      <div class='row hidden' id='wealth_row_institution'><label>institution</label><input id='wealth_institution'></div>
-      <div class='row hidden' id='wealth_row_publisher'><label>publisher</label><input id='wealth_publisher'></div>
-      <div class='row'><label>doi</label><input id='wealth_doi'></div>
-      <div class='row'><label>url</label><input id='wealth_url'></div>
-      <div class='row'><label>urldate</label><input id='wealth_urldate'></div>
-      <div class='row'><label>keywords</label><input id='wealth_keywords'></div>
-      <div class='row'><label>note</label><input id='wealth_note'></div>
-    </div>
-    <div class='row'><label>abstract</label><textarea id='wealth_abstract'></textarea></div>
-    </div>
-    <input id='wealth_extra_fields' type='hidden' value='{}'>
-
-    <div class='panel'>
-    <h3 class='section-heading'>Actions</h3>
-    <div class='row'>
-      <div class='step'>Step 1: Check entry (validation only, no save)</div>
-      <button class='secondary' onclick='wealthValidateOnly()'>Check entry</button>
-    </div>
-    <div class='row'>
-      <div class='step'>Step 2: Save and build files locally</div>
-      <small>GCWealthProject_WealthResearchLibrary.bib, BothLibraries.bib</small>
-      <div class='row' style='max-width:420px; margin-bottom:8px;'>
-        <input id='wealth_editor_name' placeholder='your name'>
-      </div>
-      <button class='warn' onclick='wealthApplyAndBuild()'>Save entry and rebuild</button>
-    </div>
-    <div class='row'>
-      <div class='step'>Step 3: Compare with online reference (optional)</div>
-      <button class='secondary' onclick='wealthCompareOnlineBib()'>Compare</button>
-    </div>
-    </div>
-
-    <div class='panel'>
-    <h3 class='section-heading'>Status</h3>
-    <pre id='wealth_status'></pre>
-    </div>
-    <datalist id='wealth_target_opts'></datalist>
-  </div>
-
   <div id='branch_history' class='hidden'>
     <div class='panel'>
       <h3 class='section-heading'>History</h3>
-      <div class='help'>Browse history, identify the point before a change, and use external file history in GitHub or Dropbox to restore earlier versions. Recommended: keep history intact. Remove history records only for testing or development cleanup.</div>
+      <div class='help'>History shows changes recorded through the unified Library editor. Old Wealth Research history is archived in code/tools/metadata/sources/wealth_research_change_log.yaml and is not shown here. Browse affected files and restore guidance to audit or roll back a change.</div>
     </div>
 
     <div id='history_summary_strip' class='history-summary-strip'></div>
@@ -2414,14 +2415,6 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
         <div>
           <label>Show Changes Up To</label>
           <input id='history_show_before' type='datetime-local' onchange='renderHistoryView()'>
-        </div>
-        <div>
-          <label>Branch</label>
-          <select id='history_branch_filter' onchange='renderHistoryView()'>
-            <option value=''>All branches</option>
-            <option value='data_sources'>Data Sources</option>
-            <option value='wealth_research'>Wealth Research</option>
-          </select>
         </div>
         <div>
           <label>Action</label>
@@ -2533,7 +2526,7 @@ summary { cursor: pointer; font-family: "Avenir Next Condensed", "Gill Sans", "T
                   <div class='ref-link-review-benchmark-inputs'>
                     <input
                       id='ref_link_review_benchmark_url'
-                      placeholder='https://bibbase.org/f/.../GCWealthProject_DataSourcesLibrary.bib'
+                      placeholder='https://bibbase.org/f/.../digital_library.bib'
                       oninput='updateRefLinkReviewBenchmarkUrl(this.value)'
                       onchange='renderRefLinkReviewPanel()'
                     >
@@ -2624,16 +2617,48 @@ function setStatusColored(text, targetId='status'){
 function showErrorWindow(msg){
   alert(`There are validation errors:\\n\\n${msg}`);
 }
-let activeBranch = 'data';
+let activeBranch = 'library';
 let dirty = false;
 let loadedSourceKey = '';
 let loadedSourceValue = '';
 let loadedCitekeyValue = '';
 function markDirty(){ dirty = true; }
 function clearDirty(){ dirty = false; }
-let wealthDirty = false;
-let wealthLoadedKey = '';
-let wealthEntries = [];
+const DATA_SOURCE_KEYWORD_PREFIX = 'Data Sources: ';
+const DATA_SOURCE_CATEGORY_OPTIONS = [
+  'Wealth Topography',
+  'Wealth Inequality',
+  'Taxes on Wealth',
+  'Inheritance Trends',
+  'Supplementary Variables',
+  'Unclassified'
+];
+const DATA_SOURCE_SECTION_TO_KEYWORD = {
+  'Wealth Topography': 'Data Sources: Wealth Topography',
+  'Wealth Inequality': 'Data Sources: Wealth Inequality',
+  'Taxes on Wealth': 'Data Sources: Taxes on Wealth',
+  'Inheritance Trends': 'Data Sources: Inheritance Trends',
+  'Supplementary Variables': 'Data Sources: Supplementary Variables',
+  'Unclassified': 'Data Sources: Unclassified'
+};
+const DATA_SOURCE_KEYWORD_TO_SECTION = {
+  'Data Sources: Wealth Topography': 'Wealth Topography',
+  'Data Sources: Wealth Inequality': 'Wealth Inequality',
+  'Data Sources: Taxes on Wealth': 'Taxes on Wealth',
+  'Data Sources: Inheritance Trends': 'Inheritance Trends',
+  'Data Sources: Supplementary Variables': 'Supplementary Variables',
+  'Data Sources: Unclassified': 'Unclassified'
+};
+const RESEARCH_CATEGORY_KEYWORDS = [
+  'Cross-National Comparisons',
+  'Determinants of Wealth and Wealth Inequality',
+  'Estate Inheritance and Gift Taxes',
+  'Impacts of Wealth Inequality',
+  'Intergenerational Wealth',
+  'Methods of Estimation of Wealth Inequality',
+  'Trends in Aggregate Wealth and Wealth Inequality',
+  'Wealth Taxation'
+];
 let dataEntries = [];
 let historyEntries = [];
 let historySummary = {};
@@ -2723,9 +2748,6 @@ let refLinkReviewState = emptyRefLinkReviewState();
 let refLinkReviewResizeState = null;
 let refLinkReviewTrayResizeState = null;
 let refLinkReviewModalResizeState = null;
-function markWealthDirty(){ wealthDirty = true; }
-function clearWealthDirty(){ wealthDirty = false; }
-
 function allRefLinkReviewRows(){
   return [
     ...(refLinkReviewState.ready_to_apply || []),
@@ -3645,7 +3667,6 @@ function historyApplyCleanupReason(reason){
 
 function historyClearFilters(){
   document.getElementById('history_show_before').value = '';
-  document.getElementById('history_branch_filter').value = '';
   document.getElementById('history_action_filter').value = '';
   document.getElementById('history_search').value = '';
   renderHistoryView();
@@ -3668,8 +3689,6 @@ function historyMatches(entry){
       return false;
     }
   }
-  const branchFilter = v('history_branch_filter').trim();
-  if (branchFilter && String(entry.library || '') !== branchFilter) return false;
   const actionFilter = v('history_action_filter').trim();
   if (actionFilter && String(entry.action_label || '') !== actionFilter) return false;
   const query = v('history_search').trim().toLowerCase();
@@ -3680,7 +3699,6 @@ function historyMatches(entry){
     entry.actor,
     entry.reason,
     entry.summary,
-    entry.branch_label,
     entry.action_label,
     ...files.map((item) => item.path),
   ].join(' ').toLowerCase();
@@ -3695,10 +3713,10 @@ function renderHistorySummaryStrip(entries){
   const strip = document.getElementById('history_summary_strip');
   if (!strip) return;
   const cards = [
+    {label: 'Total changes', value: String(historySummary.total || 0)},
+    {label: 'Visible changes', value: String((entries || []).length)},
     {label: 'Latest change', value: historySummary.latest_updated_at ? historyFormatDate(historySummary.latest_updated_at) : 'No history yet'},
-    {label: 'Visible rows', value: String((entries || []).length)},
-    {label: 'Data Sources rows', value: String(historySummary.data_sources || 0)},
-    {label: 'Wealth Research rows', value: String(historySummary.wealth_research || 0)},
+    {label: 'Latest actor', value: historySummary.latest_actor || 'Unknown actor'},
   ];
   strip.innerHTML = cards.map((card) => `
     <div class="history-kpi">
@@ -3735,7 +3753,6 @@ function renderHistoryList(entries){
           <button class="history-item${active}" onclick='historySelect(${JSON.stringify(entry.history_id)})'>
             <div class="history-item-top">
               <div class="history-badges">
-                <span class="history-badge library">${escapeHtml(entry.branch_label || '')}</span>
                 <span class="history-badge action">${escapeHtml(entry.action_label || '')}</span>
               </div>
               <div class="history-item-time">${escapeHtml(historyFormatDate(entry.updated_at))}</div>
@@ -3825,9 +3842,9 @@ function renderHistoryDetail(entry){
         </div>
       </details>
       <details>
-        <summary><b>History cleanup</b></summary>
+        <summary><b>Advanced history cleanup</b></summary>
         <div style="margin-top:12px;">
-          <div class="history-cleanup-note">Recommended: keep history intact. Removes history records only. Source records and generated files are not changed.</div>
+          <div class="history-cleanup-note">Development-only cleanup removes entries from the unified Library history log only. Source records and generated files are not changed.</div>
           <div class="row" style="margin-top:12px;">
             <label>Cleanup reason</label>
             <input id="history_cleanup_reason" list="history_cleanup_reason_suggestions" placeholder="test entry, development trial, duplicate noise" value="${escapeHtml(historyCleanupReason)}" oninput="historyCleanupReason = this.value">
@@ -3846,8 +3863,8 @@ function renderHistoryDetail(entry){
           </div>
           <div class="history-filter-actions">
             <button class="secondary" onclick="historyUseSelectedTime()">Filter to this time</button>
-            <button class="warn" onclick="historyDeleteSelected()">Remove History Record</button>
-            <button class="warn" onclick="historyDeleteForRecord()">Remove History Records For This Source</button>
+            <button class="warn" onclick="historyDeleteSelected()">Remove Selected Log Entry</button>
+            <button class="warn" onclick="historyDeleteForRecord()">Remove Log Entries For This Record</button>
           </div>
         </div>
       </details>
@@ -3872,8 +3889,8 @@ function historySelect(historyId){
 }
 
 function activeStatusTarget(){
-  if (activeBranch === 'wealth') return 'wealth_status';
   if (activeBranch === 'history') return 'history_status';
+  if (activeBranch === 'maintenance') return 'maintenance_status';
   return 'status';
 }
 
@@ -3911,7 +3928,7 @@ async function relaunchApp(){
 
 async function shutdownApp(){
   try {
-    const unsaved = dirty || wealthDirty;
+    const unsaved = dirty;
     const msg = unsaved
       ? 'Stop the local source manager? Unsaved form changes will remain only in this browser tab.'
       : 'Stop the local source manager?';
@@ -3966,7 +3983,7 @@ Generated files are not changed.
       `Use only for testing or development cleanup.`;
     if (!confirm(msg)) return;
     const out = await req('/api/history/delete_entry', {
-      library: entry.library,
+      library: 'library',
       cleanup_scope: 'entry',
       storage_index: entry.storage_index,
       cleanup_reason: cleanupReason,
@@ -3986,7 +4003,7 @@ async function historyDeleteForRecord(){
   try {
     const entry = historyGetEntryById(historySelectedId);
     if (!entry) throw new Error('Select a history record first.');
-    if (!entry.record_id) throw new Error('This history record has no source or key identifier to clean up.');
+    if (!entry.record_id) throw new Error('This history record has no record identifier to clean up.');
     const cleanupReason = (v('history_cleanup_reason') || '').trim();
     historyCleanupReason = cleanupReason;
     if (!cleanupReason) throw new Error('Cleanup reason is required to remove history records for a source.');
@@ -3995,12 +4012,12 @@ async function historyDeleteForRecord(){
       `Remove all ${matchingRows.length} history record(s) for ${entry.record_id}?
 
 ` +
-      `Removes history records only for this source or key in ${entry.branch_label}.
+      `Removes entries from the unified Library history log only.
 Source records are not changed.
 Generated files are not changed.`;
     if (!confirm(msg)) return;
     const out = await req('/api/history/delete_entry', {
-      library: entry.library,
+      library: 'library',
       cleanup_scope: 'record',
       record_id: entry.record_id,
       cleanup_reason: cleanupReason,
@@ -4015,25 +4032,17 @@ Generated files are not changed.`;
 }
 
 function switchBranch(branch){
-  activeBranch = branch === 'wealth' ? 'wealth' : (branch === 'history' ? 'history' : (branch === 'maintenance' ? 'maintenance' : 'data'));
-  const isData = activeBranch === 'data';
-  const isWealth = activeBranch === 'wealth';
+  activeBranch = branch === 'history' ? 'history' : (branch === 'maintenance' ? 'maintenance' : 'library');
+  const isLibrary = activeBranch === 'library';
   const isHistory = activeBranch === 'history';
   const isMaintenance = activeBranch === 'maintenance';
-  document.getElementById('branch_data').classList.toggle('hidden', !isData);
-  document.getElementById('branch_wealth').classList.toggle('hidden', !isWealth);
+  document.getElementById('branch_library').classList.toggle('hidden', !isLibrary);
   document.getElementById('branch_history').classList.toggle('hidden', !isHistory);
   document.getElementById('branch_maintenance').classList.toggle('hidden', !isMaintenance);
-  document.getElementById('branch_data_tab').classList.toggle('active', isData);
-  document.getElementById('branch_wealth_tab').classList.toggle('active', isWealth);
+  document.getElementById('branch_library_tab').classList.toggle('active', isLibrary);
   document.getElementById('branch_history_tab').classList.toggle('active', isHistory);
   document.getElementById('branch_maintenance_tab').classList.toggle('active', isMaintenance);
-  if (isWealth) {
-    closeRefLinkReviewModal();
-    wealthOnModeChange();
-    wealthOnEntryTypeChange();
-    wealthLoadOptions().catch((err) => setStatus({ok:false, error:String(err)}, 'wealth_status'));
-  } else if (isHistory) {
+  if (isHistory) {
     closeRefLinkReviewModal();
     historyLoad().catch((err) => setStatus({ok:false, error:String(err)}, 'history_status'));
   } else if (isMaintenance) {
@@ -4054,19 +4063,20 @@ function onModeChange(){
   document.getElementById('dataBibPasteWrap').classList.toggle('hidden', isEdit);
   document.getElementById('loadBtn').disabled = !isEdit;
   document.getElementById('row_bib_url').classList.toggle('hidden', !isEdit);
-  document.getElementById('row_source_key').classList.toggle('hidden', isEdit);
-  document.getElementById('row_source_value').classList.toggle('hidden', !isEdit);
-  document.getElementById('row_citekey_value').classList.toggle('hidden', !isEdit);
+  document.getElementById('row_citekey_value').classList.remove('hidden');
   if (!isEdit) {
     loadedSourceKey = '';
     loadedSourceValue = '';
     loadedCitekeyValue = '';
+    document.getElementById('is_data_source').checked = false;
     document.getElementById('target').value = '';
     document.getElementById('source_value').value = '';
     document.getElementById('citekey_value').value = '';
     // In add mode we keep a single URL field and mirror it to bib.url on save.
     document.getElementById('bib_url').value = '';
   }
+  setDataSourceFieldsEnabled(document.getElementById('is_data_source').checked);
+  syncKeywordsFromControls();
 }
 
 function firstAuthorLastName(authorText){
@@ -4102,13 +4112,132 @@ function onEntryTypeChange(){
   show('row_bib_institution', t === 'techreport');
 }
 
+function splitKeywordText(text){
+  const out = [];
+  const seen = new Set();
+  String(text || '').split(',').forEach((part) => {
+    const token = part.trim().replace(/\s+/g, ' ');
+    const key = token.toLowerCase();
+    if (token && !seen.has(key)) {
+      out.push(token);
+      seen.add(key);
+    }
+  });
+  return out;
+}
+
+function formatKeywordText(tokens){
+  return splitKeywordText(tokens.join(',')).join(',');
+}
+
+function canonicalDataSourceKeywordTokens(text){
+  return splitKeywordText(text).filter((token) => Object.prototype.hasOwnProperty.call(DATA_SOURCE_KEYWORD_TO_SECTION, token));
+}
+
+function researchCategoryKeywordTokens(text){
+  const researchSet = new Set(RESEARCH_CATEGORY_KEYWORDS);
+  return splitKeywordText(text).filter((token) => researchSet.has(token));
+}
+
+function selectedValues(id){
+  const el = document.getElementById(id);
+  if (!el) return [];
+  if (el.tagName === 'SELECT') {
+    return Array.from(el.selectedOptions || []).map((option) => option.value).filter(Boolean);
+  }
+  return Array.from(el.querySelectorAll("input[type='checkbox']:checked"))
+    .map((checkbox) => checkbox.value)
+    .filter(Boolean);
+}
+
+function setSelectedValues(id, values){
+  const el = document.getElementById(id);
+  if (!el) return;
+  const selected = new Set(values || []);
+  if (el.tagName === 'SELECT') {
+    Array.from(el.options || []).forEach((option) => {
+      option.selected = selected.has(option.value);
+    });
+    return;
+  }
+  Array.from(el.querySelectorAll("input[type='checkbox']")).forEach((checkbox) => {
+    checkbox.checked = selected.has(checkbox.value);
+  });
+}
+
+function setDataSourceFieldsEnabled(enabled){
+  document.querySelectorAll('.data-source-field').forEach((row) => {
+    row.classList.toggle('hidden', !enabled);
+    row.querySelectorAll('input, textarea, select').forEach((el) => {
+      el.disabled = !enabled;
+    });
+  });
+}
+
+function syncKeywordsFromControls(){
+  const checkbox = document.getElementById('is_data_source');
+  const keywordsEl = document.getElementById('bib_keywords');
+  if (!checkbox || !keywordsEl) return;
+  const dataSourceSections = checkbox.checked ? selectedValues('data_source_categories') : [];
+  const dataSourceKeywords = dataSourceSections
+    .map((section) => DATA_SOURCE_SECTION_TO_KEYWORD[section] || '')
+    .filter(Boolean);
+  const researchKeywords = selectedValues('research_categories');
+  if (!checkbox.checked) {
+    setSelectedValues('data_source_categories', []);
+  }
+  keywordsEl.value = formatKeywordText([...dataSourceKeywords, ...researchKeywords]);
+  document.getElementById('section').value = dataSourceSections.join('; ');
+}
+
+function syncSectionFromKeywords(recordSection, deriveFromRecord=false){
+  const checkbox = document.getElementById('is_data_source');
+  if (!checkbox) return;
+  const dataSourceKeywords = canonicalDataSourceKeywordTokens(v('bib_keywords'));
+  let sections = dataSourceKeywords.map((keyword) => DATA_SOURCE_KEYWORD_TO_SECTION[keyword]).filter(Boolean);
+  if (!sections.length && recordSection) {
+    sections = String(recordSection || '').split(/[;|]/).map((section) => section.trim()).filter((section) => DATA_SOURCE_SECTION_TO_KEYWORD[section]);
+  }
+  const researchKeywords = researchCategoryKeywordTokens(v('bib_keywords'));
+  setSelectedValues('data_source_categories', sections);
+  setSelectedValues('research_categories', researchKeywords);
+  checkbox.checked = deriveFromRecord
+    ? (dataSourceKeywords.length > 0 || sections.length > 0)
+    : (checkbox.checked || dataSourceKeywords.length > 0 || sections.length > 0);
+  setDataSourceFieldsEnabled(checkbox.checked);
+  syncKeywordsFromControls();
+}
+
+function onDataSourceCheckboxChange(){
+  const checked = document.getElementById('is_data_source').checked;
+  setDataSourceFieldsEnabled(checked);
+  syncKeywordsFromControls();
+  markDirty();
+}
+
+function onDataSourceCategoriesChange(){
+  syncKeywordsFromControls();
+  markDirty();
+}
+
+function onResearchCategoriesChange(){
+  syncKeywordsFromControls();
+  markDirty();
+}
+
+function onSectionChange(){ onDataSourceCategoriesChange(); }
+function syncDataSourceKeywordFromSection(){ syncKeywordsFromControls(); }
+
 function getPayload(){
+  syncKeywordsFromControls();
   return {
     mode: v('mode'),
     editor_name: v('editor_name'),
     target: v('target'),
     key_rename_confirmed: false,
     record: {
+      is_data_source: Boolean(document.getElementById('is_data_source').checked),
+      data_source_categories: selectedValues('data_source_categories'),
       section: v('section'), aggsource: v('aggsource'), legend: v('legend'), source_key: v('source_key'),
       source: v('source_value'), citekey: v('citekey_value'),
       data_type: v('data_type'), link: v('link'), ref_link: v('ref_link'), inclusion_in_warehouse: v('inclusion_in_warehouse'),
@@ -4129,8 +4258,9 @@ function isEmptyAddPayload(payload){
   if (mode !== 'add') return false;
   const record = payload.record || {};
   const bib = record.bib || {};
+  if (record.is_data_source) return false;
   const recordFields = [
-    'section', 'aggsource', 'legend', 'source_key', 'data_type', 'link',
+    'section', 'aggsource', 'legend', 'source', 'citekey', 'source_key', 'data_type', 'link',
     'ref_link', 'inclusion_in_warehouse', 'multigeo_reference', 'metadata', 'metadatalink',
     'shared_citekey_group', 'shared_citekey_note'
   ];
@@ -4189,8 +4319,8 @@ function buildDuplicateGuidance(out){
   );
   if (!dup.length) return '';
   const fieldHints = [];
-  if (dup.some(e => e.toLowerCase().includes('source'))) fieldHints.push('Source / Citekey');
-  if (dup.some(e => e.toLowerCase().includes('citekey') || e.toLowerCase().includes('key'))) fieldHints.push('Source / Citekey');
+  if (dup.some(e => e.toLowerCase().includes('source'))) fieldHints.push('Source code');
+  if (dup.some(e => e.toLowerCase().includes('citekey') || e.toLowerCase().includes('key'))) fieldHints.push('BibTeX citekey');
   if (dup.some(e => e.toLowerCase().includes('url') || e.toLowerCase().includes('link'))) fieldHints.push('URL / Link');
   if (dup.some(e => e.toLowerCase().includes('title'))) fieldHints.push('bib.title');
   if (dup.some(e => e.toLowerCase().includes('year'))) fieldHints.push('bib.year');
@@ -4202,7 +4332,8 @@ function buildDuplicateGuidance(out){
   if (uniqueHints.length) {
     lines.push(`- ${uniqueHints.join('\\n- ')}`);
   } else {
-    lines.push('- Source / Citekey');
+    lines.push('- Source code');
+    lines.push('- BibTeX citekey');
     lines.push('- URL / Link');
     lines.push('- bib.title / bib.year');
   }
@@ -4592,9 +4723,6 @@ function maintenanceIssueActions(issue, index){
   const actions = [];
   const rec = maintenancePrimaryRecord(issue);
   if (rec) actions.push(`<button class='secondary maintenance-action' data-action='load' data-index='${index}'>Load</button>`);
-  if (issue.type === 'source_citekey_mismatch' && rec) {
-    actions.push(`<button class='secondary maintenance-action' data-action='normalize' data-index='${index}'>Normalize citekey</button>`);
-  }
   if (issue.type === 'duplicate_citekey' && issue.severity !== 'intentional') {
     actions.push(`<button class='secondary maintenance-action' data-action='mark_shared' data-index='${index}'>Mark shared</button>`);
   }
@@ -4640,7 +4768,6 @@ function renderMaintenanceHealth(out){
       const index = Number(btn.getAttribute('data-index') || '0');
       const action = btn.getAttribute('data-action') || '';
       if (action === 'load') maintenanceLoadRecord(index);
-      if (action === 'normalize') maintenanceNormalizeCitekey(index);
       if (action === 'mark_shared') maintenanceMarkSharedCitekey(index);
       if (action === 'rebuild') maintenanceRebuildArtifacts();
     });
@@ -4658,7 +4785,7 @@ async function maintenanceLoadRecord(index){
   const issue = maintenanceIssues[index];
   const rec = maintenancePrimaryRecord(issue);
   if (!rec) return;
-  switchBranch('data');
+  switchBranch('library');
   document.getElementById('mode').value = 'edit';
   onModeChange();
   document.getElementById('target').value = rec.source || rec.citekey || rec.id || '';
@@ -4670,23 +4797,6 @@ async function maintenanceRebuildArtifacts(){
     const out = await req('/api/maintenance/rebuild_artifacts', {});
     if (out.health) renderMaintenanceHealth(out.health);
     setStatusWithChecks(out, 'Maintenance rebuild complete.', {targetId: 'maintenance_status', includeDuplicateGuidance: false, includeOnlineCompare: false});
-  } catch (err) {
-    setStatus({ok:false, error:String(err)}, 'maintenance_status');
-    showErrorWindow(String(err));
-  }
-}
-
-async function maintenanceNormalizeCitekey(index){
-  try {
-    const issue = maintenanceIssues[index];
-    const rec = maintenancePrimaryRecord(issue);
-    if (!rec) throw new Error('No record is attached to this issue.');
-    const ok = confirm(`Normalize citekey to source for ${rec.id}?\\n\\n${rec.citekey} -> ${rec.source}`);
-    if (!ok) return;
-    const editor = await ensureEditorName('normalize this citekey');
-    const out = await req('/api/maintenance/normalize_citekey', {target: rec.id || rec.source || rec.citekey, editor_name: editor});
-    if (out.health) renderMaintenanceHealth(out.health);
-    setStatusWithChecks(out, 'Maintenance normalization complete.', {targetId: 'maintenance_status', includeDuplicateGuidance: false, includeOnlineCompare: false});
   } catch (err) {
     setStatus({ok:false, error:String(err)}, 'maintenance_status');
     showErrorWindow(String(err));
@@ -4742,8 +4852,10 @@ async function parseBib(){
     document.getElementById('bib_keywords').value = b.keywords || '';
     document.getElementById('bib_note').value = b.note || '';
     document.getElementById('bib_abstract').value = b.abstract || '';
+    if (!v('citekey_value') && j.citekey) document.getElementById('citekey_value').value = j.citekey;
     if (!v('source_key') && j.source_key) document.getElementById('source_key').value = j.source_key;
     onEntryTypeChange();
+    syncSectionFromKeywords('', false);
     trySuggestLegend();
     markDirty();
     setStatus({ok:true, message:'BibTeX parsed. Fields were overwritten with parsed values.'});
@@ -4802,9 +4914,11 @@ async function loadTarget(){
     document.getElementById('bib_url').value = b.url || '';
     document.getElementById('bib_urldate').value = b.urldate || '';
     document.getElementById('bib_keywords').value = b.keywords || '';
+    document.getElementById('is_data_source').checked = Boolean(rec.is_data_source);
     document.getElementById('bib_note').value = b.note || '';
     document.getElementById('bib_abstract').value = b.abstract || '';
     onEntryTypeChange();
+    syncSectionFromKeywords(rec.section || '', false);
     clearDirty();
     setStatus({ok:true, loaded: rec.id || v('target')});
   }catch(err){
@@ -4836,6 +4950,8 @@ function resetDataAddFormAfterSave(){
     'bib_paste',
     'target',
     'section',
+    'data_source_categories',
+    'research_categories',
     'aggsource',
     'legend',
     'source_key',
@@ -4873,11 +4989,16 @@ function resetDataAddFormAfterSave(){
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  setSelectedValues('data_source_categories', []);
+  setSelectedValues('research_categories', []);
+  document.getElementById('is_data_source').checked = false;
   loadedSourceKey = '';
   loadedSourceValue = '';
   loadedCitekeyValue = '';
   delete document.getElementById('legend').dataset.userEdited;
   onEntryTypeChange();
+  setDataSourceFieldsEnabled(false);
+  syncKeywordsFromControls();
   clearDirty();
   const next = document.getElementById('bib_paste');
   if (next) next.focus();
@@ -4894,9 +5015,9 @@ async function applyAndBuild(){
       const afterCitekey = (v('citekey_value') || '').trim();
       if ((beforeSource && afterSource && beforeSource !== afterSource) || (beforeCitekey && afterCitekey && beforeCitekey !== afterCitekey)) {
         const ok = confirm(
-          `You are changing Source/Citekey identifiers.\\n\\n` +
-          `Source: '${beforeSource}' -> '${afterSource}'\\n` +
-          `Citekey: '${beforeCitekey}' -> '${afterCitekey}'\\n\\n` +
+          `You are changing source identifiers.\\n\\n` +
+          `Source code: '${beforeSource}' -> '${afterSource}'\\n` +
+          `BibTeX citekey: '${beforeCitekey}' -> '${afterCitekey}'\\n\\n` +
           `This is a compatibility change and will add alias mapping for changed keys. Continue?`
         );
         if (!ok) {
@@ -4944,20 +5065,6 @@ async function compareOnlineBib(){
     setStatusWithChecks(out, 'Online comparison complete.');
   } catch (err) {
     setStatus({ok:false, error:String(err)});
-    showErrorWindow(String(err));
-  }
-}
-
-async function wealthCompareOnlineBib(){
-  try{
-    const out = await req('/api/wealth/compare_online_bib', {});
-    setStatusWithChecks(out, 'Online comparison complete.', {
-      targetId: 'wealth_status',
-      modeValue: wv('wealth_mode'),
-      includeDuplicateGuidance: false
-    });
-  } catch (err) {
-    setStatus({ok:false, error:String(err)}, 'wealth_status');
     showErrorWindow(String(err));
   }
 }
@@ -5029,8 +5136,7 @@ async function applySelectedRefLinkReview(){
       'code/tools/metadata/sources/sources.yaml',
       'code/tools/metadata/sources/change_log.yaml',
       'handmade_tables/dictionary.xlsx',
-      'documentation/BibTeX files/GCWealthProject_DataSourcesLibrary.bib',
-      'documentation/BibTeX files/BothLibraries.bib',
+      'documentation/BibTeX files/digital_library.bib',
     ];
     const msg =
       `Apply ${selectedProposalIds.length} selected ref_link proposal(s)?\n\n` +
@@ -5095,378 +5201,18 @@ async function deleteEntry(){
   }
 }
 
-function wealthOnModeChange(){
-  const mode = wv('wealth_mode');
-  const isEdit = mode === 'edit';
-  for (const id of ['wealthEditTargetWrap', 'wealthEditToolsWrap', 'wealthSearchWrap']) {
-    document.getElementById(id).classList.toggle('hidden', !isEdit);
-  }
-  document.getElementById('wealthBibPasteWrap').classList.toggle('hidden', isEdit);
-  document.getElementById('wealthLoadBtn').disabled = !isEdit;
-  if (!isEdit) {
-    wealthLoadedKey = '';
-    document.getElementById('wealth_target').value = '';
-    document.getElementById('wealth_extra_fields').value = '{}';
-  }
-}
-
-function wealthOnEntryTypeChange(){
-  const t = wv('wealth_entry_type');
-  const show = (id, flag) => document.getElementById(id).classList.toggle('hidden', !flag);
-  show('wealth_row_journal', t === 'article');
-  show('wealth_row_booktitle', t === 'incollection' || t === 'inproceedings');
-  show('wealth_row_publisher', t === 'book' || t === 'incollection' || t === 'inproceedings');
-  show('wealth_row_institution', t === 'techreport');
-}
-
-function wealthGetPayload(){
-  let extraFields = {};
-  try {
-    extraFields = JSON.parse(wv('wealth_extra_fields') || '{}') || {};
-  } catch (err) {
-    extraFields = {};
-  }
-  return {
-    mode: wv('wealth_mode'),
-    target: wv('wealth_target'),
-    editor_name: wv('wealth_editor_name'),
-    key_rename_confirmed: false,
-    record: {
-      key: wv('wealth_key'),
-      bib: {
-        entry_type: wv('wealth_entry_type'),
-        title: wv('wealth_title'),
-        author: wv('wealth_author'),
-        year: wv('wealth_year'),
-        month: wv('wealth_month'),
-        journal: wv('wealth_journal'),
-        booktitle: wv('wealth_booktitle'),
-        volume: wv('wealth_volume'),
-        number: wv('wealth_number'),
-        pages: wv('wealth_pages'),
-        institution: wv('wealth_institution'),
-        publisher: wv('wealth_publisher'),
-        doi: wv('wealth_doi'),
-        url: wv('wealth_url'),
-        urldate: wv('wealth_urldate'),
-        keywords: wv('wealth_keywords'),
-        note: wv('wealth_note'),
-        abstract: wv('wealth_abstract'),
-        extra_fields: extraFields
-      }
-    }
-  };
-}
-
-function wealthIsEmptyAddPayload(payload){
-  const mode = String(payload.mode || '').trim().toLowerCase();
-  if (mode !== 'add') return false;
-  const record = payload.record || {};
-  const bib = record.bib || {};
-  if (String(record.key || '').trim() !== '') return false;
-  const fields = [
-    'entry_type', 'title', 'author', 'year', 'month', 'journal', 'booktitle',
-    'volume', 'number', 'pages', 'institution', 'publisher', 'doi', 'url',
-    'urldate', 'keywords', 'note', 'abstract'
-  ];
-  for (const key of fields) {
-    if (String(bib[key] || '').trim() !== '') return false;
-  }
-  return true;
-}
-
-async function wealthEnsureEditorName(actionLabel){
-  let name = (wv('wealth_editor_name') || '').trim();
-  if (name) return name;
-  const entered = prompt(`Enter your name to ${actionLabel}.`);
-  if (entered === null) {
-    throw new Error(`${capitalizeFirst(actionLabel)} cancelled. Name was not provided.`);
-  }
-  name = entered.trim();
-  if (!name) {
-    throw new Error('Your name is required to continue.');
-  }
-  document.getElementById('wealth_editor_name').value = name;
-  return name;
-}
-
-async function wealthLoadOptions(){
-  let r;
-  try {
-    r = await fetch('/api/wealth/options');
-  } catch (err) {
-    throw new Error('Could not reach local server for wealth options refresh.');
-  }
-  const j = await r.json();
-  if (!r.ok) throw new Error(j.error || `Failed to load wealth options (HTTP ${r.status}).`);
-  wealthEntries = j.entries || [];
-  const citekeys = j.citekeys || wealthEntries.map(x => x.key).filter(Boolean);
-  const dl = document.getElementById('wealth_target_opts');
-  dl.innerHTML = '';
-  [...new Set(citekeys)].sort((a, b) => String(a).localeCompare(String(b))).forEach((val) => {
-    const opt = document.createElement('option');
-    opt.value = val;
-    dl.appendChild(opt);
-  });
-  wealthRenderSearchResults();
-}
-
-function wealthRenderSearchResults(){
-  const holder = document.getElementById('wealth_search_results');
-  const q = (wv('wealth_search') || '').trim().toLowerCase();
-  const filtered = wealthEntries.filter((row) => {
-    if (!q) return true;
-    return [row.key, row.title, row.author, row.year, row.entry_type]
-      .map(x => String(x || '').toLowerCase())
-      .some(x => x.includes(q));
-  }).slice(0, 250);
-
-  if (!filtered.length) {
-    holder.innerHTML = '<small>No entries match your search.</small>';
-    return;
-  }
-  const rows = filtered.map((row) => `
-    <tr>
-      <td><button class='search-btn' data-key="${escapeHtml(row.key)}">${escapeHtml(row.key)}</button></td>
-      <td>${escapeHtml(row.year || '')}</td>
-      <td>${escapeHtml(row.author || '')}</td>
-      <td>${escapeHtml(row.title || '')}</td>
-      <td>${escapeHtml(row.entry_type || '')}</td>
-    </tr>
-  `).join('');
-  holder.innerHTML = `
-    <table>
-      <thead><tr><th>Key</th><th>Year</th><th>Author</th><th>Title</th><th>Type</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
-  holder.querySelectorAll('button[data-key]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const key = btn.getAttribute('data-key') || '';
-      document.getElementById('wealth_target').value = key;
-      wealthLoadTarget().catch((err) => {
-        setStatus({ok:false, error:String(err)}, 'wealth_status');
-        showErrorWindow(String(err));
-      });
-    });
-  });
-}
-
-async function wealthParseBib(){
-  try {
-    const j = await req('/api/parse_bib', {text: document.getElementById('wealth_bib_paste').value});
-    const b = j.bib || {};
-    document.getElementById('wealth_entry_type').value = b.entry_type || '';
-    document.getElementById('wealth_title').value = b.title || '';
-    document.getElementById('wealth_author').value = b.author || '';
-    document.getElementById('wealth_year').value = b.year || '';
-    document.getElementById('wealth_month').value = b.month || '';
-    document.getElementById('wealth_journal').value = b.journal || '';
-    document.getElementById('wealth_booktitle').value = b.booktitle || '';
-    document.getElementById('wealth_volume').value = b.volume || '';
-    document.getElementById('wealth_number').value = b.number || '';
-    document.getElementById('wealth_pages').value = b.pages || '';
-    document.getElementById('wealth_institution').value = b.institution || '';
-    document.getElementById('wealth_publisher').value = b.publisher || '';
-    document.getElementById('wealth_doi').value = b.doi || '';
-    document.getElementById('wealth_url').value = b.url || '';
-    document.getElementById('wealth_urldate').value = b.urldate || '';
-    document.getElementById('wealth_keywords').value = b.keywords || '';
-    document.getElementById('wealth_note').value = b.note || '';
-    document.getElementById('wealth_abstract').value = b.abstract || '';
-    document.getElementById('wealth_extra_fields').value = JSON.stringify(b.extra_fields || {});
-    if (!wv('wealth_key') && j.source_key) document.getElementById('wealth_key').value = j.source_key;
-    wealthOnEntryTypeChange();
-    markWealthDirty();
-    setStatus({ok:true, message:'BibTeX parsed for entry.'}, 'wealth_status');
-  } catch (err) {
-    setStatus({ok:false, error:String(err)}, 'wealth_status');
-  }
-}
-
-async function wealthLoadTarget(){
-  if (!wv('wealth_target').trim()) {
-    throw new Error('Please choose a target key from search results or type one.');
-  }
-  let r;
-  try {
-    r = await fetch('/api/wealth/record?target=' + encodeURIComponent(wv('wealth_target')));
-  } catch (err) {
-    throw new Error('Could not reach local server while loading entry.');
-  }
-  const j = await r.json();
-  if (!r.ok) throw new Error(j.error || `Load failed (HTTP ${r.status}).`);
-  const rec = j.record || {};
-  const b = rec.bib || {};
-  document.getElementById('wealth_key').value = rec.key || '';
-  wealthLoadedKey = rec.key || '';
-  document.getElementById('wealth_entry_type').value = b.entry_type || '';
-  document.getElementById('wealth_title').value = b.title || '';
-  document.getElementById('wealth_author').value = b.author || '';
-  document.getElementById('wealth_year').value = b.year || '';
-  document.getElementById('wealth_month').value = b.month || '';
-  document.getElementById('wealth_journal').value = b.journal || '';
-  document.getElementById('wealth_booktitle').value = b.booktitle || '';
-  document.getElementById('wealth_volume').value = b.volume || '';
-  document.getElementById('wealth_number').value = b.number || '';
-  document.getElementById('wealth_pages').value = b.pages || '';
-  document.getElementById('wealth_institution').value = b.institution || '';
-  document.getElementById('wealth_publisher').value = b.publisher || '';
-  document.getElementById('wealth_doi').value = b.doi || '';
-  document.getElementById('wealth_url').value = b.url || '';
-  document.getElementById('wealth_urldate').value = b.urldate || '';
-  document.getElementById('wealth_keywords').value = b.keywords || '';
-  document.getElementById('wealth_note').value = b.note || '';
-  document.getElementById('wealth_abstract').value = b.abstract || '';
-  document.getElementById('wealth_extra_fields').value = JSON.stringify(b.extra_fields || {});
-  wealthOnEntryTypeChange();
-  clearWealthDirty();
-  setStatus({ok:true, loaded: rec.key || ''}, 'wealth_status');
-}
-
-async function wealthValidateOnly(){
-  try {
-    const out = await req('/api/wealth/validate_entry', wealthGetPayload());
-    setStatusWithChecks(out, 'Validation run complete.', {
-      targetId: 'wealth_status',
-      modeValue: wv('wealth_mode'),
-      includeDuplicateGuidance: false,
-      includeOnlineCompare: false
-    });
-    if (!out.ok || (out.errors && out.errors.length)) {
-      showErrorWindow((out.errors || []).join('\\n') || 'Validation failed.');
-    }
-  } catch (err) {
-    setStatus({ok:false, error:String(err)}, 'wealth_status');
-    showErrorWindow(String(err));
-  }
-}
-
-function resetWealthAddFormAfterSave(){
-  const ids = [
-    'wealth_bib_paste',
-    'wealth_target',
-    'wealth_key',
-    'wealth_entry_type',
-    'wealth_title',
-    'wealth_author',
-    'wealth_year',
-    'wealth_month',
-    'wealth_journal',
-    'wealth_booktitle',
-    'wealth_volume',
-    'wealth_number',
-    'wealth_pages',
-    'wealth_institution',
-    'wealth_publisher',
-    'wealth_doi',
-    'wealth_url',
-    'wealth_urldate',
-    'wealth_keywords',
-    'wealth_note',
-    'wealth_abstract'
-  ];
-  ids.forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  document.getElementById('wealth_extra_fields').value = '{}';
-  wealthLoadedKey = '';
-  wealthOnEntryTypeChange();
-  clearWealthDirty();
-  const next = document.getElementById('wealth_bib_paste');
-  if (next) next.focus();
-}
-
-async function wealthApplyAndBuild(){
-  try {
-    const payload = wealthGetPayload();
-    const emptyAddPayload = wealthIsEmptyAddPayload(payload);
-    if (payload.mode === 'edit') {
-      const before = (wealthLoadedKey || '').trim();
-      const after = (wv('wealth_key') || '').trim();
-      if (before && after && before !== after) {
-        const ok = confirm(
-          `You are renaming key from '${before}' to '${after}'.\\n\\n` +
-          `This affects the bibliography key. Continue?`
-        );
-        if (!ok) {
-          throw new Error('Save cancelled. Key rename was not confirmed.');
-        }
-        payload.key_rename_confirmed = true;
-      }
-    }
-    if (!emptyAddPayload) {
-      payload.editor_name = await wealthEnsureEditorName('save this entry');
-    }
-    const out = await req('/api/wealth/apply_and_build', payload);
-    const addReadyMessage = (payload.mode === 'add' && !emptyAddPayload) ? 'Next: The form was cleared and is ready for another entry.' : '';
-    setStatusWithChecks(out, 'Save complete.', {
-      targetId: 'wealth_status',
-      modeValue: wv('wealth_mode'),
-      includeDuplicateGuidance: false,
-      nextMessage: addReadyMessage
-    });
-    try {
-      await wealthLoadOptions();
-    } catch (optErr) {
-      const current = document.getElementById('wealth_status').textContent || '';
-      setStatus(`${current}\\n\\nWarning: ${String(optErr)}`, 'wealth_status');
-    }
-    if (payload.mode === 'add' && !emptyAddPayload) {
-      resetWealthAddFormAfterSave();
-    } else {
-      clearWealthDirty();
-    }
-  } catch (err) {
-    setStatus({ok:false, error:String(err)}, 'wealth_status');
-    showErrorWindow(String(err));
-  }
-}
-
-async function wealthDeleteEntry(){
-  try{
-    if (wv('wealth_mode') !== 'edit') throw new Error('Delete is available only in edit mode.');
-    if (!wv('wealth_target').trim()) throw new Error('Select an entry target before deleting.');
-    const msg = `Delete entry '${wv('wealth_target')}'?\\n\\nThis action cannot be undone.`;
-    if (!confirm(msg)) return;
-
-    const out = await req('/api/wealth/delete_entry', {
-      target: wv('wealth_target'),
-      editor_name: await wealthEnsureEditorName('delete this entry')
-    });
-    setStatusWithChecks(out, 'Delete complete.', {
-      targetId: 'wealth_status',
-      modeValue: wv('wealth_mode'),
-      includeDuplicateGuidance: false
-    });
-    await wealthLoadOptions();
-    clearWealthDirty();
-  }catch(err){
-    setStatus({ok:false, error:String(err)}, 'wealth_status');
-    showErrorWindow(String(err));
-  }
-}
-
 loadOptions();
 onModeChange();
 onEntryTypeChange();
-wealthOnModeChange();
-wealthOnEntryTypeChange();
-switchBranch('data');
+switchBranch('library');
 document.getElementById('legend').addEventListener('input', () => { document.getElementById('legend').dataset.userEdited = '1'; });
 document.querySelectorAll('input, textarea, select').forEach(el => {
-  if ((el.id || '').startsWith('wealth_')) {
-    el.addEventListener('input', markWealthDirty);
-    el.addEventListener('change', markWealthDirty);
-  } else {
-    el.addEventListener('input', markDirty);
-    el.addEventListener('change', markDirty);
-  }
+  el.addEventListener('input', markDirty);
+  el.addEventListener('change', markDirty);
 });
 window.addEventListener('beforeunload', (e) => {
   if (isRelaunching) return;
-  if (!dirty && !wealthDirty) return;
+  if (!dirty) return;
   e.preventDefault();
   e.returnValue = '';
 });
@@ -5496,17 +5242,16 @@ class App:
     def artifact_paths(self, reg: dict) -> List[Path]:
         cfg = reg.get("config", {}) or {}
         dictionary_output = _dictionary_output_path(cfg)
-        bib_output = _data_bib_path(cfg)
-        both_bib_output = _both_bib_path(cfg)
-        return [self.registry_path, self.changelog_path, self.aliases_path, dictionary_output, bib_output, both_bib_output]
+        digital_bib_output = _digital_bib_path(cfg)
+        return [self.registry_path, self.changelog_path, self.aliases_path, dictionary_output, digital_bib_output]
 
     def delete_preview_paths(self, reg: dict) -> List[Path]:
         cfg = reg.get("config", {}) or {}
-        return [self.registry_path, self.changelog_path, _dictionary_output_path(cfg), _data_bib_path(cfg), _both_bib_path(cfg)]
+        return [self.registry_path, self.changelog_path, _dictionary_output_path(cfg), _digital_bib_path(cfg)]
 
     def wealth_artifact_paths(self, reg: dict) -> List[Path]:
         cfg = reg.get("config", {}) or {}
-        return [_wealth_bib_path(cfg), _both_bib_path(cfg), _wealth_change_log_path(cfg)]
+        return [_wealth_bib_path(cfg), _digital_bib_path(cfg), _wealth_change_log_path(cfg)]
 
     def _cleanup_ref_link_review_scans(self):
         cutoff = time.time() - 900
@@ -5797,22 +5542,10 @@ def _fetch_url_text(reference_url: str, timeout_seconds: int) -> Dict[str, str]:
 
 def _online_bib_compare_config(registry: dict, library: str) -> dict:
     cfg = registry.get("config", {}) or {}
-    if library == "wealth_research":
-        return {
-            "library": "wealth_research",
-            "library_label": "Wealth Research",
-            "local_bib_path": _wealth_bib_path(cfg),
-            "reference_url": normalize_whitespace(str(cfg.get("wealth_online_bib_reference_url", ""))),
-            "reference_url_key": "wealth_online_bib_reference_url",
-            "timeout_seconds": _coerce_timeout_seconds(
-                cfg.get("wealth_online_bib_timeout_seconds", 20),
-                default=20,
-            ),
-        }
     return {
-        "library": "data_sources",
-        "library_label": "Data Sources",
-        "local_bib_path": _data_bib_path(cfg),
+        "library": "digital_library",
+        "library_label": "Digital Library",
+        "local_bib_path": _digital_bib_path(cfg),
         "reference_url": normalize_whitespace(str(cfg.get("online_bib_reference_url", ""))),
         "reference_url_key": "online_bib_reference_url",
         "timeout_seconds": _coerce_timeout_seconds(cfg.get("online_bib_timeout_seconds", 20), default=20),
@@ -5959,6 +5692,10 @@ class Handler(BaseHTTPRequestHandler):
             )
             return
 
+        if parsed.path.startswith("/api/wealth/"):
+            self._send_json({"error": "The Wealth Research editor is archived. Use the Library editor backed by sources.yaml."}, 410)
+            return
+
         if parsed.path == "/api/wealth/options":
             try:
                 reg = self.app.registry
@@ -6054,6 +5791,10 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         self.app.last_ping = time.time()
         try:
+            if self.path.startswith("/api/wealth/"):
+                self._send_json({"error": "The Wealth Research editor is archived. Use the Library editor backed by sources.yaml."}, 410)
+                return
+
             if self.path == "/api/parse_bib":
                 data = self._read_json()
                 out = parse_bib_paste(data.get("text", ""))
@@ -6173,58 +5914,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             if self.path == "/api/maintenance/normalize_citekey":
-                data = self._read_json()
-                reg = self.app.registry
-                records = reg.get("records", [])
-                target = normalize_whitespace(data.get("target", ""))
-                editor = normalize_whitespace(data.get("editor_name", ""))
-                if not target:
-                    raise ValueError("target is required")
-                if not editor:
-                    raise ValueError("editor_name is required")
-                hits = find_target(records, target)
-                if len(hits) != 1:
-                    self._send_json(
-                        {
-                            "ok": False,
-                            "error": f"target must match exactly one record; got {len(hits)}",
-                            "matches": [record_summary(rec) for rec in hits],
-                        },
-                        400,
-                    )
-                    return
-                rec = hits[0]
-                before_rec = json.loads(json.dumps(rec))
-                source = normalize_whitespace(str(rec.get("source", "")))
-                old_citekey = normalize_whitespace(str(rec.get("citekey", "")))
-                if not source:
-                    raise ValueError("target record has no source")
-                tracked_paths = self.app.artifact_paths(reg)
-                before = file_mtimes(tracked_paths)
-                reason = "Normalized citekey to source via maintenance"
-                if old_citekey != source:
-                    rec["citekey"] = source
-                    rec["updated_at"] = now_utc()
-                    rec["updated_by"] = editor
-                    append_alias(self.app.aliases_path, "citekey", old_citekey, source, reason)
-                    append_change(self.app.changelog_path, "edit", rec.get("id", ""), reason, editor)
-                    self.app.save(reg)
-                    _run_build_sources_artifacts(self.app.registry_path)
-                after = file_mtimes(tracked_paths)
-                changed_files = modified_paths(before, after)
-                self._send_json(
-                    {
-                        "ok": True,
-                        "operation": "maintenance_normalize_citekey",
-                        "record_id": rec.get("id", ""),
-                        "changed_fields": summarize_record_diff(before_rec, rec),
-                        "key_renamed": old_citekey != source,
-                        "modified_files": changed_files,
-                        "file_change_summary": build_file_change_summary(changed_files, "edit", rec.get("id", ""), summarize_record_diff(before_rec, rec), old_citekey != source),
-                        "health": build_maintenance_health(reg, self.app.registry_path),
-                        "message": "Citekey normalized to source." if old_citekey != source else "Citekey already matched source.",
-                    }
-                )
+                self._send_json({"error": "Citekey normalization is deprecated. Source code and BibTeX citekey are distinct fields."}, 410)
                 return
 
             if self.path == "/api/wealth/validate_entry":
@@ -6259,7 +5949,7 @@ class Handler(BaseHTTPRequestHandler):
                     mode,
                     target,
                     wealth_blob.get("entries", {}),
-                    _data_bib_keys(cfg),
+                    _registry_citekeys(reg),
                     wealth_blob.get("duplicate_keys", []),
                 )
                 self._send_json({"ok": len(out.get("errors", [])) == 0, **out})
@@ -6277,7 +5967,7 @@ class Handler(BaseHTTPRequestHandler):
                 key_rename_confirmed = bool(data.get("key_rename_confirmed", False))
 
                 if mode == "add" and is_empty_wealth_add_payload(data):
-                    _rebuild_both_bib(cfg)
+                    _rebuild_digital_bib(self.app.registry_path, cfg)
                     after = file_mtimes(tracked_paths)
                     changed_files = modified_paths(before, after)
                     online_compare = compare_local_bib_with_online(reg, "wealth_research")
@@ -6294,13 +5984,13 @@ class Handler(BaseHTTPRequestHandler):
                                 {
                                     "name": "Empty add form",
                                     "passed": True,
-                                    "detail": "No record changes applied. BothLibraries.bib was rebuilt.",
+                                    "detail": "No record changes applied. digital_library.bib was rebuilt.",
                                 }
                             ],
                             "modified_files": changed_files,
                             "online_compare": online_compare,
                             "file_change_summary": build_file_change_summary(changed_files, "build_only", "", [], False),
-                            "message": "No changes made. BothLibraries.bib rebuilt.",
+                            "message": "No changes made. digital_library.bib rebuilt.",
                         }
                     )
                     return
@@ -6319,7 +6009,7 @@ class Handler(BaseHTTPRequestHandler):
                     mode,
                     target,
                     wealth_entries,
-                    _data_bib_keys(cfg),
+                    _registry_citekeys(reg),
                     wealth_blob.get("duplicate_keys", []),
                 )
                 if validation.get("errors"):
@@ -6369,7 +6059,7 @@ class Handler(BaseHTTPRequestHandler):
                 else:
                     raise ValueError("mode must be add or edit")
 
-                _rebuild_both_bib(cfg)
+                _rebuild_digital_bib(self.app.registry_path, cfg)
                 after = file_mtimes(tracked_paths)
                 changed = modified_paths(before, after)
                 online_compare = compare_local_bib_with_online(reg, "wealth_research")
@@ -6386,7 +6076,7 @@ class Handler(BaseHTTPRequestHandler):
                             out.get("changed_fields", []),
                             out.get("key_renamed", False),
                         ),
-                        "message": "Entry saved and BothLibraries.bib rebuilt",
+                        "message": "Entry saved and digital_library.bib rebuilt",
                     }
                 )
                 return
@@ -6418,7 +6108,7 @@ class Handler(BaseHTTPRequestHandler):
                 del wealth_entries[target]
                 write_parsed_bib_entries(wealth_path, wealth_entries, field_order=WEALTH_BIB_FIELDS)
                 _append_wealth_change(wealth_log_path, "delete", target, "Deleted via local UI", editor)
-                _rebuild_both_bib(cfg)
+                _rebuild_digital_bib(self.app.registry_path, cfg)
 
                 after = file_mtimes(tracked_paths)
                 changed = modified_paths(before, after)
@@ -6433,7 +6123,7 @@ class Handler(BaseHTTPRequestHandler):
                         "modified_files": changed,
                         "online_compare": online_compare,
                         "file_change_summary": build_file_change_summary(changed, "delete", target, deleted_fields, False),
-                        "message": "Entry deleted and BothLibraries.bib rebuilt",
+                        "message": "Entry deleted and digital_library.bib rebuilt",
                     }
                 )
                 return
@@ -6773,7 +6463,7 @@ class Handler(BaseHTTPRequestHandler):
                         "resolved_target": normalize_whitespace(rec.get("source", "")) or normalize_whitespace(rec.get("citekey", "")),
                         "checks": [{"name": "Delete target resolution", "passed": True, "detail": f"Resolved to {rec.get('id', '')}"}],
                         "would_modify_files": [str(path) for path in self.app.delete_preview_paths(reg)],
-                        "message": "Delete will remove this record and regenerate Data Sources artifacts.",
+                        "message": "Delete will remove this record and regenerate Library artifacts.",
                     }
                 )
                 return
@@ -6835,19 +6525,17 @@ class Handler(BaseHTTPRequestHandler):
 
             if self.path == "/api/history/delete_entry":
                 data = self._read_json()
-                library = normalize_whitespace(data.get("library", ""))
+                library = normalize_whitespace(data.get("library", "library")) or "library"
                 cleanup_reason = normalize_whitespace(data.get("cleanup_reason", ""))
                 cleanup_scope = normalize_whitespace(data.get("cleanup_scope", "entry")) or "entry"
-                if library not in {"data_sources", "wealth_research"}:
-                    raise ValueError("library must be data_sources or wealth_research")
+                if library != "library":
+                    raise ValueError("history cleanup is available only for the unified Library history log")
                 if cleanup_scope not in {"entry", "record"}:
                     raise ValueError("cleanup_scope must be entry or record")
                 if not cleanup_reason:
                     raise ValueError("cleanup_reason is required")
 
-                reg = self.app.registry
-                cfg = reg.get("config", {}) or {}
-                changelog_path = self.app.changelog_path if library == "data_sources" else _wealth_change_log_path(cfg)
+                changelog_path = self.app.changelog_path
                 if cleanup_scope == "record":
                     record_id = normalize_whitespace(data.get("record_id", ""))
                     removed_rows = delete_history_entries_for_record(changelog_path, record_id)

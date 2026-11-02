@@ -1,177 +1,215 @@
 //settings
 clear all
 
-*global path 	"`:env USERPROFILE'/Dropbox/gcwealth"
-*cd "$path"
-
 local source LWS_ineq
-run "code/mainstream/auxiliar/all_paths.do"
-run $memorize_labels
 
-//define internal paths 
-local sourcef "${ineq_dir_raw}/`source'"
-*local rawdata_anw "`sourcef'/raw data/LWS_ineq_anw_29Mar2023.csv"
-*local rawdata_dnw "`sourcef'/raw data/LWS_ineq_dnw_29Mar2023.csv"
-*local rawdata_anw "`sourcef'/raw data/LWS_ineq_anw_04Jan2024_expanded.csv"
-*local rawdata_dnw "`sourcef'/raw data/LWS_ineq_dnw_04Jan2024_expanded.csv"
-
-local rawdata_anw "`sourcef'/raw data/LWS_ineq_anw_07Jul2024_expanded.csv"
-local rawdata_dnw "`sourcef'/raw data/LWS_ineq_dnw_07Jul2024_expanded.csv"
+** Working Directories Local
+********************************************************************************
+*cd "`:env USERPROFILE'/Dropbox/gcwealth"
 
 
-local results "`sourcef'/final_table/`source'"
+global ineq_dir_raw raw_data/ineq
 
-
-// Some countryes have only dnw and not anw 
+	local sourcef "${ineq_dir_raw}/`source'"
+	local rawdata_ineq_pt1 "`sourcef'/raw data/LWS_ineq_12Mag2026_pt1.csv"
+	local rawdata_ineq_pt2 "`sourcef'/raw data/LWS_ineq_12Mag2026_pt2.csv"
+	local rawdata_ineq_pt3 "`sourcef'/raw data/LWS_ineq_12Mag2026_pt3.csv"
+	local rawdata_ineq_pt4 "`sourcef'/raw data/LWS_ineq_12Mag2026_pt4.csv"
+	local rawdata_ineq_pt5 "`sourcef'/raw data/LWS_ineq_12Mag2026_pt5.csv"
+	local rawdata_ineq_pt6 "`sourcef'/raw data/LWS_ineq_12Mag2026_pt6.csv"
+	local rawdata_own "`sourcef'/raw data/LWS_ownership_ratio_06Jan2026.csv"
+	
+	local results "`sourcef'/final_table/`source'"
 ********************************************************************************
 
-	// A(djusted)nw Countries
-	qui import delimited "`rawdata_anw'", clear varnames(1)
-	qui collapse (mean) value, by(country year)
 
-	keep country year
-	tempfile anw
-	save `anw' , replace
-	
-	
-	// D(isposable)nw Countries
-	qui import delimited "`rawdata_dnw'", clear varnames(1)
-	qui collapse (mean) value, by(country year)
-	
-	keep country year
-	tempfile dnw
-	save `dnw' , replace
-	
-	
-	
-	// Spot Missings
-	clear
-	use `anw'
-	merge 1:1 country year using `dnw'
-	drop if country==""
-		
-		// Check no Countries that for some years have anw
-		bys country: egen h_min=min(_merge)
-		bys country: egen h_max=max(_merge)
-	
-		*replace _merge=2 if h_min!=h_max
-	
-
-	levelsof country if _merge==1 | _merge==3 , c local(anw_countries)
-	levelsof country if _merge==2 , c local(dnw_countries)
-	
-	// Italy for 94 and 2000 only DNW, afterwards both!
-	
-	
-	
-// Generate Dataset
 ********************************************************************************
-	
-// Start with Adj
-foreach nw in anw dnw {
-	
-	qui import delimited "`rawdata_`nw''", clear varnames(1)
-		
-	qui collapse (mean) value, by(country year variable)
+// Ineq + Distrib Topo
+********************************************************************************
 
-	gen keep=.
-	foreach cc of local `nw'_countries {
-		replace keep=1 if country=="`cc'"
-	}
-	
-	keep if keep==1
-	drop keep
-	
-	//clean
-	drop if strpos(variable, "`nw'")
-	drop if strpos(variable, "adpop")
-	drop if missing(value)
+** Append All parts
+forvalues v=1(1)6{
+	qui import delimited "`rawdata_ineq_pt`v''", clear varnames(1)
+	tempfile a`v'
+	save `a`v'', replace
+}
+clear
+forvalues v=1(1)6{
+	append using `a`v''
+} 
 
 
-	//adjust value
-	qui replace value = value * 100 if variable == "gini"
-	qui replace value = value * 100 if variable == "b50_sh"
-	qui replace value = value * 100 if variable == "m40_sh"
-	qui replace value = value * 100 if variable == "t20_sh"
-	qui replace value = value * 100 if variable == "t10_sh"
-	qui replace value = value * 100 if variable == "t1_sh"
-	qui replace value = value * 100 if variable == "t5_sh"
+** Set all implcates in different columns
+drop if missing(value)
+drop sd
+reshape wide value, i(country year variable) j(impl)
 
+** Make Average across implicates
+egen value=rowmean(value1 value2 value3 value4 value5)
+drop value1 value2 value3 value4 value5
+
+
+** Generate Variable
+split variable, p(_)
+drop variable
+
+** Fix Percentile
+rename variable3 percentile
+
+** Fix Varcode
+replace variable1="gin" if variable1=="gini"
+gen varcode="t-hs-"+variable1+"-"+variable2+"-ho"
+
+** Fix units 
+replace value=value*100 if variable1=="dsh"
+replace value=value*100 if variable1=="gin"
+replace value=-value    if variable2=="fliabi"		// All debt quantites set as negative!
+
+
+** Fix Source and Area		
+gen source="`source'"
+rename country area
+
+//order
+order area year varcode percentile value source
+keep  area year value percentile source varcode
+
+		
+//save
+tempfile ineq
+save `ineq' , replace
+ 
+
+ 
+ 
+********************************************************************************
+// OWnership Ratios
+********************************************************************************
+
+	qui import delimited using "`rawdata_own'", clear 
 	
-	//percentiles
-	qui gen percentile = ""
-		qui replace percentile = "p0p100" if variable == "gini"
-		qui replace percentile = "p0p100" if variable == "average"
-		qui replace percentile = "p80p100" if variable == "t20_sh"
-		qui replace percentile = "p90p100" if variable == "t10_sh"
-		qui replace percentile = "p95p100" if variable == "t5_sh"
-		qui replace percentile = "p99p100" if variable == "t1_sh"
-		qui replace percentile = "p50p90" if variable == "m40_sh"
-		qui replace percentile = "p0p50" if variable == "b50_sh"
+	
+	** rename variables
+	rename v1 area
+	rename v2 year
+		replace year=substr(year,1,4)
+		destring year, replace
+	rename v3 varcode
+	rename v4 value
+	rename v5 check
+	
+	
+	// Note: we have different alternative values for same concept:
+	** e.g. :
+		* nfahou
+		* nfahou1
+		* nfahou2
+		* nfahou3
+	** This comes from "\gcwealth\raw_data\topo\LWS_topo\auxiliary files\composition table LWS.xlsx"
+	** nfahou is the preferred, in case not availabe (check=0)
+	** then use in oreder 1, 2, 3, ...
+	gen help=varcode
+	replace help = subinstr(help, "1", "", .)
+	replace help = subinstr(help, "2", "", .)
+	replace help = subinstr(help, "3", "", .)
+	replace help = subinstr(help, "4", "", .)
+	replace help = subinstr(help, "5", "", .)
+	
+	drop if check==0		// No variation in Outcome
+	drop check
+	
+	bys area year help (varcode): gen n=_n
+	keep if n==1
+	replace varcode=help
+	drop help n 
+	
+	sort area year varcode
+	replace varcode="t-hs-owr-"+varcode+"-ho"
+	
+	replace value=value*100
+	
+	
+	
+	/*
+	
+	****************************************************************************
+	** Check Time Series hown vs. hhou vs. nfhous
+	****************************************************************************
+	
+	// Note: We have 3 concepts of Housing Ownership:
+	** hown --> comes from varialbe "own" -->  OWNERSHIP of house of residence, 
+	** hhou --> comes from  holidng of Rela Estate assets
+	** nfhous --> should be the combo of the two, prioratizing hown
+		preserve
+			keep if varcode=="t-hs-owr--ho"  |  varcode=="t-hs-owr-hhou-ho" | varcode=="t-hs-owr-nfhous-ho"  
+			tostring year, replace
+			
+			gen help=area+"-"+year
+			encode help , gen(XX)
+			
+		sum XX
+		local max=r(max)
+		twoway 		(connect value XX if varcode=="t-hs-owr-hown-ho")		///
+					(connect value XX if varcode=="t-hs-owr-hhou-ho"	)	///
+					(connect value XX if varcode=="t-hs-owr-nfhous-ho"	)	///
+					, legend(order(	1 "own - Do you own residence house?" 	///
+									2 "nfhous - Housing assets"	///
+									3 "Combo")	///
+							pos(6) col(3))	///
+					xlabel(1(1)`max', valuelabel angle(90)) scale(0.7)	///
+					ysize(5) xsize(15)
+		restore
+		drop if varcode=="t-hs-owr-hown-ho" 
+		drop if varcode=="t-hs-owr-hhou-ho" 
 		
-		qui replace percentile = "p0p50" 	if variable == "b50_av"
-		qui replace percentile = "p50p90" 	if variable == "m40_av"
-		qui replace percentile = "p80p100" 	if variable == "t20_av"
-		qui replace percentile = "p90p100" 	if variable == "t10_av"
-		qui replace percentile = "p95p100" 	if variable == "t5_av"
-		qui replace percentile = "p99p100" 	if variable == "t1_av"
 		
-		qui replace percentile = "p50p90" 	if variable == "thr50"
-		qui replace percentile = "p80p100" 	if variable == "thr80"
-		qui replace percentile = "p90p100" 	if variable == "thr90"
-		qui replace percentile = "p95p100" 	if variable == "thr95"
-		qui replace percentile = "p99p100" 	if variable == "thr99"
-		
-		
-	//generate code variables
-	gen dashboard = "t"
-	gen sector = "hs"
-	gen vartype = "dsh"
-	gen concept = "netwea"
-	gen specific = "ho"
-	qui replace vartype = "gin" if strpos(variable, "gini")
-	qui replace vartype = "avg" if strpos(variable, "average")
-	qui replace vartype = "avg" if strpos(variable, "av")
-	qui replace vartype = "thr" if strpos(variable, "thr")
+	gen percentile="p0p100"
+	order area year varcode percentile value
+	*/
+	
+	drop if varcode=="t-hs-owr-hhou-ho"
+	drop if varcode=="t-hs-owr-hown-ho"
+	
+	gen lenght=strlen(varcode)
+	tab lenght
+	drop lenght
+	
+	gen percentile = "p0p100"
 	gen source = "`source'"
 	
-
-	egen varcode = concat(dashboard sector vartype concept specific), punct ("-")  
-	drop dashboard sector vartype concept specific variable
-
-	//clean
-	rename country area
-
 	//order
 	order area year value percentile source varcode
 
 	
-	if "`nw'"=="anw"{
-		// Italy has both anw and dnw after 2000
-		drop if area=="IT" & year>2000
-	}
-	
+	// Select only Some Assets
+	split varcode , p(-)
+	tab varcode3 
+	tab varcode4
+	drop if varcode4=="facdbl"
+	drop if varcode4=="fadepo"
+	drop if varcode4=="fliabm"
+	drop if varcode4=="nfadur"
+	drop if varcode4=="nfhous"
+	drop varcode1 varcode2 varcode3 varcode4 varcode5
 
+	// Save
+	tempfile own
+	save `own' , replace
+********************************************************************************	
 	
-	//save
-	tempfile tf_lws_`nw'
-	save `tf_lws_`nw'' , replace
-
-} 
 
 
 clear
 
 //append
-qui append using `tf_lws_anw'
-qui append using `tf_lws_dnw'
+qui append using `ineq'
+qui append using `own'
 
-sort area year
+qui sort area year
 
 
 //export
-export delimited "`results'", replace
-
+qui export delimited "`results'" , replace
 
 // Check
 preserve 
@@ -179,14 +217,3 @@ bys area year percentile varcode: gen N=_N
 tab N
 restore
 
-/*
-// Example
-preserve
-keep if area=="US"
-twoway 	(line value year if varcode=="t-hs-thr-netwea-ho" & percentile=="p50p90") ///
-		(line value year if varcode=="t-hs-thr-netwea-ho" & percentile=="p80p100") ///
-		(line value year if varcode=="t-hs-thr-netwea-ho" & percentile=="p90p100") ///
-		(line value year if varcode=="t-hs-thr-netwea-ho" & percentile=="p95p100") ///
-		
-		
-*/		

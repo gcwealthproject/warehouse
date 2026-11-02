@@ -1,0 +1,600 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[]{biblatex}
+\addbibresource{C:/Users/guzza/Dropbox/gcwealth/documentation/BibTeX files/BothLibraries.bib}
+\usepackage{titling}
+\usepackage{setspace}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{makecell}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Inheritance Trends}\label{sec:inhe}
+
+\subsection{Introduction to the Inheritance Trends
+Section}\label{introduction-to-the-inheritance-trends-section}
+
+The Inheritance Trends section presents a comprehensive compilation of
+cross-national time-series data on the annual flow of wealth transfers,
+that is, the wealth passed from one household or individual to another
+either at the time of the donor's death (bequests) or while the donor is
+alive (inter vivos gifts). This section contains estimates of the size
+of these flows, expressed both in national currency and relative to
+national income, as estimated in the existing literature using fiscal
+records or an ensemble of data sources. It also documents the average
+effective rate at which these transfers are taxed. The data are
+accompanied by Methodological Tables that provide systematic assessments
+of the underlying concepts, methods, and sources used to produce each
+series.
+
+The Inheritance Trends section is not about the distribution of wealth
+across the population: every estimate refers to the reference population
+as a whole. What it measures instead is the \emph{magnitude} of the
+annual transmission of wealth between generations and its evolution over
+time. This distinction matters because inheritance flows are a
+macroeconomic quantity: they can be compared to national income, they
+can be traced back over long historical horizons, and they can be
+related to the tax revenue they generate.
+
+The core value-added of this section is to assemble, for the very first
+time in a single venue, estimates that are otherwise scattered across
+national historical studies, each built on different records and
+conventions, and to make explicit whether a given estimate derives from
+fiscal data or from an ensemble of data sources such as national
+accounts.
+
+\subsection{The Structure of the Inheritance Trends
+Section}\label{the-structure-of-the-inheritance-trends-section}
+
+In the Inheritance Trends database, each estimate (\texttt{value}) is
+uniquely identified by the combination of the reference country indexed
+by a two-digit identifier (\texttt{GEO}), the reference year
+(\texttt{year}), the data source (\texttt{source}), and the
+\texttt{varcode}.
+
+Table \ref{tab:intro_inhe} provides a small extract from the Inheritance
+Trends database. This table displays data for Italy in 1995 and 1996.
+The series reported in the \texttt{value} column correspond to an
+inheritance indicator (\texttt{varcode}), with the \texttt{percentile}
+column always set to \emph{p0p100} because all estimates in this section
+refer to the reference population as a whole. The \texttt{varcode}
+column carries the substantive information: the type of measure (an
+aggregate in national currency, or a ratio to national income), the
+concept it refers to (bequests only, or bequests and gifts together),
+and the type of flow estimate (fiscal or economic). The subsequent
+sections elaborate on the \texttt{varcode} and on the
+\texttt{percentile} variable.
+
+\begin{table}
+\centering
+\caption{\label{tab:show_inhe}\label{tab:intro_inhe} Introducing the GC Inheritance Trends Database - Snippet}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{ccccccc}
+\toprule
+source & GEO & GEO\_long & year & varcode & percentile & value\\
+\midrule
+\cellcolor{gray!10}{Acciari2021} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1995} & \cellcolor{gray!10}{i-hs-agg-etnwea-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{5.575000e+10}\\
+Guzzardi2026 & IT & Italy & 1995 & i-hs-agg-etnweg-ef & p0p100 & 6.223423e+10\\
+\cellcolor{gray!10}{Acciari2021} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1995} & \cellcolor{gray!10}{i-hs-agg-etnweg-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{6.950000e+10}\\
+Guzzardi2026 & IT & Italy & 1995 & i-hs-rat-averat-ef & p0p100 & 9.400000e-03\\
+\cellcolor{gray!10}{Acciari2021} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1995} & \cellcolor{gray!10}{i-hs-rto-etnwea-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{6.720000e-02}\\
+\addlinespace
+Guzzardi2026 & IT & Italy & 1995 & i-hs-rto-etnweg-ef & p0p100 & 7.420000e-02\\
+\cellcolor{gray!10}{Gabbuti2025} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1995} & \cellcolor{gray!10}{i-hs-rto-etnweg-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{7.730000e-02}\\
+Acciari2021 & IT & Italy & 1995 & i-hs-rto-etnweg-ff & p0p100 & 8.380000e-02\\
+\cellcolor{gray!10}{Acciari2021} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1996} & \cellcolor{gray!10}{i-hs-agg-etnwea-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{6.077000e+10}\\
+Guzzardi2026 & IT & Italy & 1996 & i-hs-agg-etnweg-ef & p0p100 & 6.818048e+10\\
+\addlinespace
+\cellcolor{gray!10}{Acciari2021} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1996} & \cellcolor{gray!10}{i-hs-agg-etnweg-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{7.576000e+10}\\
+Guzzardi2026 & IT & Italy & 1996 & i-hs-rat-averat-ef & p0p100 & 1.030000e-02\\
+\cellcolor{gray!10}{Acciari2021} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1996} & \cellcolor{gray!10}{i-hs-rto-etnwea-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{6.890000e-02}\\
+Guzzardi2026 & IT & Italy & 1996 & i-hs-rto-etnweg-ef & p0p100 & 7.660000e-02\\
+\cellcolor{gray!10}{Acciari2021} & \cellcolor{gray!10}{IT} & \cellcolor{gray!10}{Italy} & \cellcolor{gray!10}{1996} & \cellcolor{gray!10}{i-hs-rto-etnweg-ff} & \cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{8.590000e-02}\\
+\addlinespace
+Gabbuti2025 & IT & Italy & 1996 & i-hs-rto-etnweg-ff & p0p100 & 7.910000e-02\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{\texorpdfstring{The \texttt{varcode} in the Inheritance
+Trends
+Section}{The varcode in the Inheritance Trends Section}}\label{subsec:inhe_varcode}
+
+In the Inheritance Trends section, two of the five elements of
+\texttt{varcode} are fixed across the entire database. The constant
+elements are the first, that identifies the Section of the GC Wealth
+Project and takes the value \texttt{i}, and the second, that indexes the
+household sector and takes the value \texttt{hs}. The
+\texttt{Variable\ Type}, the \texttt{Concept}, and the
+\texttt{Section-Specific} parts of the \texttt{varcode} vary within a
+source and across sources and are explained in detail in what follows.
+Hence, \texttt{varcode} takes the following form:
+
+\begin{equation}
+\notag \underbrace{\textcolor{blue}{i}}_{\text{Section}} - \underbrace{\textcolor{blue}{hs}}_{\text{Sector}} - \underbrace{CCC}_{\text{Variable Type}} -     \underbrace{DDDDDD }_{\text{Concept}} - \underbrace{ZZ}_{\text{Section-Specific}}
+\end{equation}
+
+\clearpage
+
+\subsubsection{\texorpdfstring{\texttt{Variable\ Type}}{Variable Type}}\label{variable-type}
+
+The third element of the \texttt{varcode} identifies the broad type of
+measure. Table \ref{tab:vartype_inhe} provides the permitted strings of
+the \texttt{Variable\ Type} within the \texttt{varcode} in the
+Inheritance Trends database, together with a label and a description.
+The section employs three types of measure. Aggregates (\texttt{agg})
+report the total annual flow of wealth transfers of the household
+sector; monetary values are always shown in national currency, in
+nominal terms, with no adjustment for inflation. Where the national
+currency changed over the period covered by a series, the whole series
+is expressed in the currency currently in force: for euro-area
+countries, for instance, values referring to years before the changeover
+are reported in euros rather than in the legacy national currency, so
+that a series is expressed in a single unit over its entire length.
+Ratios (\texttt{rto}) express the same annual flow relative to national
+income, which is the standard way of assessing the macroeconomic
+importance of inheritance and the only form in which the series can be
+compared across countries and across centuries. Rates (\texttt{rat})
+report the average effective tax rate applied to the flow.
+
+\begin{table}
+\centering
+\caption{\label{tab:vartype_inhe}Inheritance Trends: Variable Type}
+\centering
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{11cm}}
+\toprule
+Code & Label & Description\\
+\midrule
+\cellcolor{gray!10}{rat} & \cellcolor{gray!10}{Rate} & \cellcolor{gray!10}{In general, a rate is expressed as a percentage. For instance, the marginal inheritance tax rate is the amount of tax that is paid on an additional dollar of inheritance received. It represents the rate at which a person's tax liability increases as their inheritance increases. The concept can also be applied to the saving rate which refers to the percentage of disposable income that is saved or not spent on consumption.}\\
+rto & Ratio & A ratio describes the relationship between two quantities and is expressed as the quotient of one quantity divided by another. For example, if a country's total private net wealth is €10,000 billion and its total national income is  €2,000 billion, the ratio of private wealth to national income is 5 to 1, as total private wealth is five times the amount of national income.\\
+\cellcolor{gray!10}{agg} & \cellcolor{gray!10}{Aggregate} & \cellcolor{gray!10}{Aggregate value for a given institutional sector. The value is reported without knowing whether transactions that occur between units within the same sector are eliminated or kept during the aggregation.}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+
+\subsubsection{\texorpdfstring{\texttt{Concept}}{Concept}}\label{concept}
+
+The fourth element of the \texttt{varcode} identifies the
+\texttt{Concept}. In the Inheritance Trends database, a concept is the
+object being measured: either the type of wealth transfer the flow
+estimate refers to, or the effective tax rate levied on that transfer.
+Table \ref{tab:concept_inhe} reports the concepts and the corresponding
+identifiers used in the \texttt{varcode} of the Inheritance Trends
+database, together with a detailed description and the list of available
+\texttt{Variable\ Type} associated with each concept.
+
+Two transfer concepts are distinguished. Inheritances (\texttt{etnwea})
+cover wealth left at death only. Inheritances \& Gifts (\texttt{etnweg})
+cover wealth left at death together with inter vivos gifts and
+donations, and is the broader and more widely available of the two.
+Keeping them separate is essential: in countries where gifts are a
+common way of anticipating a bequest, the two concepts can differ
+substantially, and a comparison across countries that mixed them would
+be misleading. Wherever a source allows it, we publish both, so that
+users can gauge the size of the gift component directly. The third
+concept, the average effective tax rate (\texttt{averat}), is defined as
+the ratio between official wealth-transfer tax revenue and the estimated
+total tax base, that is, total estate, inheritance, and gift (EIG) tax
+revenue divided by the total flow of inheritances and gifts in a given
+year. It therefore measures the share of the annual flow of wealth
+transfers that is actually collected in taxes, and it is not a statutory
+rate: it reflects jointly the tax schedule in force, the exemptions and
+reliefs granted, and the extent to which transfers are declared at all.
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:concept_inhe}Inheritance Trends: Concept Dictionary}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{9cm}>{\raggedright\arraybackslash}p{2cm}}
+\toprule
+Code & Label & Description & Var Type\\
+\midrule
+\cellcolor{gray!10}{etnweg} & \cellcolor{gray!10}{Inheritances \& Gifts} & \cellcolor{gray!10}{Inheritances \& Gifts refers to wealth left at death (bequests) and intervivos gifts and donations. The value refers to the value of all possessions, tangible and intangible assets left at death, and to the value of all assets donated in life.} & \cellcolor{gray!10}{agg, rto}\\
+etnwea & Inheritances & Inheritances refer to wealth left at death (bequests), namely the value of all possessions, tangible and intangible assets left at death. & agg, rto\\
+\cellcolor{gray!10}{averat} & \cellcolor{gray!10}{Average Effective Tax Rate} & \cellcolor{gray!10}{The average tax rate is computed as the ratio between official tax revenue and estimate total tax base (e.g. the average effective wealth transfers tax rate is computed as the total EIG tax revenue divided by the total flow of inheritances and gifts in a given year).} & \cellcolor{gray!10}{rat}\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\clearpage
+
+\subsubsection{\texorpdfstring{\texttt{Section-Specific}}{Section-Specific}}\label{section-specific}
+
+In the Inheritance Trends database, the section-specific part of the
+\texttt{varcode} refers to the type of estimate from which the flow of
+wealth transfers is derived. The database distinguishes two types: the
+fiscal flow (\texttt{ff}) and the economic flow (\texttt{ef}). The list
+of permitted strings and a short description is provided in Table
+\ref{tab:dboard_inhe}.
+
+This distinction is the central methodological divide of the section,
+and it is the reason why two estimates for the same country and year may
+legitimately differ. What separates the two is the \emph{primary source}
+on which the estimate rests, not the amount of work the authors put into
+it: both are the outcome of a research exercise, and neither is a raw
+figure lifted from a statistical table.
+
+The \textbf{fiscal flow} is built on fiscal data: the estates,
+inheritances, and gifts reported to the tax authority, as recorded in
+estate tax returns, inheritance tax statistics, and successions
+registers. These records are the starting point rather than the final
+estimate. Taken as they stand, they capture only the transfers that are
+declared, and their coverage moves with the tax legislation in force,
+which changes over time and across countries: estates below the filing
+threshold, assets that are exempt or benefit from special reliefs, and
+transfers that go unreported are absent from the raw returns. Authors
+therefore adjust the fiscal material before arriving at a flow estimate
+--- grossing up for non-filing estates, imputing the value of tax-exempt
+assets and of asset classes outside the scope of the tax, correcting for
+valuation rules that depart from market values, and reconstructing
+series across legislative breaks. The specific adjustments differ from
+source to source and are documented in the Methodological Table of each
+source.
+
+The \textbf{economic flow} is instead built on an ensemble of
+macroeconomic and demographic data, chiefly national accounts, typically
+by combining aggregate household wealth with mortality rates and with
+the ratio between the average wealth of the deceased and the average
+wealth of the living. It aims at the full economic magnitude of the
+transfer, independently of what is declared for tax purposes, at the
+cost of relying on estimation assumptions that are, again, documented in
+the Methodological Tables of each source.
+
+Neither measure dominates the other, and we publish both wherever they
+are available. The fiscal flow stays closer to observed transfers and is
+the natural benchmark when the object of interest is the tax base; the
+economic flow is the appropriate measure when the object of interest is
+the intergenerational transmission of wealth as a whole. Users should
+not compare a fiscal flow for one country with an economic flow for
+another.
+
+\begin{table}
+\centering
+\caption{\label{tab:dboard_inhe}Inheritance Trends: Section-Specific}
+\centering
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{11cm}}
+\toprule
+Code & Label & Description\\
+\midrule
+\cellcolor{gray!10}{ef} & \cellcolor{gray!10}{Economic Flow} & \cellcolor{gray!10}{Estimates from national accounts}\\
+ff & Fiscal Flow & Estimates from fiscal records\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+
+\subsection{\texorpdfstring{The \texttt{percentile} variable in the
+Inheritance Trends
+Section}{The percentile variable in the Inheritance Trends Section}}\label{the-percentile-variable-in-the-inheritance-trends-section}
+
+In addition to the \texttt{varcode}, values are indexed by the
+\texttt{percentile} variable, which identifies the segment of the
+population an estimate refers to. The Inheritance Trends section is not
+a distributional section: every series published here refers to the
+reference population as a whole, and the \texttt{percentile} variable
+therefore takes the single value \emph{p0p100} throughout, as reported
+in Table \ref{tab:percentiles_inhe}. The variable is retained so that
+each estimate is fully identified by the same set of keys, and so that
+the population an estimate refers to is stated explicitly rather than
+left implicit. Extending the section with estimates of wealth transfers
+received by different segments of the distribution is an important
+direction for future releases of the GC Wealth Project.
+
+\begin{longtable}[t]{>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{8cm}}
+\caption{\label{tab:percentiles_inhe}Inheritance Trends: Percentiles}\\
+\toprule
+Code & Label & Description\\
+\midrule
+\cellcolor{gray!10}{p0p100} & \cellcolor{gray!10}{Overall Population} & \cellcolor{gray!10}{Everyone in the reference population}\\
+\bottomrule
+\end{longtable}
+
+\subsection{Construction of the Inheritance Trends
+Section}\label{construction-of-the-inheritance-trends-section}
+
+The procedure used to construct the Inheritance Trends database proceeds
+in three steps. First, we identify the relevant sources and obtain the
+raw data. Second, we transform and harmonize the raw data to fit our
+standards in terms of format and structure. Third, we run a set of tests
+and append the source-specific estimates to the database. Concurrently,
+we develop and write a detailed \textbf{Methodological Table}.
+
+\subsubsection{Step 1: Identification and Classification of
+Sources}\label{step-1-identification-and-classification-of-sources}
+
+The starting point is the identification of relevant estimates of the
+annual flow of wealth transfers. In principle, such estimates can
+originate from different \emph{types} of sources, including academic,
+government, and corporate research, as well as cross-national research
+and official statistics. Table \ref{tab:source_type_inhe} provides an
+overview of the permitted types of source.
+
+\begin{longtable}[t]{>{\raggedright\arraybackslash}p{4cm}>{\raggedright\arraybackslash}p{10cm}}
+\caption{\label{tab:source_type_inhe}Inheritance Trends: Source Types}\\
+\toprule
+Label & Description\\
+\midrule
+\cellcolor{gray!10}{Cross-national official statistics} & \cellcolor{gray!10}{Cross-national data from official institutions, such as national accounts from central banks.}\\
+Cross-national official survey data & Cross-national survey data from official institutions, such as household finance surveys from national statistical offices.\\
+\cellcolor{gray!10}{Cross-national corporate research} & \cellcolor{gray!10}{Cross-national research published by corporate entities, such as private consultancy firms.}\\
+Cross-national academic research & Cross-national research published by academic institutions, such as an academic journal article.\\
+\cellcolor{gray!10}{Cross-national government research} & \cellcolor{gray!10}{Cross-national research published by government institutions, such as government-commissioned reports.}\\
+\addlinespace
+Official statistics & Data from official institutions, such as national accounts from a country’s central bank.\\
+\cellcolor{gray!10}{Official survey data} & \cellcolor{gray!10}{Survey data from official institutions, such as household finance surveys from a country’s national statistical office.}\\
+Corporate research & Research published by corporate entities, such as private consultancy firms.\\
+\cellcolor{gray!10}{Academic research} & \cellcolor{gray!10}{Research published by academic institutions, such as an academic journal article.}\\
+Government research & Research published by government institutions, such as government-commissioned reports.\\
+\addlinespace
+\cellcolor{gray!10}{Government legislation} & \cellcolor{gray!10}{The actual text of public legislation.}\\
+Government legislative info & Texts published by government institutions that provide descriptive information about public legislation, such as a government website explaining tax clauses.\\
+\cellcolor{gray!10}{Government documents} & \cellcolor{gray!10}{Other texts published by government institutions, such as tax documents, forms, or descriptive reports.}\\
+\bottomrule
+\end{longtable}
+
+In practice, however, the sources of the Inheritance Trends section are
+exclusively academic research. There is no official statistic, national
+or cross-national, that publishes the annual flow of inheritances and
+gifts as such: the underlying fiscal records and national accounts
+exist, but the step from those records to a flow estimate is a research
+exercise, and it is performed in academic work. Each source is therefore
+a study, or a set of companion studies, that reconstructs the flow for
+one country over a long historical period, or, in the case of the
+cross-national source, for many countries over a shorter recent period.
+
+Table \ref{tab:sources_inhe} lists the sources currently included in the
+Inheritance Trends database, together with their country coverage, the
+period they span, and the \texttt{varcode} components they provide. The
+strong asymmetry visible in the table is a substantive feature of the
+field rather than an artifact of our selection: long historical series
+exist only for the small number of countries whose estate and
+inheritance tax records have been systematically exploited, whereas
+broad country coverage is available only for recent decades.
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:sources_inhe}Inheritance Trends: Sources and Coverage}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{3.5cm}cc>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{1.5cm}c}
+\toprule
+Source & Legend & Countries & Period & Concepts & Flow & Obs.\\
+\midrule
+\cellcolor{gray!10}{Guzzardi2026} & \cellcolor{gray!10}{Guzzardi and Morelli (2026)} & \cellcolor{gray!10}{63} & \cellcolor{gray!10}{1995-2024} & \cellcolor{gray!10}{averat, etnweg} & \cellcolor{gray!10}{ef} & \cellcolor{gray!10}{4842}\\
+Acciari2021 & Acciari et al. (2020) & 1 & 1995-2016 & etnwea, etnweg & ff & 88\\
+\cellcolor{gray!10}{Alvaredo2017} & \cellcolor{gray!10}{Alvaredo et al. (2017)} & \cellcolor{gray!10}{1} & \cellcolor{gray!10}{1870-2013} & \cellcolor{gray!10}{etnweg} & \cellcolor{gray!10}{ef} & \cellcolor{gray!10}{144}\\
+Apostel2025 & Apostel (2025) & 1 & 2009-2022 & etnwea, etnweg & ff & 24\\
+\cellcolor{gray!10}{Atkinson2012} & \cellcolor{gray!10}{Atkinson (2018)} & \cellcolor{gray!10}{1} & \cellcolor{gray!10}{1896-2008} & \cellcolor{gray!10}{etnwea, etnweg} & \cellcolor{gray!10}{ff} & \cellcolor{gray!10}{404}\\
+\addlinespace
+Brulhart2018 & Brülhart et al. (2018) & 1 & 1911-2011 & etnweg & ef & 9\\
+\cellcolor{gray!10}{Brulhart2026} & \cellcolor{gray!10}{Brülhart et al. (2026)} & \cellcolor{gray!10}{1} & \cellcolor{gray!10}{2002-2021} & \cellcolor{gray!10}{etnwea, etnweg} & \cellcolor{gray!10}{ff} & \cellcolor{gray!10}{40}\\
+Gabbuti2025 & Gabbuti and Morelli (2025) & 1 & 1864-2016 & etnweg & ff & 65\\
+\cellcolor{gray!10}{Piketty2011} & \cellcolor{gray!10}{Piketty (2011)} & \cellcolor{gray!10}{1} & \cellcolor{gray!10}{1826-2008} & \cellcolor{gray!10}{etnwea, etnweg} & \cellcolor{gray!10}{ef, ff} & \cellcolor{gray!10}{848}\\
+Schinke2012 & - & 1 & 1911-2009 & etnweg & ef & 7\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Once the relevant source is identified and correctly classified, we
+acquire the raw data. For the Inheritance Trends section we do not
+produce our own estimates from micro data: the published estimates are
+used as they are made available by the authors, whether in the article
+itself, in its appendix, or in the replication material accompanying it.
+Where the authors publish several variants of the same series, we retain
+a single one, as described in Step 2.
+
+\subsubsection{Step 2: Transformation and Harmonization of Raw
+Data}\label{step-2-transformation-and-harmonization-of-raw-data}
+
+The published raw data may come in various shapes or formats, including
+.pdf documents, and .xlsx or .csv files. Therefore, we need to process
+this information and harmonize the source-specific series to conform to
+our formatting standards. This involves assigning each data point
+(\texttt{value}) with relevant information, including its data source
+(\texttt{source}), reference year (\texttt{year}), country code
+(\texttt{GEO}, \texttt{GEO\_long}), type of measure (\texttt{varcode}),
+and the reference population (\texttt{percentile}, always \emph{p0p100}
+in this section). This procedure ensures a consistent data structure
+across all sources.
+
+Two harmonization choices deserve to be made explicit. First, a source
+may publish the flow of wealth transfers either as an aggregate in
+national currency or as a ratio to national income, and often only one
+of the two. We do not convert one into the other, because doing so would
+require adopting a national income denominator that may differ from the
+one used by the authors; we publish what the source publishes. This is
+why the availability of \texttt{agg} and \texttt{rto} varies across
+sources in Table \ref{tab:sources_inhe}. Second, monetary aggregates are
+always reported in national currency and in nominal terms, with no
+adjustment for inflation. Where a series spans a change of currency ---
+a redenomination, or the adoption of the euro --- the values referring
+to the earlier period are converted, so that the series is expressed in
+the currency currently in force over its entire length and contains no
+unit break. A long \texttt{agg} series is therefore internally
+consistent, but it remains a nominal series: it is not comparable across
+countries without conversion, and its growth over a long historical
+period reflects price dynamics as much as the growth of the transferred
+wealth itself. For long-run and cross-country comparisons, the ratio to
+national income (\texttt{rto}) is the appropriate measure.
+
+It is also important to note that when a source provides multiple
+estimates for the same series, reflecting alternative assumptions about
+mortality differentials, the treatment of gifts, or the valuation of
+assets, we select only one of these values, typically the benchmark
+estimate as defined in the underlying research.
+
+Finally, where a country is covered by more than one source, we do not
+merge or splice the resulting series into a single time series.
+Different sources rest on different records and different estimation
+choices, and a spliced series would conceal a methodological break
+rather than resolve it. The series are published side by side under
+their respective \texttt{source} identifiers, and the Methodological
+Tables provide the information needed to decide which one is appropriate
+for a given purpose.
+
+\subsubsection{Step 3: Testing and
+Appending}\label{step-3-testing-and-appending}
+
+After making sure the acquired estimates follow our formatting
+standards, we run a set of consistency checks and tests before we append
+them to the Inheritance Trends database. Besides the general formatting
+and duplication checks, these include substantive tests: that the ratio
+to national income lies in a plausible range and that its aggregate
+counterpart, where both are available, is consistent with it; that the
+flow of inheritances and gifts (\texttt{etnweg}) is not smaller than the
+flow of inheritances alone (\texttt{etnwea}) for the same country, year,
+source, and flow type; and that the average effective tax rate
+(\texttt{averat}) lies between zero and one and is consistent with the
+tax revenue and the flow of transfers from which it is derived.
+
+\clearpage
+
+\subsection{Methodological Tables}\label{m_tables_inhe}
+
+The \textbf{Methodological Tables} summarize for each source, among
+other things: the type of data used, where the work sources its data,
+the definition of the transfers covered, the methods of estimation, how
+different assets are valued, how specific types of assets and transfers
+are treated, any adjustments made to the data, important underlying
+assumptions, and more. We provide a brief description of the content of
+the \textbf{Methodological Tables} in Table \ref{tab:mtable_cells_inhe}.
+Fields that do not apply to a given source are left empty.
+
+\begingroup\fontsize{8}{10}\selectfont
+
+\begin{longtable}[t]{>{\raggedleft\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{12cm}}
+\caption{\label{tab:mtable_cells_inhe}Methodological Tables - Content Description}\\
+\toprule
+Field name & Field description\\
+\midrule
+\cellcolor{gray!10}{Legend} & \cellcolor{gray!10}{The name of the source.}\\
+Period covered and data points & The range from the first to last year included in the series published in the warehouse; the precise years and/or quarters for which data points are available; the total number of years and/or quarters containing data points.\\
+\cellcolor{gray!10}{Data type} & \cellcolor{gray!10}{A categorization of the data type(s) used in the series published in the warehouse.}\\
+Inequality indicators & The precise inequality measures covered in the series. See the description of the varcode (vartype) for more information on these measures.\\
+\cellcolor{gray!10}{Data sources used in the research} & \cellcolor{gray!10}{A list of all data sources used in the estimation of wealth inequality and the year(s) they provide data for. Note that not all of these data sources are necessarily relevant to the specific series we publish in the database. Full citation information for these sources is not typically included in the references section, and should instead be located from the source itself.}\\
+\addlinespace
+Unit of analysis & The unit of analysis of the series published in the warehouse. See the description of the varcode (dashboard-specific)  for details.\\
+\cellcolor{gray!10}{Definition of wealth} & \cellcolor{gray!10}{The precise definition of wealth underlying the wealth inequality estimates provided by the source.}\\
+Method of estimation & A brief summary of the estimation method of the series published in the warehouse.\\
+\cellcolor{gray!10}{Method of estimation (detailed)} & \cellcolor{gray!10}{A more detailed explanation (when applicable) of the estimation method of the series published in the warehouse.}\\
+Valuation of assets & How specific assets and liabilities have been valuated.\\
+\addlinespace
+\cellcolor{gray!10}{Treatment of private pensions} & \cellcolor{gray!10}{Whether any private pensions are included in the wealth definition, and if applicable, how they have been valuated.}\\
+Treatment of public pensions & Whether any public pensions are included in the wealth definition, and if applicable, how they have been valuated.\\
+\cellcolor{gray!10}{Treatment of life insurance} & \cellcolor{gray!10}{Whether any life insurance benefits are included in the wealth definition, and if applicable, how they have been valuated.}\\
+Treatment of household and personal goods (e.g., vehicles, boats, aircraft, jewelry, antiques, works of art, collections) & Whether any valuables and consumer goods are included in the definition of wealth, and if applicable, how they have been valuated.\\
+\cellcolor{gray!10}{Treatment of foreign wealth holdings} & \cellcolor{gray!10}{Whether any assets held abroad are included in the wealth definition, and if applicable, how they have been valuated.}\\
+\addlinespace
+Treatment of debt & Which types of liabilities are included in the wealth definition, and if applicable, how they have been valuated.\\
+\cellcolor{gray!10}{Adjustments to data} & \cellcolor{gray!10}{An explanation of any significant adjustments made to the raw data.}\\
+Distributional estimates aligned with national account aggregates & Whether the wealth estimate has been brought into alignment with the reference country’s national accounts wealth aggregates.\\
+\cellcolor{gray!10}{Total population estimate and source} & \cellcolor{gray!10}{The manner and source of the reference population estimate underlying the series.}\\
+Total wealth estimate and source & The manner and source of the aggregate wealth estimate underlying the series.\\
+\addlinespace
+\cellcolor{gray!10}{References} & \cellcolor{gray!10}{A bibliography for the sources cited parenthetically in the table’s analysis (i.e., not necessarily those listed in the data sources used in the research section). Any important references that are called out by title in the analysis (such as appendices, data files, or a working paper version of the source) are listed first, with their reference information and any downloadable files being available at their hyperlinked entry in the Data Sources Library.}\\
+\bottomrule
+\end{longtable}
+\endgroup{}
+
+\subsection{Additional Information on the Inheritance Trends
+Section}\label{additional-information-on-the-inheritance-trends-section}
+
+For additional information about the Inheritance Trends section, we
+refer the reader to the Appendix of this Documentation, where we provide
+a list of all sources included in the Inheritance Trends database,
+country-specific information on the coverage of the database, and
+additional information on the precise treatment of selected sources
+(Section \ref{sec:inhe_appendix}).
+
+\printbibliography
+
+\end{document}

@@ -222,6 +222,37 @@ drop year yyear
 rename yyyear year
 order year, first
 
+// convert EUR to Forint, using latest rate when year > max(rate year)
+* 1) Bring in rates and capture the latest HU year & rate
+preserve
+    import delimited ///
+        "${supvar_wid_dwld}/supvars_wide_18Jul2025.csv", ///
+        varnames(1) stringcols(_all) clear
+    keep country year xlceux
+    keep if country == "HU"
+    rename country area
+    destring year xlceux, replace ignore(" ,")
+    duplicates drop area year, force
+    * Record latest available year and corresponding rate for HU
+    quietly summarize year, meanonly
+    local hu_last_year = r(max)
+    quietly summarize xlceux if year == `hu_last_year', meanonly
+    local hu_last_rate = r(mean)
+    tempfile hurates
+    save `hurates'
+restore
+* 2) Merge the year-specific rates where available
+merge m:1 area year using `hurates', keep(master match) nogen
+* 3) Convert: EUR -> HUF
+*    - If we have a year-specific rate, use it
+*    - If the observation's year is after the last rate year and xlceux is missing, use the latest available rate
+gen value_huf = value
+replace value_huf = value * xlceux if area == "HU" & !missing(xlceux)
+* use last known HU rate for years beyond the rate sheet
+replace value_huf = value * `hu_last_rate' if area == "HU" & missing(xlceux) & year > `hu_last_year'
+replace value = value_huf if area == "HU"
+drop value_huf xlceux
+
 run "code/mainstream/auxiliar/all_paths.do"
 global output "${topo_dir_raw}/ECB_DWA_topo/final table"
 save "${output}/ECB_DWA_topo_warehouse.dta", replace

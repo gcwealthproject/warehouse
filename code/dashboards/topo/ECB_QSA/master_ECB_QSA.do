@@ -9,7 +9,7 @@ qui do "${topo_pro}/ECB_QSA/codes/create_grid_stock.do"
 
 *exit 1
 //run translate and populate grid
-do "${topo_pro}/ECB_QSA/codes/translate_24.do"
+do "${topo_pro}/ECB_QSA/codes/translate.do"
 qui di as result "raw data have been translated!"
 pwd
 

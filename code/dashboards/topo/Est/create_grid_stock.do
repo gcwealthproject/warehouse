@@ -7,7 +7,9 @@ global destination "${topo_dir_raw}/Est/auxiliary files"
 
 *import delimited "${origin}/nasa_10_f_bs__custom_3518312_linear.csv", varnames(1) delimiter(";") clear // June 2023 Version
 *import delimited "${origin}/nasa_10_f_bs__custom_7119296_linear.csv",  varnames(1) clear // August 2023 Version
-import delimited "${origin}/nasa_10_f_bs__custom_11875082_linear.csv",  varnames(1) clear // Juni 2024 Version
+*import delimited "${origin}/nasa_10_f_bs__custom_11875082_linear.csv",  varnames(1) clear // Juni 2024 Version
+*import delimited "${origin}/nasa_10_f_bs__custom_18259401_linear.csv",  varnames(1) clear // Oct 2025 Version
+import delimited "${origin}/nasa_10_f_bs__custom_20747415_linear.csv",  varnames(1) clear // March 2026 Version
 
 			
 keep time_period

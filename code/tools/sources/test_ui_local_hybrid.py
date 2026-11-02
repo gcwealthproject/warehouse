@@ -27,7 +27,7 @@ class HybridSourceCitekeyTests(unittest.TestCase):
         cls.build = load_module("build_sources_artifacts", "code/tools/sources/build_sources_artifacts.py")
         cls.validate = load_module("validate_sources", "code/tools/sources/validate_sources.py")
 
-    def test_add_candidate_still_uses_one_source_key(self):
+    def test_add_research_candidate_uses_citekey_without_source(self):
         candidate = self.ui.make_candidate(
             {
                 "mode": "add",
@@ -39,18 +39,73 @@ class HybridSourceCitekeyTests(unittest.TestCase):
             }
         )
 
-        self.assertEqual(candidate["source"], "Example2026")
+        self.assertEqual(candidate["source"], "")
         self.assertEqual(candidate["citekey"], "Example2026")
+
+    def test_add_data_source_candidate_keeps_distinct_source_and_citekey(self):
+        candidate = self.ui.make_candidate(
+            {
+                "mode": "add",
+                "record": {
+                    "is_data_source": True,
+                    "section": "Wealth Inequality",
+                    "source": "Example_ineq",
+                    "citekey": "ExampleBibliography2026",
+                    "link": "https://example.test/source",
+                    "bib": {
+                        "entry_type": "misc",
+                        "title": "Example",
+                        "author": "Example",
+                        "year": "2026",
+                    },
+                },
+            }
+        )
+
+        self.assertEqual(candidate["source"], "Example_ineq")
+        self.assertEqual(candidate["citekey"], "ExampleBibliography2026")
+        self.assertEqual(candidate["bib"]["keywords"], "Data Sources: Wealth Inequality")
+
+    def test_add_candidate_can_infer_data_source_from_pasted_canonical_keyword(self):
+        candidate = self.ui.make_candidate(
+            {
+                "mode": "add",
+                "record": {
+                    "source_key": "ExampleData",
+                    "link": "https://example.test/source",
+                    "bib": {
+                        "entry_type": "misc",
+                        "title": "Example",
+                        "author": "Example",
+                        "year": "2026",
+                        "keywords": "Data Sources: Wealth Topography,Wealth Taxation",
+                    },
+                },
+            }
+        )
+
+        self.assertTrue(candidate["is_data_source"])
+        self.assertEqual(candidate["source"], "ExampleData")
+        self.assertEqual(candidate["section"], "Wealth Topography")
+        self.assertEqual(candidate["bib"]["keywords"], "Data Sources: Wealth Topography,Wealth Taxation")
 
     def test_edit_candidate_preserves_legacy_source_citekey_split(self):
         candidate = self.ui.make_candidate(
             {
                 "mode": "edit",
                 "record": {
+                    "is_data_source": True,
+                    "section": "Wealth Inequality",
                     "source": "DHS_ineq",
                     "citekey": "dhs_various",
                     "link": "https://dhsprogram.com/data/",
-                    "bib": {"entry_type": "misc", "title": "DHS", "author": "Unknown", "year": "1900"},
+                    "bib": {
+                        "entry_type": "misc",
+                        "title": "DHS",
+                        "author": "Unknown",
+                        "year": "1900",
+                        "keywords": "Data Sources: Wealth Inequality",
+                    },
                 },
             }
         )
@@ -58,30 +113,92 @@ class HybridSourceCitekeyTests(unittest.TestCase):
         self.assertEqual(candidate["source"], "DHS_ineq")
         self.assertEqual(candidate["citekey"], "dhs_various")
 
-    def test_validate_edit_allows_legacy_mismatch_as_warning(self):
+    def test_unchecked_data_source_candidate_strips_data_source_fields_and_preserves_research_keywords(self):
+        candidate = self.ui.make_candidate(
+            {
+                "mode": "add",
+                "record": {
+                    "is_data_source": False,
+                    "section": "Taxes on Wealth",
+                    "aggsource": "Official statistics",
+                    "source_key": "Research2026",
+                    "legend": "Research (2026)",
+                    "link": "https://example.test/research",
+                    "ref_link": "https://bibbase.org/network/publication/example",
+                    "metadata": "Data-source-only note",
+                    "bib": {
+                        "entry_type": "article",
+                        "title": "Research paper",
+                        "author": "Researcher",
+                        "year": "2026",
+                        "keywords": "Data Sources: Taxes on Wealth,Wealth Taxation",
+                    },
+                },
+            }
+        )
+
+        self.assertFalse(candidate["is_data_source"])
+        self.assertEqual(candidate["section"], "")
+        self.assertEqual(candidate["aggsource"], "")
+        self.assertEqual(candidate["ref_link"], "")
+        self.assertEqual(candidate["metadata"], "")
+        self.assertEqual(candidate["bib"]["keywords"], "Wealth Taxation")
+
+    def test_checked_data_source_candidate_maps_section_to_canonical_keyword(self):
+        candidate = self.ui.make_candidate(
+            {
+                "mode": "add",
+                "record": {
+                    "is_data_source": True,
+                    "section": "Inheritance Trends",
+                    "aggsource": "Official statistics",
+                    "source_key": "Inheritance2026",
+                    "legend": "Inheritance (2026)",
+                    "link": "https://example.test/inheritance",
+                    "bib": {
+                        "entry_type": "misc",
+                        "title": "Inheritance data",
+                        "author": "Archive",
+                        "year": "2026",
+                        "keywords": "Estate Tax,Data Sources: Taxes on Wealth",
+                    },
+                },
+            }
+        )
+
+        self.assertEqual(candidate["bib"]["keywords"], "Data Sources: Inheritance Trends")
+
+    def test_validate_edit_allows_distinct_source_and_citekey_without_warning(self):
         record = {
             "id": "src-dhs-ineq",
-            "section": "Wealth Inequality Trends",
+            "section": "Wealth Inequality",
             "aggsource": "Cross-national official statistics",
+            "is_data_source": True,
             "legend": "DHS",
             "source": "DHS_ineq",
             "citekey": "dhs_various",
             "link": "https://dhsprogram.com/data/",
-            "bib": {"entry_type": "misc", "title": "DHS", "author": "Unknown", "year": "1900"},
+            "bib": {
+                "entry_type": "misc",
+                "title": "DHS",
+                "author": "Unknown",
+                "year": "1900",
+                "keywords": "Data Sources: Wealth Inequality",
+            },
         }
         candidate = dict(record)
 
         out = self.ui.validate_candidate([record], candidate, mode="edit", target_id="src-dhs-ineq")
 
         self.assertEqual(out["errors"], [])
-        self.assertIn("source and citekey differ; preserving legacy bibliography key", out["warnings"])
+        self.assertEqual(out["warnings"], [])
 
     def test_apply_edit_preserves_legacy_citekey_for_non_key_change(self):
         registry = {
             "records": [
                 {
                     "id": "src-dhs-ineq",
-                    "section": "Wealth Inequality Trends",
+                    "section": "Wealth Inequality",
                     "aggsource": "Cross-national official statistics",
                     "legend": "DHS",
                     "source": "DHS_ineq",
@@ -96,7 +213,7 @@ class HybridSourceCitekeyTests(unittest.TestCase):
             "target": "DHS_ineq",
             "editor_name": "Matteo",
             "record": {
-                "section": "Wealth Inequality Trends",
+                "section": "Wealth Inequality",
                 "aggsource": "Cross-national official survey data",
                 "legend": "DHS",
                 "source": "DHS_ineq",
@@ -143,7 +260,7 @@ class HybridSourceCitekeyTests(unittest.TestCase):
                 "}\n",
                 encoding="utf-8",
             )
-            registry = {"config": {"bib_output": str(bib_path)}, "records": [record]}
+            registry = {"config": {"digital_bib_output": str(bib_path)}, "records": [record]}
 
             out = self.ui.validate_candidate_against_artifacts(registry, record, mode="edit", target="DHS_ineq")
 
@@ -152,22 +269,36 @@ class HybridSourceCitekeyTests(unittest.TestCase):
     def test_shared_citekey_group_allows_duplicate_citekey_validation(self):
         existing = {
             "id": "src-a",
+            "section": "Wealth Topography",
             "source": "A",
             "citekey": "SharedKey",
             "shared_citekey_group": "shared-key",
             "link": "https://example.test/shared",
-            "bib": {"entry_type": "misc", "title": "Shared", "author": "A", "year": "2026"},
+            "bib": {
+                "entry_type": "misc",
+                "title": "Shared",
+                "author": "A",
+                "year": "2026",
+                "keywords": "Data Sources: Wealth Topography",
+            },
         }
         candidate = {
             "id": "src-b",
-            "section": "Wealth",
+            "section": "Wealth Topography",
             "aggsource": "Official statistics",
+            "is_data_source": True,
             "legend": "B",
             "source": "B",
             "citekey": "SharedKey",
             "shared_citekey_group": "shared-key",
             "link": "https://example.test/shared",
-            "bib": {"entry_type": "misc", "title": "Shared", "author": "B", "year": "2026"},
+            "bib": {
+                "entry_type": "misc",
+                "title": "Shared",
+                "author": "B",
+                "year": "2026",
+                "keywords": "Data Sources: Wealth Topography",
+            },
         }
 
         out = self.ui.validate_candidate([existing], candidate, mode="edit", target_id="src-b")
@@ -177,7 +308,7 @@ class HybridSourceCitekeyTests(unittest.TestCase):
 
     def test_maintenance_health_classifies_marked_shared_citekey(self):
         registry = {
-            "config": {"bib_output": "/tmp/missing-data.bib", "both_bib_output": "/tmp/missing-both.bib"},
+            "config": {"digital_bib_output": "/tmp/missing-data.bib"},
             "records": [
                 {"id": "src-a", "source": "A", "citekey": "SharedKey", "shared_citekey_group": "g", "bib": {}},
                 {"id": "src-b", "source": "B", "citekey": "SharedKey", "shared_citekey_group": "g", "bib": {}},
@@ -196,38 +327,39 @@ class HybridSourceCitekeyTests(unittest.TestCase):
             "records": [
                 {
                     "id": "src-a",
-                    "section": " Wealth Survey ",
+                    "section": " Wealth Topography ",
                     "source": "A",
                     "citekey": "A",
                     "legend": "A",
-                    "bib": {"keywords": "Data Sources: Wealth Survey"},
+                    "bib": {"keywords": "Data Sources: Wealth Topography"},
                 },
                 {
                     "id": "src-b",
-                    "section": "Wealth Survey",
+                    "section": "Wealth Topography",
                     "source": "B",
                     "citekey": "B",
                     "legend": "B",
-                    "bib": {"keywords": "Custom,Data Sources: Wealth Survey"},
+                    "bib": {"keywords": "Custom,Data Sources: Wealth Topography"},
                 },
                 {
                     "id": "src-c",
-                    "section": "Other",
+                    "section": "Taxes on Wealth",
                     "source": "C",
                     "citekey": "C",
                     "legend": "C",
-                    "bib": {"keywords": "Data Sources: Other"},
+                    "bib": {"keywords": "Data Sources: Taxes on Wealth"},
                 },
             ]
         }
 
-        out = self.ui.bulk_label_preview(registry, "section", "Wealth Survey", "Household Survey")
+        out = self.ui.bulk_label_preview(registry, "section", "Wealth Topography", "Supplementary Variables")
 
         self.assertEqual(out["total_matches"], 2)
         self.assertEqual([row["id"] for row in out["records"]], ["src-a", "src-b"])
-        self.assertEqual(out["keyword_mirror_updates"], 1)
+        self.assertEqual(out["keyword_mirror_updates"], 2)
         self.assertTrue(out["records"][0]["keyword_mirror_update"])
-        self.assertFalse(out["records"][1]["keyword_mirror_update"])
+        self.assertTrue(out["records"][1]["keyword_mirror_update"])
+        self.assertEqual(out["records"][1]["keywords_after"], "Data Sources: Supplementary Variables,Custom")
 
     def test_bulk_label_apply_updates_selected_records_and_one_history_entry(self):
         registry = {
@@ -296,17 +428,17 @@ class HybridSourceCitekeyTests(unittest.TestCase):
             "records": [
                 {
                     "id": "src-a",
-                    "section": "Wealth Inequality Trends",
+                    "section": "Wealth Topography",
                     "source": "A",
                     "citekey": "A",
-                    "bib": {"keywords": "Data Sources: Wealth Inequality Trends"},
+                    "bib": {"keywords": "Data Sources: Wealth Topography"},
                 },
                 {
                     "id": "src-b",
-                    "section": "Wealth Inequality Trends",
+                    "section": "Wealth Topography",
                     "source": "B",
                     "citekey": "B",
-                    "bib": {"keywords": "Data Sources: Wealth Inequality Trends,Methods"},
+                    "bib": {"keywords": "Data Sources: Wealth Topography,Methods"},
                 },
             ]
         }
@@ -318,18 +450,18 @@ class HybridSourceCitekeyTests(unittest.TestCase):
                 registry,
                 {
                     "field": "section",
-                    "old_label": "Wealth Inequality Trends",
-                    "new_label": "Wealth Distribution",
+                    "old_label": "Wealth Topography",
+                    "new_label": "Wealth Inequality",
                     "record_ids": ["src-a", "src-b"],
                     "editor_name": "Francesca",
                 },
                 changelog,
             )
 
-        self.assertEqual(out["keyword_mirror_updates"], 1)
+        self.assertEqual(out["keyword_mirror_updates"], 2)
         self.assertIn("bib.keywords", out["changed_fields"])
-        self.assertEqual(registry["records"][0]["bib"]["keywords"], "Data Sources: Wealth Distribution")
-        self.assertEqual(registry["records"][1]["bib"]["keywords"], "Data Sources: Wealth Inequality Trends,Methods")
+        self.assertEqual(registry["records"][0]["bib"]["keywords"], "Data Sources: Wealth Inequality")
+        self.assertEqual(registry["records"][1]["bib"]["keywords"], "Data Sources: Wealth Inequality,Methods")
 
     def test_marked_shared_citekey_writes_one_bib_entry(self):
         records = [
@@ -337,18 +469,32 @@ class HybridSourceCitekeyTests(unittest.TestCase):
                 "source": "A",
                 "citekey": "SharedKey",
                 "shared_citekey_group": "g",
-                "bib": {"entry_type": "misc", "title": "A", "author": "A", "year": "2026"},
+                "section": "Wealth Topography",
+                "bib": {
+                    "entry_type": "misc",
+                    "title": "A",
+                    "author": "A",
+                    "year": "2026",
+                    "keywords": "Data Sources: Wealth Topography",
+                },
             },
             {
                 "source": "B",
                 "citekey": "SharedKey",
                 "shared_citekey_group": "g",
-                "bib": {"entry_type": "misc", "title": "B", "author": "B", "year": "2026"},
+                "section": "Wealth Topography",
+                "bib": {
+                    "entry_type": "misc",
+                    "title": "B",
+                    "author": "B",
+                    "year": "2026",
+                    "keywords": "Data Sources: Wealth Topography",
+                },
             },
         ]
         with tempfile.TemporaryDirectory() as tmpdir:
-            out_path = pathlib.Path(tmpdir) / "data.bib"
-            self.build.write_bib(out_path, records)
+            out_path = pathlib.Path(tmpdir) / "digital_library.bib"
+            self.build.write_digital_library_bib(out_path, records)
             text = out_path.read_text(encoding="utf-8")
 
         self.assertEqual(text.count("@misc{SharedKey,"), 1)
@@ -362,7 +508,15 @@ class HybridSourceCitekeyTests(unittest.TestCase):
                     "citekey": "SharedKey",
                     "shared_citekey_group": "g",
                     "link": "https://example.test/shared",
-                    "bib": {"entry_type": "misc", "title": "Shared", "author": "A", "year": "2026", "url": "https://example.test/shared", "keywords": "Data Sources"},
+                    "section": "Wealth Topography",
+                    "bib": {
+                        "entry_type": "misc",
+                        "title": "Shared",
+                        "author": "A",
+                        "year": "2026",
+                        "url": "https://example.test/shared",
+                        "keywords": "Data Sources: Wealth Topography",
+                    },
                 },
                 {
                     "id": "src-b",
@@ -370,7 +524,15 @@ class HybridSourceCitekeyTests(unittest.TestCase):
                     "citekey": "SharedKey",
                     "shared_citekey_group": "g",
                     "link": "https://example.test/shared",
-                    "bib": {"entry_type": "misc", "title": "Shared", "author": "B", "year": "2026", "url": "https://example.test/shared", "keywords": "Data Sources"},
+                    "section": "Wealth Topography",
+                    "bib": {
+                        "entry_type": "misc",
+                        "title": "Shared",
+                        "author": "B",
+                        "year": "2026",
+                        "url": "https://example.test/shared",
+                        "keywords": "Data Sources: Wealth Topography",
+                    },
                 },
             ]
         }

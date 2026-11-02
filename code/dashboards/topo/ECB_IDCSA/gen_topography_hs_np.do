@@ -8,8 +8,8 @@
 // Check the following lines always before running the code
 local general_source = "ECB_IDCSA" // The source does not change across the do-file
 qui local sector_list S14 S15
-qui local country_list canada colombia iceland israel japan mexico ///
-				newzealand northmacedonia norway switzerland turkey gb
+qui local country_list australia brazil canada chile colombia gb israel iceland japan korea mexico norway newzealand ///
+                russia turkey usa northmacedonia switzerland
 		
 	
 * Origin folder: it contains the excel files to import
@@ -133,68 +133,30 @@ foreach s in `sector_list'{
 						"composition can be computed using : ``cod'`iter'_dirty'"
 					di as text "`outcome'"
 		
-					// Save country in local 
-						if "`ctry'" == "albania" {
-							qui local area_short  = "AL"
-						}
-						if "`ctry'" == "australia" {
-							qui replace area_short = "AU"
-						}
-						else if "`ctry'" == "brazil" {
-							qui local area_short  = "BR"
-						}
-						else if "`ctry'" == "canada" {
-							qui local area_short  = "CA"
-						}
-						else if "`ctry'" == "chile" {
-							qui local area_short  = "CL"
-						}
-						else if "`ctry'" == "colombia" {
-							qui local area_short  = "CO"
-						}
-						else if "`ctry'" == "iceland" {
-							qui local area_short = "IS"
-						}	   
-						else if "`ctry'" == "israel" {
-							qui local area_short  = "IL"
-						}	
-						if "`ctry'" == "india" {
-							qui replace area_short  = "IN"
-						}									
-						else if "`ctry'" == "japan" {
-							qui local area_short = "JP"
-						}	   
-						else if "`ctry'" == "korea" {
-							qui local area_short = "KR"
-						}		   
-						else if "`ctry'" == "mexico" {
-							qui local area_short  = "MX"
-						}		   
-						else if "`ctry'" == "newzealand" {
-							qui local area_short  = "NZ"
-						}		   
-						else if "`ctry'" == "northmacedonia" {
-							qui local area_short  = "MK"
-						}	   
-						else if "`ctry'" == "norway" {
-							qui local area_short = "NO"
-						}		   
-						else if "`ctry'" == "russia" {
-							qui local area_short  = "RU"
-						}		   
-						else if "`ctry'" == "switzerland" {
-							qui local area_short  = "CH"
-						}	   
-						else if "`ctry'" == "turkey" {
-							qui local area_short  = "TR"
-						}	
-						else if "`ctry'" == "gb" {
-							qui local area_short  = "GB"
-						}		   
-						else if "`ctry'" == "usa" {
-							qui local area_short = "US"
-						}	
-					qui di as text "`area_short'" // and print it
+					local area_short ""   // default empty
+
+					if      "`ctry'" == "albania"         local area_short "AL"
+					else if "`ctry'" == "australia"       local area_short "AU"
+					else if "`ctry'" == "brazil"          local area_short "BR"
+					else if "`ctry'" == "canada"          local area_short "CA"
+					else if "`ctry'" == "chile"           local area_short "CL"
+					else if "`ctry'" == "colombia"        local area_short "CO"
+					else if "`ctry'" == "iceland"         local area_short "IS"
+					else if "`ctry'" == "israel"          local area_short "IL"
+					else if "`ctry'" == "india"           local area_short "IN"
+					else if "`ctry'" == "japan"           local area_short "JP"
+					else if "`ctry'" == "korea"           local area_short "KR"
+					else if "`ctry'" == "mexico"          local area_short "MX"
+					else if "`ctry'" == "newzealand"      local area_short "NZ"
+					else if "`ctry'" == "northmacedonia"  local area_short "MK"
+					else if "`ctry'" == "norway"          local area_short "NO"
+					else if "`ctry'" == "russia"          local area_short "RU"
+					else if "`ctry'" == "switzerland"     local area_short "CH"
+					else if "`ctry'" == "turkey"          local area_short "TR"
+					else if "`ctry'" == "gb"              local area_short "GB"
+					else if "`ctry'" == "usa"             local area_short "US"
+
+					di as text "`area_short'"
 					
 					// Save sector in local 
 					if "`s'" == "S1M" {

@@ -14,29 +14,44 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from common import (
+    CANONICAL_DATA_SOURCE_KEYWORD_SET,
+    DATA_SOURCE_KEYWORD_PREFIX,
+    DIGITAL_LIBRARY_CONFLICT_FIELDS,
+    RESEARCH_CATEGORY_KEYWORD_SET,
+    build_digital_library_entries,
+    canonical_data_source_keyword_for_section,
+    canonical_data_source_keywords_for_sections,
+    data_source_keywords_from_value,
+    is_canonical_data_source_keyword,
+    is_data_source_keyword,
     load_json_yaml,
     load_registry,
     normalize_text,
     normalize_url,
     normalize_whitespace,
+    parse_bib_entries,
+    record_is_data_source,
+    read_source_alias_sheet,
     read_sources_sheet,
     records_sorted,
+    research_category_keywords_from_value,
+    split_section_labels,
+    split_keywords,
     validate_xlsx_file,
 )
 from source_paths import (
     DEFAULT_ALIASES_PATH,
-    DEFAULT_BOTH_BIB_PATH,
     DEFAULT_CHANGE_LOG_PATH,
-    DEFAULT_DATA_BIB_PATH,
+    DEFAULT_DIGITAL_BIB_PATH,
     DEFAULT_DICTIONARY_PATH,
     DEFAULT_REGISTRY_PATH,
     DEFAULT_SCHEMA_PATH,
-    DEFAULT_WEALTH_BIB_PATH,
 )
 
 URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 DOI_RE = re.compile(r"^10\.\d{4,9}/[-._;()/:A-Z0-9]+$", re.IGNORECASE)
 YEAR_RE = re.compile(r"^\d{4}$")
+BIB_KEY_RE = re.compile(r"@\w+\s*\{\s*([^,\n]+)\s*,", re.IGNORECASE)
 
 
 class ValidationError(Exception):
@@ -62,9 +77,15 @@ def validate_records(registry: dict, strict: bool = False) -> list:
     warns = []
 
     by_source = {}
+    by_alias = {}
     by_citekey = {}
     by_url = {}
     by_title_year = {}
+    canonical_sources = {
+        normalize_whitespace(str(rec.get("source", "")))
+        for rec in records
+        if normalize_whitespace(str(rec.get("source", "")))
+    }
 
     def intentional_shared(first: dict, current: dict) -> bool:
         first_citekey = normalize_whitespace(str(first.get("citekey", "")))
@@ -73,21 +94,40 @@ def validate_records(registry: dict, strict: bool = False) -> list:
         current_group = normalize_whitespace(str(current.get("shared_citekey_group", "")))
         return bool(first_citekey and first_citekey == current_citekey and first_group and first_group == current_group)
 
+    def conflicting_bibliographic_fields(first: dict, current: dict) -> list:
+        first_bib = first.get("bib", {}) or {}
+        current_bib = current.get("bib", {}) or {}
+        conflicts = []
+        for field in DIGITAL_LIBRARY_CONFLICT_FIELDS:
+            first_value = normalize_whitespace(str(first_bib.get(field, "")))
+            current_value = normalize_whitespace(str(current_bib.get(field, "")))
+            if not first_value or not current_value:
+                continue
+            first_norm = first_value.lower() if field in {"year", "doi"} else normalize_text(first_value)
+            current_norm = current_value.lower() if field in {"year", "doi"} else normalize_text(current_value)
+            if first_norm != current_norm:
+                conflicts.append(field)
+        return conflicts
+
     for rec in records:
         rec_id = rec.get("id", "")
         source = normalize_whitespace(rec.get("source", ""))
         citekey = normalize_whitespace(rec.get("citekey", ""))
+        section = normalize_whitespace(rec.get("section", ""))
         link = normalize_whitespace(rec.get("link", ""))
         ref_link = normalize_whitespace(rec.get("ref_link", ""))
         bib = rec.get("bib", {}) or {}
+        is_data_source = record_is_data_source(rec)
 
         if not rec_id:
             errors.append("Record with missing id")
-        if not source:
-            errors.append(f"{rec_id}: missing source")
         if not citekey:
             errors.append(f"{rec_id}: missing citekey")
-        if not link:
+        if is_data_source and not source:
+            errors.append(f"{rec_id}: data-source records must have source")
+        if not is_data_source and source:
+            errors.append(f"{rec_id}: non-data-source records must leave source blank; use citekey for the BibTeX key")
+        if is_data_source and not link:
             errors.append(f"{rec_id}: missing link")
 
         if link and not URL_RE.match(link):
@@ -103,6 +143,29 @@ def validate_records(registry: dict, strict: bool = False) -> list:
         bib_url = normalize_whitespace(str(bib.get("url", "")))
         doi = normalize_whitespace(str(bib.get("doi", "")))
         keywords = normalize_whitespace(str(bib.get("keywords", "")))
+        keyword_tokens = split_keywords(keywords)
+        data_source_tokens = [token for token in keyword_tokens if is_data_source_keyword(token)]
+        canonical_data_source_tokens = [token for token in data_source_tokens if is_canonical_data_source_keyword(token)]
+        noncanonical_data_source_tokens = [token for token in data_source_tokens if not is_canonical_data_source_keyword(token)]
+        uncontrolled_tokens = [
+            token
+            for token in keyword_tokens
+            if token not in RESEARCH_CATEGORY_KEYWORD_SET
+            and not is_data_source_keyword(token)
+        ]
+        section_keywords = canonical_data_source_keywords_for_sections(section)
+        unknown_sections = [
+            label
+            for label in split_section_labels(section)
+            if not canonical_data_source_keyword_for_section(label)
+        ]
+        research_category_tokens = research_category_keywords_from_value(keywords)
+        manual_review = bool(
+            rec.get("manual_review")
+            or rec.get("manual_review_required")
+            or rec.get("needs_manual_review")
+            or normalize_whitespace(str(rec.get("classification_review", ""))).lower() in {"manual_review", "manual review", "needs_review", "needs review"}
+        )
 
         if not normalize_whitespace(str(bib.get("entry_type", ""))):
             errors.append(f"{rec_id}: bib.entry_type is required")
@@ -123,11 +186,52 @@ def validate_records(registry: dict, strict: bool = False) -> list:
             msg = f"{rec_id}: invalid bib.doi: {doi}"
             (errors if strict else warns).append(msg)
         if not keywords:
-            warns.append(f"{rec_id}: bib.keywords is missing (recommended but optional)")
+            errors.append(f"{rec_id}: bib.keywords is required for digital_library.bib export")
+        if noncanonical_data_source_tokens:
+            errors.append(
+                f"{rec_id}: noncanonical data-source keyword(s): {', '.join(noncanonical_data_source_tokens)}. "
+                f"Allowed: {', '.join(sorted(CANONICAL_DATA_SOURCE_KEYWORD_SET))}"
+            )
+        if uncontrolled_tokens:
+            errors.append(
+                f"{rec_id}: uncontrolled keyword(s): {', '.join(uncontrolled_tokens)}. "
+                "Use the controlled data-source and research category checkboxes."
+            )
+        if unknown_sections:
+            errors.append(f"{rec_id}: unrecognized data-source section/category: {', '.join(unknown_sections)}")
+        if is_data_source:
+            if not canonical_data_source_tokens:
+                errors.append(
+                    f"{rec_id}: data-source records must have one or more controlled canonical {DATA_SOURCE_KEYWORD_PREFIX} keyword"
+                )
+            if section_keywords and set(canonical_data_source_tokens) != set(section_keywords):
+                errors.append(
+                    f"{rec_id}: section/category values must map to the selected data-source keyword(s)"
+                )
+        elif data_source_tokens:
+            errors.append(f"{rec_id}: non-data-source records must not have {DATA_SOURCE_KEYWORD_PREFIX} keywords")
+        elif not research_category_tokens and not manual_review:
+            errors.append(
+                f"{rec_id}: non-data-source records must have at least one controlled research category keyword "
+                "or be explicitly marked for manual review"
+            )
 
-        if source in by_source:
+        for alias in rec.get("source_aliases", []) or []:
+            alias = normalize_whitespace(str(alias))
+            if alias and alias == source:
+                errors.append(f"{rec_id}: source_aliases must not repeat canonical source {source}")
+            if alias and alias in canonical_sources:
+                errors.append(f"{rec_id}: source alias {alias} collides with an active source code")
+            if alias and alias in by_alias and by_alias[alias][0] != source:
+                errors.append(
+                    f"{rec_id}: source alias {alias} maps to both {by_alias[alias][0]} and {source}"
+                )
+            elif alias:
+                by_alias[alias] = (source, rec_id)
+
+        if source and source in by_source:
             errors.append(f"Exact duplicate source: {source} ({by_source[source]} and {rec_id})")
-        else:
+        elif source:
             by_source[source] = rec_id
 
         if citekey in by_citekey:
@@ -136,6 +240,9 @@ def validate_records(registry: dict, strict: bool = False) -> list:
             current_group = normalize_whitespace(str(rec.get("shared_citekey_group", "")))
             if not first_group or first_group != current_group:
                 msg = f"Exact duplicate citekey: {citekey} ({first.get('id', '')} and {rec_id})"
+                conflict_fields = conflicting_bibliographic_fields(first, rec)
+                if conflict_fields:
+                    msg += f"; conflicting bibliographic fields: {', '.join(conflict_fields)}"
                 (errors if strict else warns).append(msg)
         else:
             by_citekey[citekey] = rec
@@ -265,14 +372,11 @@ def validate_change_log(changelog_path: Path) -> None:
 def check_generated_artifacts(
     registry_path: Path,
     dictionary: Path,
-    bib: Path,
-    wealth_bib_input: Path,
-    both_bib_output: Path,
-) -> None:
+    digital_bib: Path,
+) -> list:
     with tempfile.TemporaryDirectory() as td:
         tmp_dict = Path(td) / "dictionary.xlsx"
-        tmp_bib = Path(td) / "data.bib"
-        tmp_both_bib = Path(td) / "both.bib"
+        tmp_digital_bib = Path(td) / "digital_library.bib"
         validate_xlsx_file(dictionary)
         shutil.copy2(dictionary, tmp_dict)
         cmd = [
@@ -284,30 +388,87 @@ def check_generated_artifacts(
             str(dictionary),
             "--dictionary-output",
             str(tmp_dict),
-            "--bib-output",
-            str(tmp_bib),
-            "--wealth-bib-input",
-            str(wealth_bib_input),
-            "--both-bib-output",
-            str(tmp_both_bib),
+            "--digital-bib-output",
+            str(tmp_digital_bib),
         ]
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        if not bib.exists():
-            raise ValidationError(f"Bib artifact missing: {bib}")
-        if not both_bib_output.exists():
-            raise ValidationError(f"Combined bib artifact missing: {both_bib_output}")
+        if not digital_bib.exists():
+            raise ValidationError(f"Digital library artifact missing: {digital_bib}")
 
-        if tmp_bib.read_text(encoding="utf-8") != bib.read_text(encoding="utf-8"):
-            raise ValidationError("Generated bib is out of date. Run build_sources_artifacts.py")
-        if tmp_both_bib.read_text(encoding="utf-8") != both_bib_output.read_text(encoding="utf-8"):
-            raise ValidationError("Generated combined bib is out of date. Run build_sources_artifacts.py")
+        if tmp_digital_bib.read_text(encoding="utf-8") != digital_bib.read_text(encoding="utf-8"):
+            raise ValidationError("digital_library.bib is out of date. Run build_sources_artifacts.py")
 
         validate_xlsx_file(tmp_dict)
         current_rows = read_sources_sheet(dictionary)
         rebuilt_rows = read_sources_sheet(tmp_dict)
         if json.dumps(current_rows, sort_keys=True) != json.dumps(rebuilt_rows, sort_keys=True):
             raise ValidationError("dictionary.xlsx Sources sheet is out of date. Run build_sources_artifacts.py")
+        current_alias_rows = read_source_alias_sheet(dictionary)
+        rebuilt_alias_rows = read_source_alias_sheet(tmp_dict)
+        if json.dumps(current_alias_rows, sort_keys=True) != json.dumps(rebuilt_alias_rows, sort_keys=True):
+            raise ValidationError("dictionary.xlsx SourceAliases sheet is out of date. Run build_sources_artifacts.py")
+
+        return validate_digital_bib(digital_bib)
+
+
+def raw_bib_duplicate_keys(text: str) -> list:
+    keys = [normalize_whitespace(match.group(1)) for match in BIB_KEY_RE.finditer(text)]
+    counts = defaultdict(int)
+    for key in keys:
+        if key:
+            counts[key] += 1
+    return sorted([key for key, count in counts.items() if count > 1], key=str.lower)
+
+
+def validate_digital_bib(path: Path) -> list:
+    text = path.read_text(encoding="utf-8")
+    duplicate_keys = raw_bib_duplicate_keys(text)
+    if duplicate_keys:
+        raise ValidationError(f"digital_library.bib contains duplicate citekey(s): {', '.join(duplicate_keys)}")
+    entries = parse_bib_entries(text)
+    errors = []
+    warns = []
+    for key, entry in entries.items():
+        fields = entry.get("fields", {}) or {}
+        if "section" in fields:
+            errors.append(f"{key}: exported BibTeX must not include section field")
+        keywords = normalize_whitespace(str(fields.get("keywords", "")))
+        if not keywords:
+            errors.append(f"{key}: exported BibTeX keywords are required")
+            continue
+        data_source_tokens = data_source_keywords_from_value(keywords, canonical_only=False)
+        bad_data_source_tokens = [token for token in data_source_tokens if not is_canonical_data_source_keyword(token)]
+        if bad_data_source_tokens:
+            errors.append(f"{key}: noncanonical exported data-source keyword(s): {', '.join(bad_data_source_tokens)}")
+        uncontrolled_tokens = [
+            token
+            for token in split_keywords(keywords)
+            if token not in RESEARCH_CATEGORY_KEYWORD_SET
+            and not is_data_source_keyword(token)
+        ]
+        if uncontrolled_tokens:
+            errors.append(f"{key}: uncontrolled exported keyword(s): {', '.join(uncontrolled_tokens)}")
+    if errors:
+        raise ValidationError("\n".join(errors))
+    return warns
+
+
+def digital_library_merge_warnings(registry: dict) -> list:
+    _, report = build_digital_library_entries(records_sorted(registry.get("records", [])))
+    warnings = []
+    for conflict in report.get("bibliographic_conflicts", []):
+        warnings.append(
+            "Digital library duplicate citekey conflict: "
+            f"{conflict.get('citekey', '')} field={conflict.get('field', '')} "
+            f"incoming={conflict.get('incoming_source', '')}"
+        )
+    for item in report.get("multi_data_source_keyword_exports", []):
+        warnings.append(
+            "Digital library merged multi-category data-source entry: "
+            f"{item.get('citekey', '')} -> {', '.join(item.get('keywords', []))}"
+        )
+    return warnings
 
 
 def main() -> int:
@@ -318,9 +479,10 @@ def main() -> int:
     parser.add_argument("--change-log", default=DEFAULT_CHANGE_LOG_PATH)
     parser.add_argument("--check-generated", action="store_true")
     parser.add_argument("--dictionary", default=DEFAULT_DICTIONARY_PATH)
-    parser.add_argument("--bib", default=DEFAULT_DATA_BIB_PATH)
-    parser.add_argument("--wealth-bib-input", default=DEFAULT_WEALTH_BIB_PATH)
-    parser.add_argument("--both-bib", default=DEFAULT_BOTH_BIB_PATH)
+    parser.add_argument("--digital-bib", default=None)
+    parser.add_argument("--bib", default=None, help="Deprecated alias for --digital-bib")
+    parser.add_argument("--wealth-bib-input", default=None, help="Deprecated; ignored because sources.yaml is the only input")
+    parser.add_argument("--both-bib", default=None, help="Deprecated; ignored because split outputs are legacy")
     parser.add_argument("--strict", action="store_true", help="Fail on duplicate citekey/url/title-year and URL/DOI format issues")
     args = parser.parse_args()
 
@@ -332,17 +494,16 @@ def main() -> int:
     reg = load_registry(registry_path)
     validate_schema_shape(reg, schema_path)
     warnings = validate_records(reg, strict=args.strict)
+    warnings.extend(digital_library_merge_warnings(reg))
     validate_aliases(aliases_path)
     validate_change_log(changelog_path)
 
     if args.check_generated:
-        check_generated_artifacts(
+        warnings.extend(check_generated_artifacts(
             registry_path,
             Path(args.dictionary),
-            Path(args.bib),
-            Path(args.wealth_bib_input),
-            Path(args.both_bib),
-        )
+            Path(args.digital_bib or args.bib or DEFAULT_DIGITAL_BIB_PATH),
+        ))
 
     if warnings:
         print(f"Warnings (non-blocking unless --strict is used): {len(warnings)}")

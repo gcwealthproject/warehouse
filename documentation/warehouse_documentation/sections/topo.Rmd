@@ -1,0 +1,189 @@
+---
+output:
+  pdf_document:
+  html_document: default
+---
+
+```{r , include=FALSE}
+#Load libraries 
+library(tidyverse)
+library(glue)
+library(stringr)
+library(countrycode)
+library(janitor)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(tibble)
+library(readxl)
+library(readr)
+library(expss)
+```
+
+```{r, echo=F}
+topo_info <- "docs/bible_wt_tables.xlsx"
+```
+
+# Wealth Topography Section {#sec:topo}
+ 
+## Introduction to the Wealth Topography Section {#subsec:topo_intro}
+
+The Wealth Topography section includes cross-country data that capture, at the aggregate level, the evolution of household portfolios of assets and debt. 
+<!-- Assets are metaphorically represented as “mountains and hills”, while debts are visualized as “seas” of debt.  -->
+The data come from national accounts, household surveys, and a range of research projects and reports.
+
+These data offer a unique view of aggregate household balance sheets. Country-specific portfolios are shaped by, and reflect, national characteristics, including demographic trends, inflation and interest rate dynamics, features of financial and credit markets, the relative importance of stock exchanges versus banking systems, the strength of asset management industries, and the preferential tax treatment of assets, as well as the preferences of households and the generosity of pensions systems.
+
+This chapter introduces the categories of the Wealth Topography database and the construction of each concept. We refer the interested reader to the Technical Documentation of the Wealth Topography for all information related to the treatment of each source of data as well as the country-specific data coverage. 
+
+## The `varcode` in the Wealth Topography Section {#subsec:topo_varcode}
+
+As described in the general warehouse structure section, for each country-source pair, the `varcode` is a string that identifies a unique time-series by means of five elements. The first element of the `varcode` is a 1-digit code that identifies the Section of the GC Wealth Project, which for the case of Wealth Topography takes the value `p`. Hence, `varcode` takes the following form:
+
+\begin{equation}
+\notag \underbrace{\textcolor{blue}{p}}_{\text{Section}} - \underbrace{BB}_{\text{Sector}} - \underbrace{CCC}_{\text{Variable Type}} - \underbrace{DDDDDD}_{\text{Concept}} - \underbrace{ZZ}_{\text{Section Specific}} 
+\end{equation}
+ 
+
+### `Sector`
+The second element of the `varcode` identifies the sector to which the time-series refers. The Wealth Topography database reports aggregate wealth and the composition of assets and liabilities of three institutional sectors: Households, NPISH (non-profit institutions serving households), and Households & NPISH sectors.\footnote{Other institutional sectors (non-financial corporations sector, financial corporations sector, general government sector, and the rest of the world) are not currently included in the database.} The classification of institutional sectors used in the Wealth Topography database (and in the GC Wealth Project more in in general) mirrors the classification used by the System of National Accounts 2008 (SNA2008, hereafter) and its European counterpart, the European System of Accounts 2010 (ESA2010. hereafter). The institutional sectors are reported in Table \ref{tab:tsector}, where the column "Code" reports the sector identifier used in the `varcode` while the column "Description" reports a detailed, non-technical, description of each sector.
+
+```{r tsector, echo=F}
+tsector <- read_excel("docs/bible_wt_sectors.xlsx", sheet = "sectors", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(tsector, format="latex", align = "l", booktabs = T, longtable=T, centering = T, caption = "Wealth Topography: Sector") %>%
+  kable_styling(latex_options = "striped", 
+                font_size = 8)   %>%
+  column_spec(1, width = "1cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "10cm") 
+```
+
+
+### `Variable Type`: Consolidation 
+The third element of the `varcode` identifies the `Variable Type` which, in the Wealth Topography database, coincides with the consolidation status. The Wealth Topography reports outstanding levels of assets and liabilities and net wealth for the institutional sectors considered. In the SNA2008, outstanding levels or stocks for a given sector are obtained by aggregating the accounts of the units of the sector, and the aggregation process can differ according to the treatment of transactions within the sector. Within-sector transactions can be consolidated or non-consolidated accounts. Consolidation refers to the practice of eliminating any transaction between units or sub-sectors within the same sector. In this case, any remaining transaction is a transaction with other institutional sectors of the economy. For example, in a consolidated financial account, a loan between two households within the household sector would be eliminated, and the remaining loans would reflect transactions with other sectors of the economy (e.g., the rest of the world, the government sector, the non-financial corporations sector, or the financial corporations sector). In contrast, in a non-consolidated account, such an elimination is not carried out and the aggregation across units within the same sector includes all types of transactions, regardless of the counterpart. In this case, a loan between two households within the households sector would be counted as both an asset and a liability. In practice, most statistical agencies publish only non-consolidated accounts because the construction of consolidated accounts requires knowing the sender and the recipient of all transactions. 
+
+Table \ref{tab:tcons} reports under the column "Code" the consolidation status identifier used in the `varcode` of the Wealth Topography database while the column "Description" reports a detailed, non-technical description. If a source in the Wealth Topography database does not provide any information about the consolidation status, we classify them simply as "Aggregate".
+
+```{r tcons, echo=F}
+tcons <- read_excel("docs/bible_wt_consolidation.xlsx", sheet = "consolidation", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(tcons, format="latex", align = "l", booktabs = T, longtable=T, caption = "Wealth Topography: Variable Type") %>%
+  kable_styling(latex_options = "striped", 
+                font_size = 8)   %>%
+  column_spec(1, width = "1cm") %>%
+  column_spec(2, width = "4cm") %>%
+  column_spec(3, width = "10cm") 
+```
+
+
+### `Concept` 
+The fourth element of the `varcode` identifies the `Concept`. In the Wealth Topography database, a concept is a macro-category of the balance sheet, computed by aggregating different asset and liability classes. The construction of such concepts and the aggregation procedure are explained in Section \ref{subsec:topo_construction}. The concepts and the corresponding identifiers used in the `varcode` of the Wealth Topography database, together with a detailed description, are reported in Table \ref{tab:tconcepts}. 
+
+```{r tconcepts, echo=F}
+concepts_tab <- read_excel("docs/bible_wt_concepts.xlsx", sheet = "concepts", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(concepts_tab, format="latex", align = "l", booktabs = T, longtable=T, caption = "Wealth Topography: Concept") %>%
+  kable_styling(latex_options = "striped", 
+                font_size = 8)   %>%
+  column_spec(1, width = "1cm") %>%
+  column_spec(2, width = "4cm") %>%
+  column_spec(3, width = "10cm") 
+```
+
+We use a stylized balance sheet to show the relationship between the concepts in Table \ref{tab:tconcepts}. The balance sheet is organized into two panels: Assets, and Liabilities and Net Wealth. We also report illustrative values for each concept. Among assets, "Housing & Land" and "Financial Assets & Fixed Capital of Personal Businesses" are the two main concepts. "Housing & Land" is the sum of the concepts "Housing" and "Land". The concept "Financial Assets & Fixed Capital of Personal Businesses", in turn, equals the sum of the following concepts: "Fixed Capital of Personal Businesses", "Cash, Deposits, Bonds & Loans", "Stocks, Business Equities & Fund Shares", and "Pensions & Life Insurance". "Deposits" is a part of "Cash, Deposits, Bonds & Loans", but also a concept on its own. We also include additional concepts "Offshore Financial Wealth" and "Consumer Durable Goods". The concept "Debt" constitutes the liability side of the balance sheet. As mortgage debt is the key component of debt in many countries, the concept "Debt Secured by a Mortgage" provides data on debt at an additional level of disaggregation. Finally, the concept "Net Wealth" is the balancing item and it equals the difference between total assets ("Housing & Land" and "Financial Assets & Fixed Capital of Personal Businesses") and "Debt". Note that we follow the standard definition of net wealth and, therefore, do not include offshore financial wealth or consumer durable goods in the net wealth definition. That is why we separate the two concepts in the right panel of the balance sheet.
+
+
+```{r child=if(knitr::is_latex_output()) file.path(doc_root, "sections", "fragments", "wt_balancesheet_new.Rmd") else file.path(doc_root, "sections", "fragments", "wt_balancesheet_new_html.Rmd")}
+```
+
+
+### `Section-Specific`: Recording of Financial Position
+
+The fifth element of the `varcode` is a `Section-Specific` string which, in the Wealth Topography databse, corresponds to the financial position of each concepts. Financial assets may be recorded gross or net of all liabilities, at a given point in time. Similarly, debt securities can appear both as assets or as liabilities. To distinguish between the financial position of each concept, the Wealth Topography distinguishes between three types of financial position: gross assets (`ga`), net assets (`na`), and liabilities (`lb`). When this classification is not possible, the financial position is not applicable (`_`). Table \ref{tab:tfinpos} provides a taxonomy of financial positions together with a non-technical description for each.
+
+```{r tfinpos, echo=F}
+tfinpos <- read_excel("docs/bible_wt_finpos.xlsx", sheet = "finpos", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(tfinpos, format="latex", align = "l", booktabs = T, longtable=T, caption = "Wealth Topography: Section-Specific") %>%
+  kable_styling(latex_options = "striped", font_size = 8)   %>%
+  column_spec(1, width = "1cm") %>%
+  column_spec(2, width = "3cm") %>%
+  column_spec(3, width = "10cm") 
+```
+
+## Construction of the Wealth Topography Database {#subsec:topo_construction}
+
+We now give a brief and stylized description of the process underlying the construction of the Wealth Topography database. In its most stylized version, this process involves three steps (synthesized in the flow chart):
+
+\begin{enumerate}
+\item Identify and download raw data for each source.
+\item Map every raw source into national accounting concepts using the Wealth Topography Conceptual Grid.
+\item Create Wealth Topography macro-category (`concept') by aggregating the variables from each source (transformed following step 2) using the Wealth Topography Composition Rules.
+\end{enumerate}
+
+```{r topoflow ,echo=FALSE, out.width = "40%", fig.align = "center", fig.cap = "Wealth Topography: Flow Chart"}
+knitr::include_graphics(
+  render_path(file.path(doc_root, "docs", "stylizes_flow_chart_wt.png")),
+  rel_path = FALSE
+)
+```
+
+We now provide a detailed explanation of all steps put in place to construct the Wealth Topography database. 
+
+
+### Identify and Download Raw Data for Each Source
+
+The starting point is the identification of raw data on balance sheets from various sources, such as national accounts, household surveys, and a range of research projects and reports. Once the sources have been identified and the raw data downloaded, we classify them in three macro groups:
+\begin{enumerate}
+\item Raw data sources published by central banks and national statistical institutes that use the SNA2008/ESA2010 framework to organize and disseminate the data. We refer to these raw data sources simply as cross-national official statistics.
+\item Raw data sources published by central banks and national statistical institutes that use variants of the SNA2008/ESA2010 framework or other frameworks to organize and disseminate the data. We refer to these raw data sources as cross-national official statistics that use variants of SNA2008/ESA2010 framework.
+\item Raw data sources contained in surveys and academic papers or published by central banks and research institutes that use frameworks different from the SNA2008/ESA2010 framework to organize and disseminate the data. We refer to these data sources as cross-national official survey data or cross-national academic research that do not use the SNA2008/ESA2010 framework.
+\end{enumerate}
+
+
+###  Map Raw Data into National Accounting Concepts
+
+Once raw data have been obtained and classified, we harmonize them using the Wealth Topography Conceptual Grid. This grid, inspired by National Accounts, assigns an alphanumeric identifier to each item or instrument of the balance sheet.\footnote{For the original table used in ESA2010 @ESA2010, see Section `IV.3: Balance sheets: Closing balance sheet' in `Table 24.6 — Full sequence of accounts for households' of the European System of National Accounts accessed via [https://ec.europa.eu/eurostat/esa2010/](https://ec.europa.eu/eurostat/esa2010/).} An extract of the grid can be seen in Table \ref{tab:tgrid_extract}. Under the column "Code", we report the code that identifies each item of the balance sheet (e.g., AN111 stands for Dwellings). The code consists of two elements (letters and numbers) and a special character for the case of financial assets and liabilities. The alphabetic part of the code identifies whether a specific balance sheet component falls in the category of non-financial assets (AN), financial assets (A_AF), or liabilities (L_AF), while numbers identify the class of assets and liabilities to which the instrument belongs. 
+
+Equipped with the grid, we can map each raw source into national accounting concepts with the aim of obtaining harmonized data on net wealth, assets, and liabilities that can be compared across countries and sources. According to the type of raw data source, we distinguish between two types of mapping:
+
+\begin{itemize}
+\item Automatic mapping (for cross-national official statistics). For raw data sources published by central banks and national statistical institutes that use the SNA2008/ESA2010 framework to organize and disseminate the data, the mapping of raw data into national accounting concepts is straightforward. 
+\item Conceptual or manual mapping (for cross-national official statistics that use variants of SNA2008/ESA2010 framework). For raw data sources published by central banks and national statistical institutes that use variants of the SNA2008/ESA2010 framework or other frameworks to organize and disseminate the data, the mapping of raw data into national accounting concepts is not straightforward. Therefore, we manually map each series from the raw data source to elements of the grid. The mapping is conceptual and based on our reading of source-specific documentation. All source-specific manual mapping tables are reported in Appendix \ref{sec:topo_appendix_sourcedoc}.
+\end{itemize}
+
+For cross-national official survey data or cross-national academic research that do not use the SNA2008/ESA2010 framework, we build source-specific grids to help cross-walking from raw data to the national accounting concepts in Table \ref{tab:tgrid_extract}. For completeness, we report the source-specific grids together with source-specific documentation in Appendix \ref{sec:topo_appendix_sourcedoc}. We followed the SNA2008/ESA2010 definition for consumer durable goods and debt secured by a mortgage. For offshore financial wealth, we created a framework which is analogous to the financial wealth definition. 
+
+```{r tgrid_extract, echo=F}
+concepts_tab <- read_excel("docs/bible_wt_tables.xlsx", sheet = "general_grid_reduced", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(concepts_tab, format="latex", align = "l", booktabs = T, longtable=T, caption = "Wealth Topography: Conceptual Grid") %>%
+  kable_styling(latex_options = "striped", font_size = 8)   %>%
+  column_spec(2, width = "1cm") %>%
+  column_spec(2, width = "7cm") %>% 
+  column_spec(3, width = "3cm") 
+```
+
+### Create Wealth Topography Concepts Using Our Composition Rules 
+
+For raw sources classified as cross-national official statistics (independently of whether the SNA2008/ESA2010 framework is used), the mapping yields harmonized series on net wealth, assets, and liabilities. The next step is to aggregate these harmonized raw data into the macro-categories (`concept`) of the Wealth Topography database. Aggregation is carried out through the general composition rules in Table \ref{tab:tcomposition}.
+
+In practice, we use an extended set of composition rules relative to those displayed in Table \ref{tab:tcomposition}, since different data sources provide different levels of aggregation for the sub-components of the balance sheet. For example, the `concept` "Stocks, Business Equity & Fund Shares" can be computed by aggregating different variables. On the one hand, for some data sources, the `concept` "Stocks, Business Equity & Fund Shares" is set equal to "Equity and investment fund shares (A_AF5)". On the other hand, when the aggregate variable is missing, we obtain "Stocks, Business Equity & Fund Shares" by summing up "Equity (A_AF51)" and "Investment fund shares/units (A_AF52)". We always provide a detailed account of which composition rule has been used to construct a data point in the Wealth Topography database in the metadata section of the warehouse file or graphs available to users through the website of the GC Wealth Project.  All source-specific composition rules used in the Wealth Topography database are reported in the source-specific documentation.
+ <!-- in Appendix \ref{sec:topo_appendix_sourcedoc}.  -->
+
+Finally, for raw data sources classified as cross-national official survey data or cross-national academic research that do not use the SNA2008/ESA2010 framework, we consider ad-hoc source-specific composition rules. In this case, raw data sources are not harmonized by mapping them into national accounting concepts using the grid. Rather, based on our reading of source-specific documentations, the aggregation of this raw data type uses macro-categories that are coherent and comparable to those obtained from cross-national official statistics. We provide a detailed treatment of these sources in Appendix \ref{sec:topo_appendix_sourcedoc}.
+
+## Additional Information on the Wealth Topography Section
+
+For any additional information about the Wealth Topography database the reader can refer to Appendix \ref{sec:topo_appendix} which includes a list of all sources covered by the Wealth Topography database, an extensive treatment of the composition rules, and detailed source-specific documentations.
+
+```{r tcomposition, echo=F}
+concepts_tab <- read_excel("docs/bible_wt_generalcomposition.xlsx", sheet = "generalcomposition", col_names = TRUE, col_types = NULL, na = " ", skip = 0)
+kbl(concepts_tab, format="latex", align = "l", booktabs = T, longtable=T, caption = "Wealth Topography: General Composition Rule") %>%
+  kable_styling(latex_options = "striped", font_size = 8)   %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "4cm") %>%
+  column_spec(3, width = "5cm") %>%
+  column_spec(4, width = "10cm") %>%
+  landscape()
+```
+
+
+
+

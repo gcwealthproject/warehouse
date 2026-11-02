@@ -1719,6 +1719,2718 @@
       "actor": "Luca",
       "issue_number": "local-ui",
       "updated_at": "2026-07-01T14:08:10Z"
+    },
+    {
+      "operation": "bulk_label_update",
+      "record_id": "data_type:Wealth survey->Household survey",
+      "reason": "Bulk label update via maintenance: Data type 'Wealth survey' -> 'Household survey' (17 records)",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T15:00:11Z"
+    },
+    {
+      "operation": "bulk_label_update",
+      "record_id": "section:Estate, Inheritance, and Gift Taxes->Taxes on Wealth",
+      "reason": "Bulk label update via maintenance: Section 'Estate, Inheritance, and Gift Taxes' -> 'Taxes on Wealth' (649 records)",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T15:01:08Z"
+    },
+    {
+      "operation": "bulk_label_update",
+      "record_id": "section:Wealth Inequality Trends->Wealth Inequality",
+      "reason": "Bulk label update via maintenance: Section 'Wealth Inequality Trends' -> 'Wealth Inequality' (170 records)",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T15:01:59Z"
+    },
+    {
+      "operation": "bulk_label_update",
+      "record_id": "section:Inheritance->Inheritance Trends",
+      "reason": "Bulk label update via maintenance: Section 'Inheritance' -> 'Inheritance Trends' (9 records)",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-01T15:02:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-shultz-1926",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:37:04Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-germantaxlaw-1951",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:37:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-bartholdito1992",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:52:17Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-bartholdito1992",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:52:22Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1975",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:54:01Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1978",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:54:24Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1980",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:55:27Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1975",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:55:40Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1978",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:55:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1982",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:57:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1983",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:58:02Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1975",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:58:18Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1978",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:58:25Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1980",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:58:35Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1982",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:58:47Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1983",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:59:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1984",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:59:12Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1985",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:59:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1986",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:59:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1987",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T08:59:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1988",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:00:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1989",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:00:17Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1990",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:00:26Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1991",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:00:39Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1990",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:00:48Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1992",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:00:56Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1993",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:01:07Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1995",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:01:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1996",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:01:29Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1997",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:01:40Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1998",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:01:52Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1999",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:02:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2000",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:02:15Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2001",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:02:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2002",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:02:40Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2003",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:02:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2004",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:03:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2005",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:03:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2005",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:03:22Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2006",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:03:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:03:43Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-bruneitaxlaw-1984",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:05:10Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-cbpp2004",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:07:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlawestate-1929",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:09:39Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1981",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:10:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1965",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:11:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1934",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:11:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1932",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:11:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1929",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:12:15Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1925",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:12:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1915",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:13:29Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1878",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:14:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1923",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T09:15:09Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-cyprustaxlaw-1962",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T12:34:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-cyprustaxlaw-2000",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-02T12:35:18Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1983",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1984",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1985",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1987",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1989",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-west1911",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1986",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1988",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1991",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1990",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1992",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1993",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:08:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1995",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:09:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1996",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:09:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1997",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:09:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1998",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:09:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-1999",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:10:16Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2000",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:10:16Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2001",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:10:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2002",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:10:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2003",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2004",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2005",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2006",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2010",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dhs-ineq",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2002",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2003",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2004",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2005",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2006",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2007",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2008",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dtirs-2009",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:21:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1955-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1957-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1959-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1960-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1961-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1962-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1963-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1964-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1965-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1966-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1968-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1970-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1971-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1979-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:39:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1972-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1974-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1976-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1977-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1980-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1981-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1982-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1983-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1986-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1989-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T12:57:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1990-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1992-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-egact1993-nz",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-estatedutyact1953-india",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ey2012b",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-gifttaxact1958-india",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ibfd2009de",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-irs1954",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-irs1969",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T13:01:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-japantaxguide2022",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:08:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-journalofta2018-india",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:08:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-kenyataxlaw-1967",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:08:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-irs1976",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:11:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-kenyataxlaw-1972",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:11:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-west1910",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:11:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance1983",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance1986",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance1992",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance1999",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance2001",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance2004",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance2005",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance2006",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance2007",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance2008",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legislativehistory-india",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain88",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-lexcanada1985",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-west1908",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:12:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-irs1972",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-kenyataxlaw-1963",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-kenyataxlaw-1980",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-kenyataxlaw-1982",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance1989",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance1998",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legifrance2002",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain01",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain87",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain89",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain90",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain91",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain94",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain95",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain96",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain98",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain99",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-shultz-1926",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-west1909",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:13:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-legispain97",
+      "reason": "Applied ref_link proposal from local UI review",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-03T14:14:39Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-bruneitaxlaw-1984",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T09:58:29Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-bruneitaxlaw-1984",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T09:58:35Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlawestate-1929",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T09:59:09Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlawestate-1929",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T09:59:12Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlawestate-1929",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T09:59:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1878",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T09:59:56Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1915",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:00:17Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1923",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:00:46Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1925",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:01:08Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1929",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:01:23Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1932",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:01:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1934",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:01:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1965",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:02:12Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-chiletaxlaw-1981",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:02:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1924",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:02:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1926",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:03:04Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1931",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:03:17Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1939",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:03:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1941",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:03:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1951",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:04:01Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1960",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:04:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1961",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:04:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1976",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:04:43Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie1985",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:05:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie2003",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:05:25Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie2009",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:05:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:05:57Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ie2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:06:10Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-pakistan-tax-law1950",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:06:27Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-perutaxlaw-1979",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:06:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2009",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:16:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:16:59Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:17:15Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:17:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:17:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2009",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:18:23Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:18:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:18:51Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:19:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:19:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:19:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:20:11Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:20:25Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2017",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:20:40Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ct-inst2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:20:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-dc-comp2019",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T10:21:38Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:52:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:52:19Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:52:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:52:52Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:53:07Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:54:56Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de2017",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:55:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-de-sum2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:55:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-gandhi2005",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T11:56:22Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-hi2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:02:02Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-hi-inst2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:03:04Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-lohman2009",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:05:49Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-gandhi2005",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:06:39Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:15:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:16:06Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:16:39Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:17:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:17:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:17:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2017",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:18:22Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:18:44Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-case2006",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:19:27Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-civunsum2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:20:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-comp2019",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:21:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:21:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:21:49Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:22:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:22:21Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:22:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:22:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:23:24Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2017",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:23:48Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-sum2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:24:05Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-il-table2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:24:30Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-statcan2025",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:37:52Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-hi2017",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:40:59Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-hi2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T12:41:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:10:20Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:11:29Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:20:26Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:22:24Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:30:49Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:31:04Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:34:38Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-annualbalancesheetsnonfinancialassets",
+      "reason": "Edited via local UI",
+      "actor": "severin",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-22T15:46:16Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ma-guide",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:12:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:12:49Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:12:59Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:07Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:15Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:16Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:24Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:32Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:40Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:41Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2017",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:49Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:13:57Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2019",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:14:04Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md2020",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:14:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:14:33Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-md-esttax2",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:14:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-me2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:15:06Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-me2019",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:15:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-me-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:15:38Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-me-leg2002",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:16:35Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-me-sum2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:16:50Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-me-sum2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:16:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-esttax2",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:17:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:17:25Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2007",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:17:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2008",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:18:02Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2009",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:18:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2012",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:18:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2013",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:18:36Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:18:45Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:18:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:19:02Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2017",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:19:10Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-mn-inst2018",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:19:26Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-michael2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:19:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-michael2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:20:07Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nc2002",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:21:39Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nc2005",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:22:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nc2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:22:17Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nc2011",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:22:19Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nj-comp",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:22:33Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nj-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:22:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nj-esttax17",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:23:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nj-esttax17",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:23:33Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-nj-kpm2019",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:23:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ny2019",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:24:38Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ny-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:25:14Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ny-esttax2",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:25:31Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ny-inst2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:26:23Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oh-2x1983",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:26:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oh-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:27:16Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oh-inst2002",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:27:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ri2002",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:27:55Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ri2015",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:28:07Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ri-est2009",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:28:54Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ri-inst2002",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:29:19Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-tn-est1999",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:29:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-tn-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:29:46Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-vt2002",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:30:11Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-vt2008",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:30:53Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-vt2016",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:31:22Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-vt-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:31:43Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-wa2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:32:13Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-wa-esttax",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:32:37Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-wa-esttax2",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:32:52Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-wa-inst2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T08:33:07Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-barry1956",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T09:05:40Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-barry1956",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T09:05:42Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ca2022",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T09:06:00Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-co-esttax2005",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T09:06:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ny2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T09:08:34Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-ny2014",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-23T09:08:41Z"
+    },
+    {
+      "operation": "bulk_label_update",
+      "record_id": "data_type:Inheritance/estate tax data, wealth survey, and national accounts->Inheritance/estate tax data, household survey, and national accounts",
+      "reason": "Bulk label update via maintenance: Data type 'Inheritance/estate tax data, wealth survey, and national accounts' -> 'Inheritance/estate tax data, household survey, and national accounts' (4 records)",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-28T12:06:11Z"
+    },
+    {
+      "operation": "bulk_label_update",
+      "record_id": "data_type:Wealth survey (with adjustments)->Household survey (with adjustments)",
+      "reason": "Bulk label update via maintenance: Data type 'Wealth survey (with adjustments)' -> 'Household survey (with adjustments)' (20 records)",
+      "actor": "Ignacio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-07-28T12:31:58Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-shultz-1926",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-08-26T12:59:03Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-08-26T13:00:08Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-08-26T13:00:18Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-britishtaxlaw-2010",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-08-26T13:00:19Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-rev",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-08-26T13:01:28Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-oecd-rev",
+      "reason": "Edited via local UI",
+      "actor": "Francesca",
+      "issue_number": "local-ui",
+      "updated_at": "2026-08-26T13:01:29Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-gabbuti2025",
+      "reason": "Edited via local UI",
+      "actor": "Demetrio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-08-30T09:44:35Z"
+    },
+    {
+      "operation": "edit",
+      "record_id": "src-acciari-morelli-2020",
+      "reason": "Edited via local UI",
+      "actor": "Demetrio",
+      "issue_number": "local-ui",
+      "updated_at": "2026-09-02T07:20:35Z"
     }
   ]
 }

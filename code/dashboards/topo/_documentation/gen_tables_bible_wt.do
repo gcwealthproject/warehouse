@@ -89,14 +89,18 @@ preserve
 	replace ordering = 1 if code == "netwea"
 	replace ordering = 2 if code == "nnhass"
 	replace ordering = 3 if code == "fliabi"
-	replace ordering = 4 if code == "facdbl"
-	replace ordering = 5 if code == "faeqfd"
-	replace ordering = 6 if code == "falipe"
-	replace ordering = 7 if code == "nfabus"
-	replace ordering = 8 if code == "nfadur"
-	replace ordering = 9 if code == "offsho"
-	replace ordering = 10 if code == "etnwea"
-	replace ordering = 11 if code == "nfahou"
+	replace ordering = 4 if code == "fliabm"
+	replace ordering = 5 if code == "facdbl"
+	replace ordering = 6 if code == "fadepo"
+	replace ordering = 7 if code == "faeqfd"
+	replace ordering = 8 if code == "falipe"
+	replace ordering = 9 if code == "nfabus"
+	replace ordering = 10 if code == "nfadur"
+	replace ordering = 11 if code == "offsho"
+	replace ordering = 12 if code == "etnwea"
+	replace ordering = 13 if code == "nfahou"
+	replace ordering = 14 if code == "nfhous"
+	replace ordering = 15 if code == "nfalan"
 	sort ordering
 	drop ordering
 	
@@ -164,14 +168,18 @@ preserve
 	replace ordering = 1 if code == "netwea"
 	replace ordering = 2 if code == "nnhass"
 	replace ordering = 3 if code == "fliabi"
-	replace ordering = 4 if code == "facdbl"
-	replace ordering = 5 if code == "faeqfd"
-	replace ordering = 6 if code == "falipe"
-	replace ordering = 7 if code == "nfabus"
-	replace ordering = 8 if code == "nfadur"
-	replace ordering = 9 if code == "offsho"
-	replace ordering = 10 if code == "etnwea"
-	replace ordering = 11 if code == "nfahou"
+	replace ordering = 4 if code == "fliabm"
+	replace ordering = 5 if code == "facdbl"
+	replace ordering = 6 if code == "fadepo"
+	replace ordering = 7 if code == "faeqfd"
+	replace ordering = 8 if code == "falipe"
+	replace ordering = 9 if code == "nfabus"
+	replace ordering = 10 if code == "nfadur"
+	replace ordering = 11 if code == "offsho"
+	replace ordering = 12 if code == "etnwea"
+	replace ordering = 13 if code == "nfahou"
+	replace ordering = 14 if code == "nfhous"
+	replace ordering = 15 if code == "nfalan"
 	sort ordering
 	drop ordering
 	
@@ -275,7 +283,9 @@ foreach sou of local source_list {
 			replace code = "netwea" if label == "Net Wealth"
 			replace code = "nnhass" if label == "Financial Assets & Fixed Capital of Personal Businesses"
 			replace code = "fliabi" if label == "Debt"
+			replace code = "fliabm" if label == "Debt secured by a mortgage"
 			replace code = "facdbl" if label == "Cash, Deposits, Bonds & Loans"
+			replace code = "fadepo" if label == "Deposits"
 			replace code = "faeqfd" if label == "Stocks, Business Equities & Fund Shares"
 			replace code = "falipe" if label == "Pensions & Life Insurance"
 			replace code = "nfabus" if label == "Fixed Capital of Personal Businesses"
@@ -283,21 +293,27 @@ foreach sou of local source_list {
 			replace code = "offsho" if label == "Offshore Financial Wealth"
 			replace code = "etnwea" if label == "Wealth at Death"
 			replace code = "nfahou" if label == "Housing & Land"
+			replace code = "nfalan" if label == "Land"
+			replace code = "nfhous" if label == "Housing"
 				
 
 			gen ordering = 0
 			order ordering, first
-			replace ordering = 1 if code == "netwea"
-			replace ordering = 2 if code == "nnhass"
-			replace ordering = 3 if code == "fliabi"
-			replace ordering = 4 if code == "facdbl"
-			replace ordering = 5 if code == "faeqfd"
-			replace ordering = 6 if code == "falipe"
-			replace ordering = 7 if code == "nfabus"
-			replace ordering = 8 if code == "nfadur"
-			replace ordering = 9 if code == "offsho"
-			replace ordering = 10 if code == "etnwea"
-			replace ordering = 11 if code == "nfahou"
+				replace ordering = 1 if code == "netwea"
+				replace ordering = 2 if code == "nnhass"
+				replace ordering = 3 if code == "fliabi"
+				replace ordering = 4 if code == "fliabm"
+				replace ordering = 5 if code == "facdbl"
+				replace ordering = 6 if code == "fadepo"
+				replace ordering = 7 if code == "faeqfd"
+				replace ordering = 8 if code == "falipe"
+				replace ordering = 9 if code == "nfabus"
+				replace ordering = 10 if code == "nfadur"
+				replace ordering = 11 if code == "offsho"
+				replace ordering = 12 if code == "etnwea"
+				replace ordering = 13 if code == "nfahou"
+				replace ordering = 14 if code == "nfhous"
+				replace ordering = 15 if code == "nfalan"
 			sort ordering
 			drop ordering
 
@@ -533,5 +549,23 @@ append using `WID_hs'
 
 append using `WID_np'
 export excel using "${output_documentation}/bible_wt_matching.xlsx", sheet(WID_topo) sheetreplace firstrow(varlabels) 
+
+
+*StatCan 
+global StatCan_DWA "${user}/raw_data/topo/StatCan_DWA_topo/auxiliary files"
+
+import excel "${StatCan_DWA}/matched_grid_StatCan.xls", firstrow clear
+rename na_code code
+keep code source_code varname_source
+sort code source_code varname_source
+keep if code != ""
+
+replace varname_source = strproper(varname_source) 
+
+label var code "Code" 
+label var source_code "Original identifier" 
+label var varname_source "Original label" 
+
+export excel using "${output_documentation}/bible_wt_matching.xlsx", sheet(StatCan_DWA_topo) sheetreplace firstrow(varlabels) 
 
 
