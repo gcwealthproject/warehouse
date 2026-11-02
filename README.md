@@ -48,6 +48,7 @@ ssc install sxpose
 ssc install findname
 ssc install renvarlab
 ssc install ereplace
+ssc install wid
 ```
 
 * From Sealed Envelope:
